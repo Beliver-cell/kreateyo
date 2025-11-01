@@ -14,6 +14,7 @@ import {
   FileEdit,
   FolderKanban,
   Mail,
+  Image,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -65,6 +66,7 @@ export function AppSidebar() {
     const endItems = [
       { title: 'Tools', url: '/tools', icon: Wrench },
       { title: 'Payment Gateway', url: '/payments', icon: CreditCard },
+      { title: 'Media Library', url: '/media', icon: Image },
       { title: 'Settings', url: '/settings', icon: Settings },
     ];
 

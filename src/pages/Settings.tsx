@@ -3,8 +3,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
+import { Zap } from 'lucide-react';
+import { useState } from 'react';
 
 export default function Settings() {
+  const [scaleMode, setScaleMode] = useState(false);
+
   return (
     <div className="space-y-4 md:space-y-6 max-w-5xl">
       <div>
@@ -63,6 +67,78 @@ export default function Settings() {
             </div>
             <Switch />
           </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-gradient-accent flex items-center justify-center">
+              <Zap className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <CardTitle>Advanced Features</CardTitle>
+              <CardDescription>Unlock powerful tools for scaling</CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="flex items-center justify-between p-4 rounded-lg border bg-muted/30">
+            <div className="space-y-1 flex-1">
+              <div className="flex items-center gap-2">
+                <Label htmlFor="scale-mode" className="text-base font-semibold cursor-pointer">
+                  Scale Mode
+                </Label>
+                {scaleMode && (
+                  <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary font-medium">
+                    Active
+                  </span>
+                )}
+              </div>
+              <p className="text-sm text-muted-foreground">
+                {scaleMode 
+                  ? 'Advanced features enabled: A/B testing, API access, custom CSS, and more'
+                  : 'Enable to unlock A/B testing, API access, custom CSS, and advanced analytics'}
+              </p>
+            </div>
+            <Switch
+              id="scale-mode"
+              checked={scaleMode}
+              onCheckedChange={setScaleMode}
+              className="ml-4"
+            />
+          </div>
+
+          {scaleMode && (
+            <div className="space-y-3 p-4 rounded-lg bg-primary/5 border border-primary/20">
+              <h4 className="font-semibold text-sm flex items-center gap-2">
+                <Zap className="w-4 h-4 text-primary" />
+                Available Advanced Features
+              </h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                  A/B Testing for pages and campaigns
+                </li>
+                <li className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                  API Access with webhooks
+                </li>
+                <li className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                  Custom CSS editor
+                </li>
+                <li className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                  Advanced analytics dashboards
+                </li>
+                <li className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                  White-label options
+                </li>
+              </ul>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

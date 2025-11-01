@@ -22,6 +22,7 @@ import Pages from "./pages/Pages";
 import Subscribers from "./pages/Subscribers";
 import Tools from "./pages/Tools";
 import Payments from "./pages/Payments";
+import MediaLibrary from "./pages/MediaLibrary";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -152,6 +153,14 @@ const App = () => (
               element={
                 <DashboardLayout>
                   <Subscribers />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/media"
+              element={
+                <DashboardLayout>
+                  <MediaLibrary />
                 </DashboardLayout>
               }
             />
