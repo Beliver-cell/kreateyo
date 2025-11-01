@@ -1,11 +1,24 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useBusinessContext } from '@/contexts/BusinessContext';
 
 const Index = () => {
+  const navigate = useNavigate();
+  const { businessProfile } = useBusinessContext();
+
+  useEffect(() => {
+    if (businessProfile.onboarded) {
+      navigate('/dashboard');
+    }
+  }, [businessProfile.onboarded, navigate]);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-subtle">
       <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+        <h1 className="text-5xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-4">
+          NexusCreate
+        </h1>
+        <p className="text-xl text-muted-foreground">Loading your business platform...</p>
       </div>
     </div>
   );
