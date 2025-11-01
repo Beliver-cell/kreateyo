@@ -23,6 +23,7 @@ import Subscribers from "./pages/Subscribers";
 import Tools from "./pages/Tools";
 import Payments from "./pages/Payments";
 import MediaLibrary from "./pages/MediaLibrary";
+import TemplatePreview from "./pages/TemplatePreview";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -161,6 +162,14 @@ const App = () => (
               element={
                 <DashboardLayout>
                   <MediaLibrary />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/template-preview"
+              element={
+                <DashboardLayout>
+                  <TemplatePreview />
                 </DashboardLayout>
               }
             />

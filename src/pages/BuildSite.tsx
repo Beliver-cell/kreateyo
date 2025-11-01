@@ -9,6 +9,7 @@ import { Sparkles, Layout, Palette, Maximize2, Check } from 'lucide-react';
 import { useState } from 'react';
 import { useBusinessContext } from '@/contexts/BusinessContext';
 import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
 
 const templates = {
   ecommerce: [
@@ -106,6 +107,7 @@ export default function BuildSite() {
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
   const { businessProfile } = useBusinessContext();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const businessType = businessProfile.type || 'ecommerce';
   const currentTemplates = templates[businessType as keyof typeof templates] || templates.ecommerce;
@@ -113,9 +115,13 @@ export default function BuildSite() {
   const handleApplyTemplate = (templateId: string, templateName: string) => {
     setSelectedTemplate(templateId);
     toast({
-      title: "Template Applied!",
-      description: `${templateName} has been applied to your site.`,
+      title: "Template Selected!",
+      description: `${templateName} selected. Click to preview and customize.`,
     });
+  };
+
+  const handlePreviewTemplate = () => {
+    navigate('/template-preview');
   };
 
   return (
@@ -130,16 +136,26 @@ export default function BuildSite() {
       <div className="space-y-6">
         <Card className="border-2">
           <CardHeader>
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-lg bg-gradient-primary flex items-center justify-center">
-                <Layout className="w-6 h-6 text-white" />
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-lg bg-gradient-primary flex items-center justify-center">
+                  <Layout className="w-6 h-6 text-white" />
+                </div>
+                <div className="flex-1">
+                  <CardTitle className="text-xl md:text-2xl">Choose Your Template</CardTitle>
+                  <CardDescription className="text-sm md:text-base">
+                    Start with a professionally designed template for your {businessType} business
+                  </CardDescription>
+                </div>
               </div>
-              <div>
-                <CardTitle className="text-xl md:text-2xl">Choose Your Template</CardTitle>
-                <CardDescription className="text-sm md:text-base">
-                  Start with a professionally designed template for your {businessType} business
-                </CardDescription>
-              </div>
+              <Button 
+                onClick={handlePreviewTemplate}
+                size="lg"
+                className="w-full sm:w-auto"
+              >
+                <Maximize2 className="w-4 h-4 mr-2" />
+                Preview All Templates
+              </Button>
             </div>
           </CardHeader>
           <CardContent>
