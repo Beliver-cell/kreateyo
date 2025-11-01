@@ -4,6 +4,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import sarahImg from '@/assets/team/sarah.jpg';
+import michaelImg from '@/assets/team/michael.jpg';
+import emilyImg from '@/assets/team/emily.jpg';
 
 interface TemplateProps {
   colors?: {
@@ -47,9 +50,9 @@ export default function ServiceTemplate({ colors, fonts }: TemplateProps) {
   ];
 
   const team = [
-    { name: 'Dr. Sarah Johnson', role: 'Lead Consultant', experience: '15+ years', image: '👩‍💼' },
-    { name: 'Michael Chen', role: 'Senior Advisor', experience: '10+ years', image: '👨‍💼' },
-    { name: 'Emily Rodriguez', role: 'Strategy Expert', experience: '8+ years', image: '👩‍💼' },
+    { name: 'Dr. Sarah Johnson', role: 'Lead Consultant', experience: '15+ years', image: sarahImg },
+    { name: 'Michael Chen', role: 'Senior Advisor', experience: '10+ years', image: michaelImg },
+    { name: 'Emily Rodriguez', role: 'Strategy Expert', experience: '8+ years', image: emilyImg },
   ];
 
   return (
@@ -173,17 +176,25 @@ export default function ServiceTemplate({ colors, fonts }: TemplateProps) {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-5xl mx-auto">
             {team.map((member, idx) => (
-              <Card key={idx} className="text-center hover:shadow-lg transition-shadow">
-                <CardContent className="p-6">
-                  <div className="text-7xl mb-4">{member.image}</div>
-                  <h4 className="text-xl font-bold mb-2">{member.name}</h4>
-                  <p className="text-sm font-medium mb-2" style={{ color: primaryColor }}>
-                    {member.role}
-                  </p>
-                  <p className="text-sm text-muted-foreground mb-4">{member.experience}</p>
-                  <Button variant="outline" size="sm">View Profile</Button>
+              <Card key={idx} className="text-center hover:shadow-lg transition-shadow overflow-hidden">
+                <CardContent className="p-0">
+                  <div className="aspect-square overflow-hidden">
+                    <img 
+                      src={member.image} 
+                      alt={member.name}
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                  <div className="p-4 md:p-6">
+                    <h4 className="text-lg md:text-xl font-bold mb-2">{member.name}</h4>
+                    <p className="text-sm font-medium mb-2" style={{ color: primaryColor }}>
+                      {member.role}
+                    </p>
+                    <p className="text-sm text-muted-foreground mb-4">{member.experience}</p>
+                    <Button variant="outline" size="sm">View Profile</Button>
+                  </div>
                 </CardContent>
               </Card>
             ))}

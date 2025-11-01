@@ -3,6 +3,9 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import webDevImg from '@/assets/blog/web-development.jpg';
+import aiTechImg from '@/assets/blog/ai-technology.jpg';
+import healthyImg from '@/assets/blog/healthy-living.jpg';
 
 interface TemplateProps {
   colors?: {
@@ -29,7 +32,7 @@ export default function BlogTemplate({ colors, fonts }: TemplateProps) {
       author: 'Sarah Johnson',
       date: 'Mar 15, 2024',
       readTime: '5 min read',
-      image: '💻'
+      image: webDevImg
     },
     { 
       id: 2, 
@@ -39,7 +42,7 @@ export default function BlogTemplate({ colors, fonts }: TemplateProps) {
       author: 'Mike Chen',
       date: 'Mar 12, 2024',
       readTime: '8 min read',
-      image: '🤖'
+      image: aiTechImg
     },
     { 
       id: 3, 
@@ -49,7 +52,7 @@ export default function BlogTemplate({ colors, fonts }: TemplateProps) {
       author: 'Emma Davis',
       date: 'Mar 10, 2024',
       readTime: '6 min read',
-      image: '🥗'
+      image: healthyImg
     },
   ];
 
@@ -57,10 +60,10 @@ export default function BlogTemplate({ colors, fonts }: TemplateProps) {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b sticky top-0 bg-background/95 backdrop-blur z-50">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-3 md:py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-8">
-              <h1 className="text-2xl font-bold" style={{ color: primaryColor }}>MyBlog</h1>
+            <div className="flex items-center gap-4 md:gap-8">
+              <h1 className="text-xl md:text-2xl font-bold" style={{ color: primaryColor }}>MyBlog</h1>
               <nav className="hidden md:flex gap-6">
                 <a href="#" className="text-sm hover:text-primary transition-colors">Latest</a>
                 <a href="#" className="text-sm hover:text-primary transition-colors">Technology</a>
@@ -68,9 +71,9 @@ export default function BlogTemplate({ colors, fonts }: TemplateProps) {
                 <a href="#" className="text-sm hover:text-primary transition-colors">About</a>
               </nav>
             </div>
-            <div className="flex items-center gap-4">
-              <Button variant="ghost" size="icon"><Search className="w-5 h-5" /></Button>
-              <Button style={{ backgroundColor: primaryColor }}>Subscribe</Button>
+            <div className="flex items-center gap-2 md:gap-4">
+              <Button variant="ghost" size="icon" className="hidden sm:flex"><Search className="w-5 h-5" /></Button>
+              <Button style={{ backgroundColor: primaryColor }} className="text-xs sm:text-sm px-3 md:px-4">Subscribe</Button>
               <Button variant="ghost" size="icon" className="md:hidden"><Menu className="w-5 h-5" /></Button>
             </div>
           </div>
@@ -101,8 +104,12 @@ export default function BlogTemplate({ colors, fonts }: TemplateProps) {
         <div className="container mx-auto px-4">
           <Card className="overflow-hidden hover:shadow-xl transition-shadow">
             <div className="grid md:grid-cols-2 gap-0">
-              <div className="aspect-video md:aspect-auto bg-muted flex items-center justify-center text-8xl">
-                💻
+              <div className="aspect-video md:aspect-auto bg-muted overflow-hidden">
+                <img 
+                  src={webDevImg} 
+                  alt="Web Development"
+                  className="w-full h-full object-cover"
+                />
               </div>
               <CardContent className="p-8 flex flex-col justify-center">
                 <Badge className="w-fit mb-4" style={{ backgroundColor: primaryColor }}>Featured</Badge>
@@ -142,12 +149,16 @@ export default function BlogTemplate({ colors, fonts }: TemplateProps) {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {posts.map((post) => (
               <Card key={post.id} className="group cursor-pointer hover:shadow-lg transition-all overflow-hidden">
-                <div className="aspect-video bg-muted flex items-center justify-center text-6xl relative overflow-hidden">
-                  {post.image}
+                <div className="aspect-video bg-muted relative overflow-hidden">
+                  <img 
+                    src={post.image} 
+                    alt={post.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
                   <Button 
                     size="icon" 
                     variant="secondary" 
-                    className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity"
                   >
                     <Bookmark className="w-4 h-4" />
                   </Button>
