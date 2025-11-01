@@ -30,21 +30,21 @@ export default function Products() {
   );
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 md:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold">Products</h1>
-          <p className="text-muted-foreground mt-1">Manage your product inventory</p>
+          <h1 className="text-2xl md:text-3xl font-bold">Products</h1>
+          <p className="text-muted-foreground mt-1 text-sm md:text-base">Manage your product inventory</p>
         </div>
-        <Button className="bg-gradient-primary hover:opacity-90">
+        <Button className="bg-gradient-primary hover:opacity-90 w-full sm:w-auto">
           <Plus className="w-4 h-4 mr-2" />
           Add Product
         </Button>
       </div>
 
       <Card>
-        <CardContent className="p-6">
-          <div className="flex items-center gap-4 mb-6">
+        <CardContent className="p-4 md:p-6">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-6">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
@@ -54,20 +54,21 @@ export default function Products() {
                 className="pl-10"
               />
             </div>
-            <Button variant="outline">Filters</Button>
+            <Button variant="outline" className="w-full sm:w-auto">Filters</Button>
           </div>
 
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Product</TableHead>
-                <TableHead>Price</TableHead>
-                <TableHead>Stock</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="w-12"></TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Product</TableHead>
+                  <TableHead>Price</TableHead>
+                  <TableHead>Stock</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="w-12"></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
               {filteredProducts.map((product) => (
                 <TableRow key={product.id}>
                   <TableCell>
@@ -103,8 +104,9 @@ export default function Products() {
                   </TableCell>
                 </TableRow>
               ))}
-            </TableBody>
-          </Table>
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
     </div>

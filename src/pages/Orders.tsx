@@ -19,15 +19,16 @@ const mockOrders = [
 
 export default function Orders() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Orders</h1>
-        <p className="text-muted-foreground mt-1">Track and manage customer orders</p>
+        <h1 className="text-2xl md:text-3xl font-bold">Orders</h1>
+        <p className="text-muted-foreground mt-1 text-sm md:text-base">Track and manage customer orders</p>
       </div>
 
       <Card>
-        <CardContent className="p-6">
-          <Table>
+        <CardContent className="p-4 md:p-6">
+          <div className="overflow-x-auto">
+            <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Order ID</TableHead>
@@ -61,8 +62,9 @@ export default function Orders() {
                   </TableCell>
                 </TableRow>
               ))}
-            </TableBody>
-          </Table>
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
     </div>

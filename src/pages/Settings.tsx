@@ -6,10 +6,10 @@ import { Switch } from '@/components/ui/switch';
 
 export default function Settings() {
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="space-y-4 md:space-y-6 max-w-5xl">
       <div>
-        <h1 className="text-3xl font-bold">Settings</h1>
-        <p className="text-muted-foreground mt-1">Manage your business settings and preferences</p>
+        <h1 className="text-2xl md:text-3xl font-bold">Settings</h1>
+        <p className="text-muted-foreground mt-1 text-sm md:text-base">Manage your business settings and preferences</p>
       </div>
 
       <Card>
@@ -18,7 +18,7 @@ export default function Settings() {
           <CardDescription>Update your business details and contact information</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="business-name">Business Name</Label>
               <Input id="business-name" placeholder="Your Business" />
@@ -32,7 +32,7 @@ export default function Settings() {
             <Label htmlFor="business-address">Address</Label>
             <Input id="business-address" placeholder="123 Business Street" />
           </div>
-          <Button>Save Changes</Button>
+          <Button className="w-full sm:w-auto">Save Changes</Button>
         </CardContent>
       </Card>
 

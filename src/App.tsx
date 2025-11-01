@@ -12,6 +12,16 @@ import Products from "./pages/Products";
 import Orders from "./pages/Orders";
 import BuildSite from "./pages/BuildSite";
 import Settings from "./pages/Settings";
+import Collections from "./pages/Collections";
+import Customers from "./pages/Customers";
+import Services from "./pages/Services";
+import Calendar from "./pages/Calendar";
+import Clients from "./pages/Clients";
+import Posts from "./pages/Posts";
+import Pages from "./pages/Pages";
+import Subscribers from "./pages/Subscribers";
+import Tools from "./pages/Tools";
+import Payments from "./pages/Payments";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -69,10 +79,7 @@ const App = () => (
               path="/collections"
               element={
                 <DashboardLayout>
-                  <div className="text-center py-12">
-                    <h2 className="text-2xl font-bold">Collections</h2>
-                    <p className="text-muted-foreground mt-2">Coming soon</p>
-                  </div>
+                  <Collections />
                 </DashboardLayout>
               }
             />
@@ -80,10 +87,31 @@ const App = () => (
               path="/customers"
               element={
                 <DashboardLayout>
-                  <div className="text-center py-12">
-                    <h2 className="text-2xl font-bold">Customers</h2>
-                    <p className="text-muted-foreground mt-2">Coming soon</p>
-                  </div>
+                  <Customers />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/services"
+              element={
+                <DashboardLayout>
+                  <Services />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/calendar"
+              element={
+                <DashboardLayout>
+                  <Calendar />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/clients"
+              element={
+                <DashboardLayout>
+                  <Clients />
                 </DashboardLayout>
               }
             />
@@ -91,10 +119,7 @@ const App = () => (
               path="/tools"
               element={
                 <DashboardLayout>
-                  <div className="text-center py-12">
-                    <h2 className="text-2xl font-bold">Tools</h2>
-                    <p className="text-muted-foreground mt-2">Coming soon</p>
-                  </div>
+                  <Tools />
                 </DashboardLayout>
               }
             />
@@ -102,10 +127,31 @@ const App = () => (
               path="/payments"
               element={
                 <DashboardLayout>
-                  <div className="text-center py-12">
-                    <h2 className="text-2xl font-bold">Payment Gateway</h2>
-                    <p className="text-muted-foreground mt-2">Coming soon</p>
-                  </div>
+                  <Payments />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/posts"
+              element={
+                <DashboardLayout>
+                  <Posts />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/pages"
+              element={
+                <DashboardLayout>
+                  <Pages />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/subscribers"
+              element={
+                <DashboardLayout>
+                  <Subscribers />
                 </DashboardLayout>
               }
             />

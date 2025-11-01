@@ -33,10 +33,10 @@ export default function Dashboard() {
   const metrics = getMetrics();
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 md:space-y-8">
       <div>
-        <h1 className="text-3xl font-bold">Dashboard</h1>
-        <p className="text-muted-foreground mt-1">
+        <h1 className="text-2xl md:text-3xl font-bold">Dashboard</h1>
+        <p className="text-muted-foreground mt-1 text-sm md:text-base">
           Welcome back! Here's an overview of your {businessProfile.type} business.
         </p>
       </div>
