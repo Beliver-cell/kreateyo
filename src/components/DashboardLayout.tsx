@@ -12,9 +12,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       <div className="min-h-screen flex w-full bg-background">
         <AppSidebar />
         <div className="flex-1 flex flex-col min-w-0">
-          <main className="flex-1 p-3 md:p-4 overflow-hidden h-screen">
-            {children}
-          </main>
+      <main className="flex-1 p-2 md:p-3 overflow-hidden h-screen">
+        {children}
+      </main>
         </div>
       </div>
     </SidebarProvider>
