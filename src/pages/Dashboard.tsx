@@ -3,9 +3,11 @@ import { TrendingUp, DollarSign, ShoppingCart, Users, Package, Calendar, FileTex
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { useNavigate } from 'react-router-dom';
 
 export default function Dashboard() {
   const { businessProfile } = useBusinessContext();
+  const navigate = useNavigate();
 
   const getMetrics = () => {
     if (businessProfile.type === 'ecommerce') {
@@ -152,7 +154,14 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              <button className="w-full p-4 rounded-lg border-2 border-border hover:border-primary hover:bg-primary/5 transition-all text-left group">
+              <button 
+                onClick={() => {
+                  if (businessProfile.type === 'ecommerce') navigate('/products');
+                  else if (businessProfile.type === 'services') navigate('/calendar');
+                  else navigate('/posts');
+                }}
+                className="w-full p-4 rounded-lg border-2 border-border hover:border-primary hover:bg-primary/5 transition-all text-left group"
+              >
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-semibold group-hover:text-primary transition-colors">
@@ -170,7 +179,10 @@ export default function Dashboard() {
                 </div>
               </button>
               
-              <button className="w-full p-4 rounded-lg border-2 border-border hover:border-primary hover:bg-primary/5 transition-all text-left group">
+              <button 
+                onClick={() => navigate('/build')}
+                className="w-full p-4 rounded-lg border-2 border-border hover:border-primary hover:bg-primary/5 transition-all text-left group"
+              >
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-semibold group-hover:text-primary transition-colors">Customize Your Site</p>
@@ -182,7 +194,10 @@ export default function Dashboard() {
                 </div>
               </button>
               
-              <button className="w-full p-4 rounded-lg border-2 border-border hover:border-primary hover:bg-primary/5 transition-all text-left group">
+              <button 
+                onClick={() => navigate('/dashboard')}
+                className="w-full p-4 rounded-lg border-2 border-border hover:border-primary hover:bg-primary/5 transition-all text-left group"
+              >
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-semibold group-hover:text-primary transition-colors">View Full Analytics</p>
