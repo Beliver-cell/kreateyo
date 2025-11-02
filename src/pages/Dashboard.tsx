@@ -61,30 +61,14 @@ export default function Dashboard() {
 
   const metrics = getMetrics();
   const activityData = getActivityData();
-  const businessHealth = 8.5;
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Dashboard</h1>
-          <p className="text-muted-foreground">
-            Welcome back! Here's an overview of your {businessProfile.type} business.
-          </p>
-        </div>
-        <Card className="p-4">
-          <div className="flex items-center gap-3">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-primary">{businessHealth}</div>
-              <p className="text-xs text-muted-foreground">Health Score</p>
-            </div>
-            <div className="h-12 w-px bg-border" />
-            <div className="space-y-2 min-w-[120px]">
-              <Progress value={businessHealth * 10} className="h-2" />
-              <p className="text-xs text-muted-foreground">Excellent</p>
-            </div>
-          </div>
-        </Card>
+      <div>
+        <h1 className="text-3xl font-bold">Dashboard</h1>
+        <p className="text-muted-foreground">
+          Welcome back! Here's an overview of your {businessProfile.type} business.
+        </p>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
