@@ -1,10 +1,13 @@
 import { useState } from 'react';
-import { Plus, Search, Mail, Phone, MapPin } from 'lucide-react';
+import { Plus, Search, Mail, Phone, MapPin, Upload, Download, Filter, Edit, MoreVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { CustomerDialog } from '@/components/CustomerDialog';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { toast } from '@/hooks/use-toast';
 
 const mockCustomers = [
   {
@@ -66,11 +69,21 @@ const mockCustomers = [
 
 export default function Customers() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedCustomer, setSelectedCustomer] = useState<any>(null);
 
   const filteredCustomers = mockCustomers.filter((customer) =>
     customer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     customer.email.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleImport = () => {
+    toast({ title: "Import customers", description: "Upload a CSV file to import customers." });
+  };
+
+  const handleExport = () => {
+    toast({ title: "Exporting customers...", description: "Downloading customer data as CSV." });
+  };
 
   return (
     <div className="space-y-4 md:space-y-6">
@@ -81,10 +94,26 @@ export default function Customers() {
             Manage your customer relationships
           </p>
         </div>
-        <Button className="bg-gradient-primary hover:opacity-90 w-full sm:w-auto">
-          <Plus className="w-4 h-4 mr-2" />
-          Add Customer
-        </Button>
+        <div className="flex gap-2">
+          <Button 
+            variant="outline"
+            onClick={handleImport}
+            className="hidden sm:flex"
+          >
+            <Upload className="w-4 h-4 mr-2" />
+            Import
+          </Button>
+          <Button 
+            className="bg-primary hover:bg-primary/90 w-full sm:w-auto"
+            onClick={() => {
+              setSelectedCustomer(null);
+              setDialogOpen(true);
+            }}
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Add Customer
+          </Button>
+        </div>
       </div>
 
       <Card>
@@ -99,7 +128,14 @@ export default function Customers() {
                 className="pl-10"
               />
             </div>
-            <Button variant="outline" className="w-full sm:w-auto">Export</Button>
+            <Button variant="outline" className="w-full sm:w-auto" onClick={handleExport}>
+              <Download className="w-4 h-4 mr-2" />
+              Export
+            </Button>
+            <Button variant="outline" className="w-full sm:w-auto">
+              <Filter className="w-4 h-4 mr-2" />
+              Filter
+            </Button>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -141,8 +177,27 @@ export default function Customers() {
                           <MapPin className="w-4 h-4 flex-shrink-0" />
                           <span>{customer.location}</span>
                         </div>
-                        <div className="pt-2 border-t border-border">
+                        <div className="pt-2 border-t border-border flex items-center justify-between">
                           <span className="text-muted-foreground">{customer.orders} orders</span>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                <MoreVertical className="w-4 h-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => {
+                                setSelectedCustomer(customer);
+                                setDialogOpen(true);
+                              }}>
+                                <Edit className="w-4 h-4 mr-2" />
+                                Edit Profile
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>View Orders</DropdownMenuItem>
+                              <DropdownMenuItem>Send Email</DropdownMenuItem>
+                              <DropdownMenuItem>Add Note</DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </div>
                       </div>
                     </div>
@@ -153,6 +208,12 @@ export default function Customers() {
           </div>
         </CardContent>
       </Card>
+
+      <CustomerDialog 
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        customer={selectedCustomer}
+      />
     </div>
   );
 }

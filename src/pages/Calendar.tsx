@@ -1,8 +1,12 @@
 import { useState } from 'react';
-import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Plus, Calendar as CalendarIcon, Settings, Printer, Download, MoreVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { BookingDialog } from '@/components/BookingDialog';
+import { toast } from '@/hooks/use-toast';
 
 const mockAppointments = [
   { id: 1, time: '09:00', client: 'John Doe', service: 'Personal Training', duration: '60 min', status: 'confirmed' },
@@ -17,20 +21,67 @@ const dates = [12, 13, 14, 15, 16, 17, 18];
 
 export default function Calendar() {
   const [selectedDate, setSelectedDate] = useState(14);
+  const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState<any>(null);
+  const [viewMode, setViewMode] = useState('week');
+
+  const handlePrintSchedule = () => {
+    toast({ title: "Printing schedule...", description: "Your schedule is being prepared for printing." });
+    window.print();
+  };
+
+  const handleExportCalendar = () => {
+    toast({ title: "Exporting calendar...", description: "Downloading calendar.ics file." });
+  };
+
+  const handleReschedule = (booking: any) => {
+    setSelectedBooking(booking);
+    setBookingDialogOpen(true);
+  };
+
+  const handleCancelBooking = (booking: any) => {
+    toast({ title: "Booking cancelled", description: `${booking.client}'s appointment has been cancelled.` });
+  };
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold">Calendar</h1>
           <p className="text-muted-foreground">
             Manage your bookings and appointments
           </p>
         </div>
-        <Button className="bg-gradient-accent hover:opacity-90">
-          <Plus className="w-4 h-4 mr-2" />
-          New Booking
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Select value={viewMode} onValueChange={setViewMode}>
+            <SelectTrigger className="w-[130px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="day">Day View</SelectItem>
+              <SelectItem value="week">Week View</SelectItem>
+              <SelectItem value="month">Month View</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button variant="outline" size="sm" onClick={handlePrintSchedule}>
+            <Printer className="w-4 h-4 mr-2" />
+            Print
+          </Button>
+          <Button variant="outline" size="sm" onClick={handleExportCalendar}>
+            <Download className="w-4 h-4 mr-2" />
+            Export
+          </Button>
+          <Button 
+            className="bg-primary hover:bg-primary/90"
+            onClick={() => {
+              setSelectedBooking(null);
+              setBookingDialogOpen(true);
+            }}
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            New Booking
+          </Button>
+        </div>
       </div>
 
       <Card>
@@ -85,6 +136,23 @@ export default function Calendar() {
                     <Badge variant={appointment.status === 'confirmed' ? 'default' : 'secondary'}>
                       {appointment.status}
                     </Badge>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                          <MoreVertical className="w-4 h-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => handleReschedule(appointment)}>
+                          Reschedule
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleCancelBooking(appointment)}>
+                          Cancel Booking
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>Add Note</DropdownMenuItem>
+                        <DropdownMenuItem>Send Reminder</DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
                 </CardContent>
               </Card>
@@ -92,6 +160,12 @@ export default function Calendar() {
           </div>
         </CardContent>
       </Card>
+
+      <BookingDialog 
+        open={bookingDialogOpen}
+        onOpenChange={setBookingDialogOpen}
+        booking={selectedBooking}
+      />
     </div>
   );
 }
