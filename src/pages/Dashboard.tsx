@@ -63,32 +63,33 @@ export default function Dashboard() {
   const activityData = getActivityData();
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">Dashboard</h1>
-        <p className="text-muted-foreground">
+    <div className="space-y-8">
+      <div className="space-y-2">
+        <h1 className="text-4xl font-bold tracking-tight">Dashboard</h1>
+        <p className="text-lg text-muted-foreground">
           Welcome back! Here's an overview of your {businessProfile.type} business.
         </p>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {metrics.map((metric) => {
           const Icon = metric.icon;
           return (
-            <Card key={metric.title} className="hover:shadow-md transition-shadow">
-              <CardHeader className="flex flex-row items-center justify-between pb-2 p-4">
+            <Card key={metric.title} className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-border">
+              <CardHeader className="flex flex-row items-center justify-between pb-3 space-y-0">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   {metric.title}
                 </CardTitle>
-                <div className="w-10 h-10 rounded-lg bg-gradient-primary flex items-center justify-center">
-                  <Icon className="w-5 h-5 text-white" />
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <Icon className="w-6 h-6 text-primary" />
                 </div>
               </CardHeader>
-              <CardContent className="p-4 pt-0">
-                <div className="text-2xl font-bold">{metric.value}</div>
-                <div className="flex items-center gap-1 mt-1">
-                  <TrendingUp className="w-4 h-4 text-success" />
-                  <p className="text-xs text-success font-medium">{metric.change}</p>
+              <CardContent>
+                <div className="text-3xl font-bold tracking-tight">{metric.value}</div>
+                <div className="flex items-center gap-1 mt-2">
+                  <TrendingUp className="w-4 h-4 text-primary" />
+                  <p className="text-sm text-primary font-medium">{metric.change}</p>
+                  <span className="text-xs text-muted-foreground ml-1">from last month</span>
                 </div>
               </CardContent>
             </Card>
@@ -97,26 +98,26 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader className="p-4">
-            <CardTitle className="text-base">Recent Activity</CardTitle>
-            <CardDescription className="text-sm">
+        <Card className="border-border">
+          <CardHeader className="space-y-1 pb-4">
+            <CardTitle className="text-xl font-semibold">Recent Activity</CardTitle>
+            <CardDescription>
               {businessProfile.type === 'ecommerce' && 'Latest orders, inventory, and customer updates'}
               {businessProfile.type === 'services' && 'Today\'s appointments and client interactions'}
               {businessProfile.type === 'blog' && 'Subscriber growth and post performance'}
             </CardDescription>
           </CardHeader>
-          <CardContent className="p-4 pt-0">
-            <div className="space-y-3">
+          <CardContent>
+            <div className="space-y-4">
               {activityData.map((activity, i) => (
-                <div key={i} className="flex items-start gap-3 p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors">
+                <div key={i} className="flex items-start gap-4 p-4 rounded-xl bg-muted/50 hover:bg-muted/80 transition-all duration-200 border border-transparent hover:border-border">
                   <div className="w-2 h-2 rounded-full bg-primary mt-2 flex-shrink-0"></div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium">{activity.text}</p>
-                    <p className="text-xs text-muted-foreground mt-1">{activity.time}</p>
+                    <p className="text-sm font-medium leading-relaxed">{activity.text}</p>
+                    <p className="text-xs text-muted-foreground mt-1.5">{activity.time}</p>
                   </div>
                   {activity.type === 'alert' && (
-                    <AlertCircle className="w-4 h-4 text-warning flex-shrink-0 mt-1" />
+                    <AlertCircle className="w-5 h-5 text-warning flex-shrink-0 mt-1" />
                   )}
                 </div>
               ))}
@@ -124,19 +125,19 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="p-4">
+        <Card className="border-border">
+          <CardHeader className="space-y-1 pb-4">
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-base">Quick Actions</CardTitle>
-                <CardDescription className="text-sm">Common tasks and shortcuts</CardDescription>
+                <CardTitle className="text-xl font-semibold">Quick Actions</CardTitle>
+                <CardDescription>Common tasks and shortcuts</CardDescription>
               </div>
-              <Badge variant="secondary" className="text-xs">
+              <Badge variant="outline" className="text-xs font-medium border-primary text-primary">
                 {businessProfile.type}
               </Badge>
             </div>
           </CardHeader>
-          <CardContent className="p-4 pt-0">
+          <CardContent>
             <div className="space-y-3">
               <button 
                 onClick={() => {
@@ -144,7 +145,7 @@ export default function Dashboard() {
                   else if (businessProfile.type === 'services') navigate('/calendar');
                   else navigate('/posts');
                 }}
-                className="w-full p-4 rounded-lg border border-border hover:border-primary hover:bg-primary/5 transition-all text-left group"
+                className="w-full p-5 rounded-xl border-2 border-border hover:border-primary hover:bg-primary/5 transition-all duration-200 text-left group"
               >
                 <div className="flex items-center justify-between">
                   <div>
@@ -153,42 +154,42 @@ export default function Dashboard() {
                       {businessProfile.type === 'services' && 'Create New Booking'}
                       {businessProfile.type === 'blog' && 'Write New Post'}
                     </p>
-                    <p className="text-xs text-muted-foreground mt-1">Start creating content</p>
+                    <p className="text-xs text-muted-foreground mt-1.5">Start creating content</p>
                   </div>
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                    {businessProfile.type === 'ecommerce' && <Package className="w-4 h-4 text-primary" />}
-                    {businessProfile.type === 'services' && <Calendar className="w-4 h-4 text-primary" />}
-                    {businessProfile.type === 'blog' && <FileText className="w-4 h-4 text-primary" />}
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                    {businessProfile.type === 'ecommerce' && <Package className="w-5 h-5 text-primary" />}
+                    {businessProfile.type === 'services' && <Calendar className="w-5 h-5 text-primary" />}
+                    {businessProfile.type === 'blog' && <FileText className="w-5 h-5 text-primary" />}
                   </div>
                 </div>
               </button>
               
               <button 
                 onClick={() => navigate('/build')}
-                className="w-full p-4 rounded-lg border border-border hover:border-primary hover:bg-primary/5 transition-all text-left group"
+                className="w-full p-5 rounded-xl border-2 border-border hover:border-primary hover:bg-primary/5 transition-all duration-200 text-left group"
               >
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-semibold group-hover:text-primary transition-colors">Customize Your Site</p>
-                    <p className="text-xs text-muted-foreground mt-1">Edit design and layout</p>
+                    <p className="text-xs text-muted-foreground mt-1.5">Edit design and layout</p>
                   </div>
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                    <TrendingUp className="w-4 h-4 text-primary" />
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                    <TrendingUp className="w-5 h-5 text-primary" />
                   </div>
                 </div>
               </button>
               
               <button 
                 onClick={() => navigate('/dashboard')}
-                className="w-full p-4 rounded-lg border border-border hover:border-primary hover:bg-primary/5 transition-all text-left group"
+                className="w-full p-5 rounded-xl border-2 border-border hover:border-primary hover:bg-primary/5 transition-all duration-200 text-left group"
               >
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-semibold group-hover:text-primary transition-colors">View Full Analytics</p>
-                    <p className="text-xs text-muted-foreground mt-1">Track your performance</p>
+                    <p className="text-xs text-muted-foreground mt-1.5">Track your performance</p>
                   </div>
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                    <TrendingUp className="w-4 h-4 text-primary" />
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                    <TrendingUp className="w-5 h-5 text-primary" />
                   </div>
                 </div>
               </button>
