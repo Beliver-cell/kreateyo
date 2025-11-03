@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Search, MoreVertical, FolderOpen } from 'lucide-react';
+import { Plus, Search, MoreVertical, Sun, Star, Gift, Tag, Gem } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -11,7 +11,7 @@ const mockCollections = [
     name: 'Summer Collection', 
     products: 24, 
     status: 'active',
-    image: '☀️',
+    icon: Sun,
     revenue: '$12,450'
   },
   { 
@@ -19,7 +19,7 @@ const mockCollections = [
     name: 'Best Sellers', 
     products: 15, 
     status: 'active',
-    image: '⭐',
+    icon: Star,
     revenue: '$24,890'
   },
   { 
@@ -27,7 +27,7 @@ const mockCollections = [
     name: 'New Arrivals', 
     products: 8, 
     status: 'active',
-    image: '🎁',
+    icon: Gift,
     revenue: '$5,230'
   },
   { 
@@ -35,7 +35,7 @@ const mockCollections = [
     name: 'Clearance', 
     products: 32, 
     status: 'draft',
-    image: '🏷️',
+    icon: Tag,
     revenue: '$8,670'
   },
   { 
@@ -43,7 +43,7 @@ const mockCollections = [
     name: 'Premium Line', 
     products: 12, 
     status: 'active',
-    image: '💎',
+    icon: Gem,
     revenue: '$18,340'
   },
 ];
@@ -86,12 +86,14 @@ export default function Collections() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredCollections.map((collection) => (
+            {filteredCollections.map((collection) => {
+              const CollectionIcon = collection.icon;
+              return (
               <Card key={collection.id} className="hover:shadow-md transition-shadow">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between mb-3">
-                    <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center text-2xl">
-                      {collection.image}
+                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
+                      <CollectionIcon className="w-6 h-6 text-primary" />
                     </div>
                     <Button variant="ghost" size="sm">
                       <MoreVertical className="w-4 h-4" />
@@ -116,7 +118,8 @@ export default function Collections() {
                   </div>
                 </CardContent>
               </Card>
-            ))}
+            );
+            })}
           </div>
         </CardContent>
       </Card>

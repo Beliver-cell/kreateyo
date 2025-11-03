@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Search, Clock, DollarSign, Users } from 'lucide-react';
+import { Plus, Search, Clock, DollarSign, Users, Dumbbell, Heart, Apple, Sparkles, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -13,7 +13,7 @@ const mockServices = [
     price: '$75',
     bookings: 24,
     status: 'active',
-    icon: '💪',
+    icon: Dumbbell,
     description: 'One-on-one fitness coaching'
   },
   {
@@ -23,7 +23,7 @@ const mockServices = [
     price: '$45',
     bookings: 18,
     status: 'active',
-    icon: '🧘',
+    icon: Heart,
     description: 'Group yoga session for all levels'
   },
   {
@@ -33,7 +33,7 @@ const mockServices = [
     price: '$85',
     bookings: 12,
     status: 'active',
-    icon: '🥗',
+    icon: Apple,
     description: 'Personalized diet planning'
   },
   {
@@ -43,7 +43,7 @@ const mockServices = [
     price: '$95',
     bookings: 8,
     status: 'limited',
-    icon: '💆',
+    icon: Sparkles,
     description: 'Relaxation and recovery massage'
   },
   {
@@ -53,7 +53,7 @@ const mockServices = [
     price: '$35',
     bookings: 32,
     status: 'active',
-    icon: '🏃',
+    icon: Zap,
     description: 'High-intensity group workout'
   },
 ];
@@ -96,12 +96,14 @@ export default function Services() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredServices.map((service) => (
+            {filteredServices.map((service) => {
+              const ServiceIcon = service.icon;
+              return (
               <Card key={service.id} className="hover:shadow-md transition-shadow">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between mb-3">
-                    <div className="w-12 h-12 rounded-lg bg-gradient-primary flex items-center justify-center text-2xl">
-                      {service.icon}
+                    <div className="w-12 h-12 rounded-lg bg-gradient-primary flex items-center justify-center">
+                      <ServiceIcon className="w-6 h-6 text-white" />
                     </div>
                     <Badge 
                       variant={service.status === 'active' ? 'default' : 'secondary'}
@@ -131,7 +133,8 @@ export default function Services() {
                   </div>
                 </CardContent>
               </Card>
-            ))}
+            );
+            })}
           </div>
         </CardContent>
       </Card>

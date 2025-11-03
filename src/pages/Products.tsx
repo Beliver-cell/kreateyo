@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Search, MoreVertical } from 'lucide-react';
+import { Plus, Search, MoreVertical, Headphones, Mouse, Keyboard, Usb, Laptop, Video } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -14,12 +14,12 @@ import {
 import { Badge } from '@/components/ui/badge';
 
 const mockProducts = [
-  { id: 1, name: 'Premium Headphones', price: 299.99, stock: 45, status: 'active', image: '🎧' },
-  { id: 2, name: 'Wireless Mouse', price: 49.99, stock: 120, status: 'active', image: '🖱️' },
-  { id: 3, name: 'Mechanical Keyboard', price: 159.99, stock: 8, status: 'low stock', image: '⌨️' },
-  { id: 4, name: 'USB-C Hub', price: 79.99, stock: 0, status: 'out of stock', image: '🔌' },
-  { id: 5, name: 'Laptop Stand', price: 89.99, stock: 65, status: 'active', image: '💻' },
-  { id: 6, name: 'Webcam HD', price: 129.99, stock: 34, status: 'active', image: '📷' },
+  { id: 1, name: 'Premium Headphones', price: 299.99, stock: 45, status: 'active', icon: Headphones },
+  { id: 2, name: 'Wireless Mouse', price: 49.99, stock: 120, status: 'active', icon: Mouse },
+  { id: 3, name: 'Mechanical Keyboard', price: 159.99, stock: 8, status: 'low stock', icon: Keyboard },
+  { id: 4, name: 'USB-C Hub', price: 79.99, stock: 0, status: 'out of stock', icon: Usb },
+  { id: 5, name: 'Laptop Stand', price: 89.99, stock: 65, status: 'active', icon: Laptop },
+  { id: 6, name: 'Webcam HD', price: 129.99, stock: 34, status: 'active', icon: Video },
 ];
 
 export default function Products() {
@@ -71,12 +71,14 @@ export default function Products() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredProducts.map((product) => (
+                {filteredProducts.map((product) => {
+                  const ProductIcon = product.icon;
+                  return (
                   <TableRow key={product.id}>
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center text-2xl">
-                          {product.image}
+                        <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
+                          <ProductIcon className="w-6 h-6 text-primary" />
                         </div>
                         <div>
                           <p className="font-medium">{product.name}</p>
@@ -105,7 +107,8 @@ export default function Products() {
                       </Button>
                     </TableCell>
                   </TableRow>
-                ))}
+                );
+                })}
               </TableBody>
             </Table>
           </div>
