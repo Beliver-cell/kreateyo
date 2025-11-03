@@ -27,14 +27,14 @@ export function Navbar() {
   };
 
   return (
-    <nav className="h-16 border-b border-border bg-card flex items-center px-6 flex-shrink-0">
+    <nav className="h-16 border-b border-border bg-card/80 backdrop-blur-xl flex items-center px-6 flex-shrink-0 shadow-sm">
       <div className="flex items-center gap-4 flex-1">
         {/* Search Bar */}
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input 
             placeholder="Search..." 
-            className="pl-10 bg-background"
+            className="pl-10 bg-background border-border hover:border-ring transition-all duration-300 focus:shadow-md"
           />
         </div>
       </div>
@@ -46,35 +46,35 @@ export function Navbar() {
         {/* Notifications */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="relative">
+            <Button variant="ghost" size="icon" className="relative hover:scale-110 transition-all duration-300">
               <Bell className="w-5 h-5" />
               <Badge 
                 variant="destructive" 
-                className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
+                className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs shadow-md"
               >
                 3
               </Badge>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-80 bg-popover z-50">
+          <DropdownMenuContent align="end" className="w-80 bg-popover/95 backdrop-blur-xl z-50 border border-border shadow-xl">
             <DropdownMenuLabel>Notifications</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem 
-              className="flex flex-col items-start gap-1 p-3 cursor-pointer"
+              className="flex flex-col items-start gap-1 p-3 cursor-pointer hover:bg-accent/80 transition-all duration-300"
               onClick={() => navigate('/orders')}
             >
               <p className="text-sm font-medium">New order received</p>
               <p className="text-xs text-muted-foreground">Order #1842 - $234.99 • 5 minutes ago</p>
             </DropdownMenuItem>
             <DropdownMenuItem 
-              className="flex flex-col items-start gap-1 p-3 cursor-pointer"
+              className="flex flex-col items-start gap-1 p-3 cursor-pointer hover:bg-accent/80 transition-all duration-300"
               onClick={() => navigate('/products')}
             >
               <p className="text-sm font-medium">Low stock alert</p>
               <p className="text-xs text-muted-foreground">Running Shoes - Only 3 left • 1 hour ago</p>
             </DropdownMenuItem>
             <DropdownMenuItem 
-              className="flex flex-col items-start gap-1 p-3 cursor-pointer"
+              className="flex flex-col items-start gap-1 p-3 cursor-pointer hover:bg-accent/80 transition-all duration-300"
               onClick={() => navigate('/customers')}
             >
               <p className="text-sm font-medium">New customer signup</p>
@@ -82,7 +82,7 @@ export function Navbar() {
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem 
-              className="text-center justify-center cursor-pointer text-primary"
+              className="text-center justify-center cursor-pointer text-primary hover:bg-accent/80 transition-all duration-300"
               onClick={() => toast({ title: "View all notifications", description: "Coming soon!" })}
             >
               View all notifications
@@ -93,7 +93,7 @@ export function Navbar() {
         {/* User Profile */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" className="hover:scale-110 transition-all duration-300">
               <Avatar className="h-8 w-8">
                 <AvatarFallback className="bg-gradient-primary text-white">
                   <User className="w-4 h-4" />
@@ -101,25 +101,25 @@ export function Navbar() {
               </Avatar>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56 bg-popover z-50">
+          <DropdownMenuContent align="end" className="w-56 bg-popover/95 backdrop-blur-xl z-50 border border-border shadow-xl">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem 
-              className="cursor-pointer"
+              className="cursor-pointer hover:bg-accent/80 transition-all duration-300"
               onClick={() => navigate('/settings')}
             >
               <Settings className="w-4 h-4 mr-2" />
               Profile Settings
             </DropdownMenuItem>
             <DropdownMenuItem 
-              className="cursor-pointer"
+              className="cursor-pointer hover:bg-accent/80 transition-all duration-300"
               onClick={() => navigate('/payments')}
             >
               <CreditCard className="w-4 h-4 mr-2" />
               Billing
             </DropdownMenuItem>
             <DropdownMenuItem 
-              className="cursor-pointer"
+              className="cursor-pointer hover:bg-accent/80 transition-all duration-300"
               onClick={() => toast({ title: "Team", description: "Team management coming soon!" })}
             >
               <Users className="w-4 h-4 mr-2" />
@@ -127,7 +127,7 @@ export function Navbar() {
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem 
-              className="text-destructive cursor-pointer"
+              className="text-destructive cursor-pointer hover:bg-destructive/10 transition-all duration-300"
               onClick={handleLogout}
             >
               <LogOut className="w-4 h-4 mr-2" />

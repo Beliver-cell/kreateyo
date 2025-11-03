@@ -92,14 +92,14 @@ export function AppSidebar() {
             <Button 
               variant="ghost" 
               size="icon" 
-              className="fixed top-3 left-3 z-50 lg:hidden"
+              className="fixed top-4 left-4 z-50 lg:hidden hover:bg-accent hover:scale-110 transition-all duration-300 shadow-md hover:shadow-xl backdrop-blur-sm bg-card/80 border border-border"
             >
               <Menu className="h-5 w-5" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="w-64 p-0">
-            <div className="p-4 border-b border-sidebar-border">
-              <h2 className="text-lg font-bold">NexusCreate</h2>
+          <SheetContent side="left" className="w-64 p-0 border-r border-border backdrop-blur-xl bg-card/95">
+            <div className="p-4 border-b border-sidebar-border bg-gradient-to-r from-card to-muted">
+              <h2 className="text-lg font-bold bg-gradient-premium bg-clip-text text-transparent">NexusCreate</h2>
             </div>
             <div className="overflow-y-auto h-[calc(100vh-73px)]">
               <div className="p-4">
@@ -110,10 +110,10 @@ export function AppSidebar() {
                       to={item.url}
                       onClick={() => setOpen(false)}
                       className={({ isActive }) =>
-                        `flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${
+                        `flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-300 hover:scale-[1.02] ${
                           isActive
-                            ? 'bg-accent text-accent-foreground font-medium'
-                            : 'hover:bg-accent/50'
+                            ? 'bg-gradient-primary text-primary-foreground font-medium shadow-md'
+                            : 'hover:bg-accent/80 hover:shadow-sm'
                         }`
                       }
                     >
@@ -133,10 +133,10 @@ export function AppSidebar() {
   // Desktop sidebar
   return (
     <Sidebar className={collapsed ? 'w-16' : 'w-64'} collapsible="icon">
-      <div className="p-4 border-b border-sidebar-border flex items-center gap-3">
+      <div className="p-4 border-b border-sidebar-border flex items-center gap-3 bg-gradient-to-r from-card to-muted">
         {!collapsed && (
           <div className="flex-1">
-            <h2 className="text-lg font-bold">NexusCreate</h2>
+            <h2 className="text-lg font-bold bg-gradient-premium bg-clip-text text-transparent">NexusCreate</h2>
           </div>
         )}
         <SidebarTrigger />
@@ -153,9 +153,11 @@ export function AppSidebar() {
                     <NavLink
                       to={item.url}
                       className={({ isActive }) =>
-                        isActive
-                          ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium'
-                          : 'hover:bg-sidebar-accent/50'
+                        `transition-all duration-300 hover:scale-[1.02] ${
+                          isActive
+                            ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium shadow-sm'
+                            : 'hover:bg-sidebar-accent/80'
+                        }`
                       }
                     >
                       <item.icon className="w-4 h-4" />
