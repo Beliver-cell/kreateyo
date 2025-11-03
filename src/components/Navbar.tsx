@@ -1,4 +1,4 @@
-import { Search, Bell, User } from 'lucide-react';
+import { Search, Bell, User, Settings, CreditCard, Users, LogOut } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -11,8 +11,20 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { useNavigate } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 
 export function Navbar() {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleLogout = () => {
+    toast({
+      title: "Logged out",
+      description: "You have been successfully logged out.",
+    });
+  };
+
   return (
     <nav className="h-16 border-b border-border bg-card flex items-center px-6 flex-shrink-0">
       <div className="flex items-center gap-4 flex-1">
@@ -26,7 +38,7 @@ export function Navbar() {
         </div>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
         {/* Notifications */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -40,20 +52,36 @@ export function Navbar() {
               </Badge>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-80">
+          <DropdownMenuContent align="end" className="w-80 bg-popover z-50">
             <DropdownMenuLabel>Notifications</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="flex flex-col items-start gap-1 p-3">
+            <DropdownMenuItem 
+              className="flex flex-col items-start gap-1 p-3 cursor-pointer"
+              onClick={() => navigate('/orders')}
+            >
               <p className="text-sm font-medium">New order received</p>
-              <p className="text-xs text-muted-foreground">5 minutes ago</p>
+              <p className="text-xs text-muted-foreground">Order #1842 - $234.99 • 5 minutes ago</p>
             </DropdownMenuItem>
-            <DropdownMenuItem className="flex flex-col items-start gap-1 p-3">
+            <DropdownMenuItem 
+              className="flex flex-col items-start gap-1 p-3 cursor-pointer"
+              onClick={() => navigate('/products')}
+            >
               <p className="text-sm font-medium">Low stock alert</p>
-              <p className="text-xs text-muted-foreground">1 hour ago</p>
+              <p className="text-xs text-muted-foreground">Running Shoes - Only 3 left • 1 hour ago</p>
             </DropdownMenuItem>
-            <DropdownMenuItem className="flex flex-col items-start gap-1 p-3">
+            <DropdownMenuItem 
+              className="flex flex-col items-start gap-1 p-3 cursor-pointer"
+              onClick={() => navigate('/customers')}
+            >
               <p className="text-sm font-medium">New customer signup</p>
-              <p className="text-xs text-muted-foreground">2 hours ago</p>
+              <p className="text-xs text-muted-foreground">3 new customers joined • 2 hours ago</p>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem 
+              className="text-center justify-center cursor-pointer text-primary"
+              onClick={() => toast({ title: "View all notifications", description: "Coming soon!" })}
+            >
+              View all notifications
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -61,23 +89,44 @@ export function Navbar() {
         {/* User Profile */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="gap-2">
+            <Button variant="ghost" size="icon">
               <Avatar className="h-8 w-8">
                 <AvatarFallback className="bg-gradient-primary text-white">
                   <User className="w-4 h-4" />
                 </AvatarFallback>
               </Avatar>
-              <span className="hidden md:inline text-sm font-medium">My Account</span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
+          <DropdownMenuContent align="end" className="w-56 bg-popover z-50">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile Settings</DropdownMenuItem>
-            <DropdownMenuItem>Billing</DropdownMenuItem>
-            <DropdownMenuItem>Team</DropdownMenuItem>
+            <DropdownMenuItem 
+              className="cursor-pointer"
+              onClick={() => navigate('/settings')}
+            >
+              <Settings className="w-4 h-4 mr-2" />
+              Profile Settings
+            </DropdownMenuItem>
+            <DropdownMenuItem 
+              className="cursor-pointer"
+              onClick={() => navigate('/payments')}
+            >
+              <CreditCard className="w-4 h-4 mr-2" />
+              Billing
+            </DropdownMenuItem>
+            <DropdownMenuItem 
+              className="cursor-pointer"
+              onClick={() => toast({ title: "Team", description: "Team management coming soon!" })}
+            >
+              <Users className="w-4 h-4 mr-2" />
+              Team
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-destructive">
+            <DropdownMenuItem 
+              className="text-destructive cursor-pointer"
+              onClick={handleLogout}
+            >
+              <LogOut className="w-4 h-4 mr-2" />
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>
