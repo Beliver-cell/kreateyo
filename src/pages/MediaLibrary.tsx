@@ -20,9 +20,9 @@ import {
 import { useState } from 'react';
 
 const mockFiles = [
-  { id: 1, name: 'product-hero.jpg', type: 'image', size: '2.4 MB', tags: ['product', 'hero'], date: '2024-03-15', url: '/placeholder.svg' },
-  { id: 2, name: 'blog-banner.png', type: 'image', size: '1.8 MB', tags: ['blog', 'banner'], date: '2024-03-14', url: '/placeholder.svg' },
-  { id: 3, name: 'service-preview.jpg', type: 'image', size: '3.1 MB', tags: ['service'], date: '2024-03-13', url: '/placeholder.svg' },
+  { id: 1, name: 'product-hero.jpg', type: 'image', size: '2.4 MB', tags: ['product', 'hero'], date: '2024-03-15' },
+  { id: 2, name: 'blog-banner.png', type: 'image', size: '1.8 MB', tags: ['blog', 'banner'], date: '2024-03-14' },
+  { id: 3, name: 'service-preview.jpg', type: 'image', size: '3.1 MB', tags: ['service'], date: '2024-03-13' },
   { id: 4, name: 'brand-guidelines.pdf', type: 'document', size: '5.2 MB', tags: ['brand'], date: '2024-03-12' },
   { id: 5, name: 'promo-video.mp4', type: 'video', size: '45.8 MB', tags: ['promo', 'video'], date: '2024-03-10' },
   { id: 6, name: 'background-music.mp3', type: 'audio', size: '8.3 MB', tags: ['audio', 'background'], date: '2024-03-08' },
@@ -120,12 +120,8 @@ export default function MediaLibrary() {
             const Icon = getFileIcon(file.type);
             return (
               <Card key={file.id} className="group hover:shadow-lg transition-all overflow-hidden">
-                <div className="aspect-video bg-muted flex items-center justify-center relative overflow-hidden">
-                  {file.type === 'image' ? (
-                    <img src={file.url} alt={file.name} className="w-full h-full object-cover" />
-                  ) : (
-                    <Icon className="w-12 h-12 text-muted-foreground" />
-                  )}
+                <div className="aspect-video bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center relative overflow-hidden">
+                  <Icon className="w-16 h-16 text-primary/60" />
                   <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                     <Button size="icon" variant="secondary" className="h-8 w-8">
                       <Copy className="w-4 h-4" />
