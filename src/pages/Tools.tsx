@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { toast } from '@/hooks/use-toast';
 import { 
   BarChart3, 
   Mail, 
@@ -231,6 +232,26 @@ export default function Tools() {
       .slice(0, 4);
   };
 
+  const handleInstall = (tool: Tool) => {
+    toast({ 
+      title: tool.isPremium ? "Subscribing..." : "Installing...", 
+      description: `${tool.title} is being ${tool.isPremium ? 'activated' : 'installed'}.` 
+    });
+    setTimeout(() => {
+      toast({ 
+        title: "Success!", 
+        description: `${tool.title} is now active and ready to use.` 
+      });
+    }, 1500);
+  };
+
+  const handlePreview = (tool: Tool) => {
+    toast({ 
+      title: "Preview mode", 
+      description: `Exploring ${tool.title} features...` 
+    });
+  };
+
   if (selectedTool) {
     const Icon = selectedTool.icon;
     const recommendedTools = getRecommendedTools(selectedTool);
@@ -279,10 +300,18 @@ export default function Tools() {
                 </div>
 
                 <div className="flex gap-2 mt-4">
-                  <Button className="flex-1">
+                  <Button 
+                    className="flex-1"
+                    onClick={() => handleInstall(selectedTool)}
+                  >
                     {selectedTool.isPremium ? 'Subscribe' : 'Install'}
                   </Button>
-                  <Button variant="outline">Preview</Button>
+                  <Button 
+                    variant="outline"
+                    onClick={() => handlePreview(selectedTool)}
+                  >
+                    Preview
+                  </Button>
                 </div>
               </CardContent>
             </Card>

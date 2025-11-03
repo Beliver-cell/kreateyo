@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { ProductDialog } from '@/components/ProductDialog';
 import { Checkbox } from '@/components/ui/checkbox';
+import { toast } from '@/hooks/use-toast';
 import {
   Table,
   TableBody,
@@ -33,6 +34,23 @@ export default function Products() {
   const filteredProducts = mockProducts.filter((product) =>
     product.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleBulkDuplicate = () => {
+    toast({ 
+      title: "Duplicating products", 
+      description: `Creating copies of ${selectedIds.length} product(s).` 
+    });
+    setSelectedIds([]);
+  };
+
+  const handleBulkDelete = () => {
+    toast({ 
+      title: "Products deleted", 
+      description: `${selectedIds.length} product(s) removed successfully.`,
+      variant: "destructive"
+    });
+    setSelectedIds([]);
+  };
 
   return (
     <div className="space-y-6">
@@ -78,11 +96,11 @@ export default function Products() {
                 {selectedIds.length} product{selectedIds.length > 1 ? 's' : ''} selected
               </span>
               <div className="flex gap-2">
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" onClick={handleBulkDuplicate}>
                   <Copy className="w-4 h-4 mr-2" />
                   Duplicate
                 </Button>
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" onClick={handleBulkDelete}>
                   <Trash2 className="w-4 h-4 mr-2" />
                   Delete
                 </Button>

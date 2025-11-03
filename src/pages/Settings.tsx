@@ -5,9 +5,20 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Zap } from 'lucide-react';
 import { useState } from 'react';
+import { toast } from '@/hooks/use-toast';
 
 export default function Settings() {
   const [scaleMode, setScaleMode] = useState(false);
+  const [emailNotifications, setEmailNotifications] = useState(false);
+  const [orderAlerts, setOrderAlerts] = useState(true);
+  const [marketingUpdates, setMarketingUpdates] = useState(false);
+
+  const handleSaveChanges = () => {
+    toast({ 
+      title: "Settings saved", 
+      description: "Your changes have been successfully saved." 
+    });
+  };
 
   return (
     <div className="space-y-6 max-w-5xl">
@@ -36,7 +47,7 @@ export default function Settings() {
             <Label htmlFor="business-address">Address</Label>
             <Input id="business-address" placeholder="123 Business Street" />
           </div>
-          <Button>Save Changes</Button>
+          <Button onClick={handleSaveChanges}>Save Changes</Button>
         </CardContent>
       </Card>
 
@@ -51,21 +62,30 @@ export default function Settings() {
               <Label>Email Notifications</Label>
               <p className="text-sm text-muted-foreground">Receive updates via email</p>
             </div>
-            <Switch />
+            <Switch 
+              checked={emailNotifications}
+              onCheckedChange={setEmailNotifications}
+            />
           </div>
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <Label>Order Alerts</Label>
               <p className="text-sm text-muted-foreground">Get notified of new orders</p>
             </div>
-            <Switch defaultChecked />
+            <Switch 
+              checked={orderAlerts}
+              onCheckedChange={setOrderAlerts}
+            />
           </div>
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <Label>Marketing Updates</Label>
               <p className="text-sm text-muted-foreground">Tips and feature announcements</p>
             </div>
-            <Switch />
+            <Switch 
+              checked={marketingUpdates}
+              onCheckedChange={setMarketingUpdates}
+            />
           </div>
         </CardContent>
       </Card>

@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { Plus, Search, Globe } from 'lucide-react';
+import { Plus, Search, Globe, Eye, Edit2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { PageDialog } from '@/components/PageDialog';
+import { toast } from '@/hooks/use-toast';
 
 const mockPages = [
   {
@@ -50,10 +52,22 @@ const mockPages = [
 
 export default function Pages() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedPage, setSelectedPage] = useState<any>(null);
 
   const filteredPages = mockPages.filter((page) =>
     page.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleEdit = (page: any) => {
+    setSelectedPage(page);
+    setDialogOpen(true);
+  };
+
+  const handleView = (page: any) => {
+    toast({ title: "Opening page", description: `Viewing ${page.title}` });
+    window.open(page.slug, '_blank');
+  };
 
   return (
     <div className="space-y-4 md:space-y-6">
@@ -64,7 +78,13 @@ export default function Pages() {
             Manage your site's static pages
           </p>
         </div>
-        <Button className="bg-gradient-primary hover:opacity-90 w-full sm:w-auto">
+        <Button 
+          className="bg-primary hover:bg-primary/90 w-full sm:w-auto"
+          onClick={() => {
+            setSelectedPage(null);
+            setDialogOpen(true);
+          }}
+        >
           <Plus className="w-4 h-4 mr-2" />
           New Page
         </Button>
@@ -113,10 +133,22 @@ export default function Pages() {
                   </div>
 
                   <div className="pt-4 mt-4 border-t border-border flex gap-2">
-                    <Button variant="outline" size="sm" className="flex-1">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="flex-1"
+                      onClick={() => handleEdit(page)}
+                    >
+                      <Edit2 className="w-4 h-4 mr-2" />
                       Edit
                     </Button>
-                    <Button variant="ghost" size="sm" className="flex-1">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="flex-1"
+                      onClick={() => handleView(page)}
+                    >
+                      <Eye className="w-4 h-4 mr-2" />
                       View
                     </Button>
                   </div>
@@ -126,6 +158,12 @@ export default function Pages() {
           </div>
         </CardContent>
       </Card>
+
+      <PageDialog 
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        page={selectedPage}
+      />
     </div>
   );
 }

@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Plus, Search, Mail, Download, TrendingUp } from 'lucide-react';
+import { Plus, Search, Mail, Download, TrendingUp, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import { toast } from '@/hooks/use-toast';
 
 const mockSubscribers = [
   {
@@ -69,6 +70,20 @@ export default function Subscribers() {
     openRate: '42%'
   };
 
+  const handleNewCampaign = () => {
+    toast({ 
+      title: "Creating campaign", 
+      description: "Opening email campaign builder..." 
+    });
+  };
+
+  const handleExport = () => {
+    toast({ 
+      title: "Exporting subscribers", 
+      description: "Downloading subscriber list as CSV." 
+    });
+  };
+
   return (
     <div className="space-y-4 md:space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -78,8 +93,11 @@ export default function Subscribers() {
             Manage your email subscribers and campaigns
           </p>
         </div>
-        <Button className="bg-gradient-accent hover:opacity-90 w-full sm:w-auto">
-          <Mail className="w-4 h-4 mr-2" />
+        <Button 
+          className="bg-primary hover:bg-primary/90 w-full sm:w-auto"
+          onClick={handleNewCampaign}
+        >
+          <Send className="w-4 h-4 mr-2" />
           New Campaign
         </Button>
       </div>
@@ -149,7 +167,11 @@ export default function Subscribers() {
                 className="pl-10"
               />
             </div>
-            <Button variant="outline" className="w-full sm:w-auto">
+            <Button 
+              variant="outline" 
+              className="w-full sm:w-auto"
+              onClick={handleExport}
+            >
               <Download className="w-4 h-4 mr-2" />
               Export
             </Button>

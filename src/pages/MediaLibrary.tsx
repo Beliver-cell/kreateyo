@@ -18,6 +18,7 @@ import {
   Copy
 } from 'lucide-react';
 import { useState } from 'react';
+import { toast } from '@/hooks/use-toast';
 
 const mockFiles = [
   { id: 1, name: 'product-hero.jpg', type: 'image', size: '2.4 MB', tags: ['product', 'hero'], date: '2024-03-15' },
@@ -35,6 +36,37 @@ export default function MediaLibrary() {
   const filteredFiles = selectedType === 'all' 
     ? mockFiles 
     : mockFiles.filter(f => f.type === selectedType);
+
+  const handleUpload = () => {
+    toast({ 
+      title: "Upload Files", 
+      description: "Opening file upload dialog..." 
+    });
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.multiple = true;
+    input.onchange = () => {
+      toast({ title: "Files uploaded", description: "Your files have been added to the library." });
+    };
+    input.click();
+  };
+
+  const handleCopy = (file: any) => {
+    navigator.clipboard.writeText(file.name);
+    toast({ title: "URL copied", description: `${file.name} URL copied to clipboard.` });
+  };
+
+  const handleDownload = (file: any) => {
+    toast({ title: "Downloading", description: `Downloading ${file.name}...` });
+  };
+
+  const handleDelete = (file: any) => {
+    toast({ 
+      title: "File deleted", 
+      description: `${file.name} has been removed from the library.`,
+      variant: "destructive"
+    });
+  };
 
   const getFileIcon = (type: string) => {
     switch (type) {
@@ -62,7 +94,10 @@ export default function MediaLibrary() {
             Centralized storage for all your business assets
           </p>
         </div>
-        <Button className="bg-gradient-primary hover:opacity-90 w-full sm:w-auto">
+        <Button 
+          className="bg-primary hover:bg-primary/90 w-full sm:w-auto"
+          onClick={handleUpload}
+        >
           <Upload className="w-4 h-4 mr-2" />
           Upload Files
         </Button>
@@ -123,13 +158,28 @@ export default function MediaLibrary() {
                 <div className="aspect-video bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center relative overflow-hidden">
                   <Icon className="w-16 h-16 text-primary/60" />
                   <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                    <Button size="icon" variant="secondary" className="h-8 w-8">
+                    <Button 
+                      size="icon" 
+                      variant="secondary" 
+                      className="h-8 w-8"
+                      onClick={() => handleCopy(file)}
+                    >
                       <Copy className="w-4 h-4" />
                     </Button>
-                    <Button size="icon" variant="secondary" className="h-8 w-8">
+                    <Button 
+                      size="icon" 
+                      variant="secondary" 
+                      className="h-8 w-8"
+                      onClick={() => handleDownload(file)}
+                    >
                       <Download className="w-4 h-4" />
                     </Button>
-                    <Button size="icon" variant="destructive" className="h-8 w-8">
+                    <Button 
+                      size="icon" 
+                      variant="destructive" 
+                      className="h-8 w-8"
+                      onClick={() => handleDelete(file)}
+                    >
                       <Trash2 className="w-4 h-4" />
                     </Button>
                   </div>
@@ -192,13 +242,28 @@ export default function MediaLibrary() {
                         </td>
                         <td className="p-4">
                           <div className="flex gap-1">
-                            <Button size="icon" variant="ghost" className="h-8 w-8">
+                            <Button 
+                              size="icon" 
+                              variant="ghost" 
+                              className="h-8 w-8"
+                              onClick={() => handleCopy(file)}
+                            >
                               <Copy className="w-4 h-4" />
                             </Button>
-                            <Button size="icon" variant="ghost" className="h-8 w-8">
+                            <Button 
+                              size="icon" 
+                              variant="ghost" 
+                              className="h-8 w-8"
+                              onClick={() => handleDownload(file)}
+                            >
                               <Download className="w-4 h-4" />
                             </Button>
-                            <Button size="icon" variant="ghost" className="h-8 w-8 text-destructive hover:text-destructive">
+                            <Button 
+                              size="icon" 
+                              variant="ghost" 
+                              className="h-8 w-8 text-destructive hover:text-destructive"
+                              onClick={() => handleDelete(file)}
+                            >
                               <Trash2 className="w-4 h-4" />
                             </Button>
                           </div>

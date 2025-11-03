@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import { Plus, Search, Calendar, DollarSign } from 'lucide-react';
+import { Plus, Search, Calendar, DollarSign, Download, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import { ClientDialog } from '@/components/ClientDialog';
+import { toast } from '@/hooks/use-toast';
 
 const mockClients = [
   {
@@ -55,11 +57,22 @@ const mockClients = [
 
 export default function Clients() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedClient, setSelectedClient] = useState<any>(null);
 
   const filteredClients = mockClients.filter((client) =>
     client.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     client.email.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleExport = () => {
+    toast({ title: "Exporting clients...", description: "Downloading client data as CSV." });
+  };
+
+  const handleViewProfile = (client: any) => {
+    setSelectedClient(client);
+    setDialogOpen(true);
+  };
 
   return (
     <div className="space-y-4 md:space-y-6">
@@ -70,10 +83,22 @@ export default function Clients() {
             Manage your client relationships and bookings
           </p>
         </div>
-        <Button className="bg-gradient-primary hover:opacity-90 w-full sm:w-auto">
-          <Plus className="w-4 h-4 mr-2" />
-          Add Client
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={handleExport} className="hidden sm:flex">
+            <Download className="w-4 h-4 mr-2" />
+            Export
+          </Button>
+          <Button 
+            className="bg-primary hover:bg-primary/90 w-full sm:w-auto"
+            onClick={() => {
+              setSelectedClient(null);
+              setDialogOpen(true);
+            }}
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Add Client
+          </Button>
+        </div>
       </div>
 
       <Card>
@@ -88,7 +113,7 @@ export default function Clients() {
                 className="pl-10"
               />
             </div>
-            <Button variant="outline" className="w-full sm:w-auto">Export</Button>
+            
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -134,7 +159,12 @@ export default function Clients() {
                       <div className="pt-3 border-t border-border">
                         <div className="flex items-center justify-between text-sm">
                           <span className="text-muted-foreground">{client.totalBookings} total bookings</span>
-                          <Button variant="ghost" size="sm" className="h-8">
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className="h-8"
+                            onClick={() => handleViewProfile(client)}
+                          >
                             View Profile
                           </Button>
                         </div>
@@ -147,6 +177,12 @@ export default function Clients() {
           </div>
         </CardContent>
       </Card>
+
+      <ClientDialog 
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        client={selectedClient}
+      />
     </div>
   );
 }

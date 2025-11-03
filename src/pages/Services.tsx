@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ServiceDialog } from '@/components/ServiceDialog';
+import { toast } from '@/hooks/use-toast';
 
 const mockServices = [
   {
@@ -67,6 +68,20 @@ export default function Services() {
   const filteredServices = mockServices.filter((service) =>
     service.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleDuplicate = (service: any) => {
+    toast({ 
+      title: "Service duplicated", 
+      description: `${service.name} has been copied.` 
+    });
+  };
+
+  const handlePause = (service: any) => {
+    toast({ 
+      title: service.status === 'active' ? "Service paused" : "Service activated",
+      description: `${service.name} is now ${service.status === 'active' ? 'paused' : 'active'}.` 
+    });
+  };
 
   return (
     <div className="space-y-4 md:space-y-6">
@@ -135,12 +150,20 @@ export default function Services() {
                     >
                       Edit
                     </Button>
-                    <Button variant="outline" size="sm">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleDuplicate(service)}
+                    >
                       <Copy className="w-3 h-3 mr-1" />
                       Duplicate
                     </Button>
-                    <Button variant="outline" size="sm">
-                      <Pause className="w-3 h-3" />
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handlePause(service)}
+                    >
+                      {service.status === 'active' ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
                     </Button>
                   </div>
 
