@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Plus, Search, MoreVertical, Sun, Star, Gift, Tag, Gem } from 'lucide-react';
+import { Plus, Search, MoreVertical, Sun, Star, Gift, Tag, Gem, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { CollectionDialog } from '@/components/CollectionDialog';
 
 const mockCollections = [
   { 
@@ -50,6 +51,8 @@ const mockCollections = [
 
 export default function Collections() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedCollection, setSelectedCollection] = useState<any>(null);
 
   const filteredCollections = mockCollections.filter((collection) =>
     collection.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -64,7 +67,13 @@ export default function Collections() {
             Organize products into curated collections
           </p>
         </div>
-        <Button className="bg-gradient-primary hover:opacity-90 w-full sm:w-auto">
+        <Button 
+          className="bg-primary hover:bg-primary/90 w-full sm:w-auto"
+          onClick={() => {
+            setSelectedCollection(null);
+            setDialogOpen(true);
+          }}
+        >
           <Plus className="w-4 h-4 mr-2" />
           Create Collection
         </Button>
@@ -82,7 +91,10 @@ export default function Collections() {
                 className="pl-10"
               />
             </div>
-            <Button variant="outline" className="w-full sm:w-auto">Filters</Button>
+            <Button variant="outline" className="w-full sm:w-auto">
+              <Filter className="w-4 h-4 mr-2" />
+              Filters
+            </Button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -95,7 +107,14 @@ export default function Collections() {
                     <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
                       <CollectionIcon className="w-6 h-6 text-primary" />
                     </div>
-                    <Button variant="ghost" size="sm">
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => {
+                        setSelectedCollection(collection);
+                        setDialogOpen(true);
+                      }}
+                    >
                       <MoreVertical className="w-4 h-4" />
                     </Button>
                   </div>
@@ -123,6 +142,12 @@ export default function Collections() {
           </div>
         </CardContent>
       </Card>
+
+      <CollectionDialog 
+        open={dialogOpen} 
+        onOpenChange={setDialogOpen}
+        collection={selectedCollection}
+      />
     </div>
   );
 }

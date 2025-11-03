@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import { Plus, Search, MoreVertical, Headphones, Mouse, Keyboard, Usb, Laptop, Video } from 'lucide-react';
+import { Plus, Search, MoreVertical, Headphones, Mouse, Keyboard, Usb, Laptop, Video, Filter, Copy, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
+import { ProductDialog } from '@/components/ProductDialog';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Table,
   TableBody,
@@ -24,6 +26,9 @@ const mockProducts = [
 
 export default function Products() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
   const filteredProducts = mockProducts.filter((product) =>
     product.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -36,7 +41,13 @@ export default function Products() {
           <h1 className="text-3xl font-bold">Products</h1>
           <p className="text-muted-foreground">Manage your product inventory</p>
         </div>
-        <Button className="bg-gradient-primary hover:opacity-90">
+        <Button 
+          className="bg-primary hover:bg-primary/90"
+          onClick={() => {
+            setSelectedProduct(null);
+            setDialogOpen(true);
+          }}
+        >
           <Plus className="w-4 h-4 mr-2" />
           Add Product
         </Button>
@@ -55,14 +66,42 @@ export default function Products() {
               />
             </div>
             <Button variant="outline">
-              Filter
+              <Filter className="w-4 h-4 mr-2" />
+              Filters
             </Button>
           </div>
+
+          {/* Bulk Actions */}
+          {selectedIds.length > 0 && (
+            <div className="mb-4 p-3 bg-primary/5 border border-primary/20 rounded-lg flex items-center justify-between">
+              <span className="text-sm font-medium">
+                {selectedIds.length} product{selectedIds.length > 1 ? 's' : ''} selected
+              </span>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm">
+                  <Copy className="w-4 h-4 mr-2" />
+                  Duplicate
+                </Button>
+                <Button variant="outline" size="sm">
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Delete
+                </Button>
+              </div>
+            </div>
+          )}
 
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead className="w-12">
+                    <Checkbox 
+                      checked={selectedIds.length === filteredProducts.length}
+                      onCheckedChange={(checked) => {
+                        setSelectedIds(checked ? filteredProducts.map(p => p.id) : []);
+                      }}
+                    />
+                  </TableHead>
                   <TableHead>Product</TableHead>
                   <TableHead>Price</TableHead>
                   <TableHead>Stock</TableHead>
@@ -75,6 +114,18 @@ export default function Products() {
                   const ProductIcon = product.icon;
                   return (
                   <TableRow key={product.id}>
+                    <TableCell>
+                      <Checkbox
+                        checked={selectedIds.includes(product.id)}
+                        onCheckedChange={(checked) => {
+                          setSelectedIds(prev => 
+                            checked 
+                              ? [...prev, product.id]
+                              : prev.filter(id => id !== product.id)
+                          );
+                        }}
+                      />
+                    </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-3">
                         <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
@@ -102,7 +153,15 @@ export default function Products() {
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-8 w-8 p-0"
+                        onClick={() => {
+                          setSelectedProduct(product);
+                          setDialogOpen(true);
+                        }}
+                      >
                         <MoreVertical className="w-4 h-4" />
                       </Button>
                     </TableCell>
@@ -114,6 +173,12 @@ export default function Products() {
           </div>
         </CardContent>
       </Card>
+
+      <ProductDialog 
+        open={dialogOpen} 
+        onOpenChange={setDialogOpen}
+        product={selectedProduct}
+      />
     </div>
   );
 }

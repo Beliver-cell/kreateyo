@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Plus, Search, Clock, DollarSign, Users, Dumbbell, Heart, Apple, Sparkles, Zap } from 'lucide-react';
+import { Plus, Search, Clock, DollarSign, Users, Dumbbell, Heart, Apple, Sparkles, Zap, Copy, Pause, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { ServiceDialog } from '@/components/ServiceDialog';
 
 const mockServices = [
   {
@@ -60,6 +61,8 @@ const mockServices = [
 
 export default function Services() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedService, setSelectedService] = useState<any>(null);
 
   const filteredServices = mockServices.filter((service) =>
     service.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -74,7 +77,13 @@ export default function Services() {
             Manage your service offerings and packages
           </p>
         </div>
-        <Button className="bg-gradient-primary hover:opacity-90 w-full sm:w-auto">
+        <Button 
+          className="bg-primary hover:bg-primary/90 w-full sm:w-auto"
+          onClick={() => {
+            setSelectedService(null);
+            setDialogOpen(true);
+          }}
+        >
           <Plus className="w-4 h-4 mr-2" />
           Add Service
         </Button>
@@ -115,6 +124,26 @@ export default function Services() {
                   <h3 className="font-semibold mb-1">{service.name}</h3>
                   <p className="text-sm text-muted-foreground mb-4">{service.description}</p>
                   
+                  <div className="flex gap-2 mb-4">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => {
+                        setSelectedService(service);
+                        setDialogOpen(true);
+                      }}
+                    >
+                      Edit
+                    </Button>
+                    <Button variant="outline" size="sm">
+                      <Copy className="w-3 h-3 mr-1" />
+                      Duplicate
+                    </Button>
+                    <Button variant="outline" size="sm">
+                      <Pause className="w-3 h-3" />
+                    </Button>
+                  </div>
+
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-sm">
                       <div className="flex items-center gap-2 text-muted-foreground">
@@ -138,6 +167,12 @@ export default function Services() {
           </div>
         </CardContent>
       </Card>
+
+      <ServiceDialog 
+        open={dialogOpen} 
+        onOpenChange={setDialogOpen}
+        service={selectedService}
+      />
     </div>
   );
 }

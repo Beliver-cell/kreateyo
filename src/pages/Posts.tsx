@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Plus, Search, Eye, MessageCircle, Calendar as CalendarIcon } from 'lucide-react';
+import { Plus, Search, Eye, MessageCircle, Calendar as CalendarIcon, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { PostEditor } from '@/components/PostEditor';
 
 const mockPosts = [
   {
@@ -50,6 +51,8 @@ const mockPosts = [
 
 export default function Posts() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [editorOpen, setEditorOpen] = useState(false);
+  const [selectedPost, setSelectedPost] = useState<any>(null);
 
   const filteredPosts = mockPosts.filter((post) =>
     post.title.toLowerCase().includes(searchQuery.toLowerCase())
@@ -64,7 +67,13 @@ export default function Posts() {
             Create and manage your blog content
           </p>
         </div>
-        <Button className="bg-gradient-primary hover:opacity-90 w-full sm:w-auto">
+        <Button 
+          className="bg-primary hover:bg-primary/90 w-full sm:w-auto"
+          onClick={() => {
+            setSelectedPost(null);
+            setEditorOpen(true);
+          }}
+        >
           <Plus className="w-4 h-4 mr-2" />
           Write Post
         </Button>
@@ -82,7 +91,10 @@ export default function Posts() {
                 className="pl-10"
               />
             </div>
-            <Button variant="outline" className="w-full sm:w-auto">Filters</Button>
+            <Button variant="outline" className="w-full sm:w-auto">
+              <Filter className="w-4 h-4 mr-2" />
+              Filters
+            </Button>
           </div>
 
           <div className="space-y-4">
@@ -115,7 +127,15 @@ export default function Posts() {
                       </div>
                     </div>
                     <div className="flex sm:flex-row flex-col gap-2 lg:flex-col">
-                      <Button variant="outline" size="sm" className="w-full sm:w-auto">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="w-full sm:w-auto"
+                        onClick={() => {
+                          setSelectedPost(post);
+                          setEditorOpen(true);
+                        }}
+                      >
                         Edit
                       </Button>
                       <Button variant="ghost" size="sm" className="w-full sm:w-auto">
@@ -129,6 +149,12 @@ export default function Posts() {
           </div>
         </CardContent>
       </Card>
+
+      <PostEditor 
+        open={editorOpen} 
+        onOpenChange={setEditorOpen}
+        post={selectedPost}
+      />
     </div>
   );
 }
