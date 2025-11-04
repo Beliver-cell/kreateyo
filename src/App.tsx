@@ -25,6 +25,12 @@ import Payments from "./pages/Payments";
 import MediaLibrary from "./pages/MediaLibrary";
 import TemplatePreview from "./pages/TemplatePreview";
 import NotFound from "./pages/NotFound";
+import Team from "./pages/Team";
+import Security from "./pages/Security";
+import Developer from "./pages/Developer";
+import Accessibility from "./pages/Accessibility";
+import Support from "./pages/Support";
+import Internationalization from "./pages/Internationalization";
 
 const queryClient = new QueryClient();
 
@@ -170,6 +176,54 @@ const App = () => (
               element={
                 <DashboardLayout>
                   <TemplatePreview />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/team"
+              element={
+                <DashboardLayout>
+                  <Team />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/security"
+              element={
+                <DashboardLayout>
+                  <Security />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/developer"
+              element={
+                <DashboardLayout>
+                  <Developer />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/accessibility"
+              element={
+                <DashboardLayout>
+                  <Accessibility />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/support"
+              element={
+                <DashboardLayout>
+                  <Support />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/internationalization"
+              element={
+                <DashboardLayout>
+                  <Internationalization />
                 </DashboardLayout>
               }
             />

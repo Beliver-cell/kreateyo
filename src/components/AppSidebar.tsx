@@ -17,6 +17,12 @@ import {
   Image,
   Menu,
   X,
+  Shield,
+  Code,
+  Eye,
+  HelpCircle,
+  Globe,
+  UsersRound,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -71,14 +77,23 @@ export function AppSidebar() {
       ];
     }
 
+    const advancedItems = [
+      { title: 'Team', url: '/team', icon: UsersRound },
+      { title: 'Security', url: '/security', icon: Shield },
+      { title: 'Developer', url: '/developer', icon: Code },
+      { title: 'Accessibility', url: '/accessibility', icon: Eye },
+      { title: 'International', url: '/internationalization', icon: Globe },
+    ];
+
     const endItems = [
       { title: 'Tools', url: '/tools', icon: Wrench },
       { title: 'Payment Gateway', url: '/payments', icon: CreditCard },
       { title: 'Media Library', url: '/media', icon: Image },
+      { title: 'Support', url: '/support', icon: HelpCircle },
       { title: 'Settings', url: '/settings', icon: Settings },
     ];
 
-    return [...baseItems, ...specificItems, ...endItems];
+    return [...baseItems, ...specificItems, ...advancedItems, ...endItems];
   };
 
   const menuItems = getMenuItems();

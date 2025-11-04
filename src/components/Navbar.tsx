@@ -14,6 +14,7 @@ import {
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import { NotificationCenter } from '@/components/NotificationCenter';
 
 export function Navbar() {
   const navigate = useNavigate();
@@ -44,51 +45,7 @@ export function Navbar() {
         <ThemeToggle />
         
         {/* Notifications */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="relative hover:scale-110 transition-all duration-300">
-              <Bell className="w-5 h-5" />
-              <Badge 
-                variant="destructive" 
-                className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs shadow-md"
-              >
-                3
-              </Badge>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-80 bg-popover/95 backdrop-blur-xl z-50 border border-border shadow-xl">
-            <DropdownMenuLabel>Notifications</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem 
-              className="flex flex-col items-start gap-1 p-3 cursor-pointer hover:bg-accent/80 transition-all duration-300"
-              onClick={() => navigate('/orders')}
-            >
-              <p className="text-sm font-medium">New order received</p>
-              <p className="text-xs text-muted-foreground">Order #1842 - $234.99 • 5 minutes ago</p>
-            </DropdownMenuItem>
-            <DropdownMenuItem 
-              className="flex flex-col items-start gap-1 p-3 cursor-pointer hover:bg-accent/80 transition-all duration-300"
-              onClick={() => navigate('/products')}
-            >
-              <p className="text-sm font-medium">Low stock alert</p>
-              <p className="text-xs text-muted-foreground">Running Shoes - Only 3 left • 1 hour ago</p>
-            </DropdownMenuItem>
-            <DropdownMenuItem 
-              className="flex flex-col items-start gap-1 p-3 cursor-pointer hover:bg-accent/80 transition-all duration-300"
-              onClick={() => navigate('/customers')}
-            >
-              <p className="text-sm font-medium">New customer signup</p>
-              <p className="text-xs text-muted-foreground">3 new customers joined • 2 hours ago</p>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem 
-              className="text-center justify-center cursor-pointer text-primary hover:bg-accent/80 transition-all duration-300"
-              onClick={() => toast({ title: "View all notifications", description: "Coming soon!" })}
-            >
-              View all notifications
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <NotificationCenter />
 
         {/* User Profile */}
         <DropdownMenu>
