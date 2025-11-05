@@ -34,6 +34,15 @@ import Internationalization from "./pages/Internationalization";
 import ChatbotManager from "./pages/ChatbotManager";
 import HumanSupportLinks from "./pages/HumanSupportLinks";
 import SupportAnalytics from "./pages/SupportAnalytics";
+import EmailCampaigns from "./pages/EmailCampaigns";
+import SocialMediaManager from "./pages/SocialMediaManager";
+import SEOManager from "./pages/SEOManager";
+import TaxesManager from "./pages/TaxesManager";
+import Analytics from "./pages/Analytics";
+import InventoryManager from "./pages/InventoryManager";
+import LoyaltyProgram from "./pages/LoyaltyProgram";
+import AppointmentManager from "./pages/AppointmentManager";
+import AffiliateProgram from "./pages/AffiliateProgram";
 
 const queryClient = new QueryClient();
 
@@ -254,6 +263,15 @@ const App = () => (
                 </DashboardLayout>
               }
             />
+            <Route path="/email-campaigns" element={<DashboardLayout><EmailCampaigns /></DashboardLayout>} />
+            <Route path="/social-media" element={<DashboardLayout><SocialMediaManager /></DashboardLayout>} />
+            <Route path="/seo-manager" element={<DashboardLayout><SEOManager /></DashboardLayout>} />
+            <Route path="/taxes" element={<DashboardLayout><TaxesManager /></DashboardLayout>} />
+            <Route path="/analytics" element={<DashboardLayout><Analytics /></DashboardLayout>} />
+            <Route path="/inventory" element={<DashboardLayout><InventoryManager /></DashboardLayout>} />
+            <Route path="/loyalty" element={<DashboardLayout><LoyaltyProgram /></DashboardLayout>} />
+            <Route path="/appointments" element={<DashboardLayout><AppointmentManager /></DashboardLayout>} />
+            <Route path="/affiliates" element={<DashboardLayout><AffiliateProgram /></DashboardLayout>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <OnboardingModal />

@@ -58,11 +58,25 @@ export function AppSidebar() {
       { title: 'Build My Site', url: '/build', icon: Palette },
     ];
 
-    // Customer Support Section
     const supportItems = [
-      { title: 'AI Chatbot Manager', url: '/chatbot-manager', icon: MessageSquare },
-      { title: 'Human Support Links', url: '/human-support', icon: Headphones },
+      { title: 'AI Chatbot', url: '/chatbot-manager', icon: MessageSquare },
+      { title: 'Human Support', url: '/human-support', icon: Headphones },
       { title: 'Support Analytics', url: '/support-analytics', icon: BarChart3 },
+    ];
+
+    const businessTools = [
+      { title: 'Email Campaigns', url: '/email-campaigns', icon: Mail },
+      { title: 'Social Media', url: '/social-media', icon: UsersRound },
+      { title: 'SEO Manager', url: '/seo-manager', icon: Globe },
+      { title: 'Taxes Manager', url: '/taxes', icon: FileEdit },
+    ];
+
+    const advancedTools = [
+      { title: 'Analytics', url: '/analytics', icon: BarChart3 },
+      { title: 'Inventory', url: '/inventory', icon: Package },
+      { title: 'Loyalty Program', url: '/loyalty', icon: Users },
+      { title: 'Appointments', url: '/appointments', icon: Calendar },
+      { title: 'Affiliates', url: '/affiliates', icon: UsersRound },
     ];
 
     let specificItems = [];
@@ -97,14 +111,11 @@ export function AppSidebar() {
     ] : [];
 
     const endItems = [
-      { title: 'Tools', url: '/tools', icon: Wrench },
-      { title: 'Payment Gateway', url: '/payments', icon: CreditCard },
-      { title: 'Media Library', url: '/media', icon: Image },
       { title: 'Platform Support', url: '/support', icon: HelpCircle },
       { title: 'Settings', url: '/settings', icon: Settings },
     ];
 
-    return [...baseItems, ...supportItems, ...specificItems, ...advancedItems, ...endItems];
+    return [...baseItems, ...supportItems, ...businessTools, ...specificItems, ...advancedTools, ...advancedItems, ...endItems];
   };
 
   const menuItems = getMenuItems();
