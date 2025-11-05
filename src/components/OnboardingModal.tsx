@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { ShoppingBag, Calendar, FileText, Layout, ArrowRight, ArrowLeft, Check } from 'lucide-react';
+import { ShoppingBag, Calendar, FileText, Layout, ArrowRight, ArrowLeft, Check, User, Users } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { BusinessType } from '@/types/business';
+import { BusinessType, AccountType } from '@/types/business';
 import { useBusinessContext } from '@/contexts/BusinessContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -96,9 +96,10 @@ const templates = {
 };
 
 export function OnboardingModal() {
-  const { businessProfile, setBusinessType, completeOnboarding } = useBusinessContext();
+  const { businessProfile, setBusinessType, setAccountType, completeOnboarding } = useBusinessContext();
   const [step, setStep] = useState(1);
   const [selectedType, setSelectedType] = useState<BusinessType>(null);
+  const [selectedAccountType, setSelectedAccountType] = useState<AccountType>(null);
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
   const navigate = useNavigate();
 
@@ -107,23 +108,30 @@ export function OnboardingModal() {
   const handleContinue = () => {
     if (step === 1 && selectedType) {
       setStep(2);
-    } else if (step === 2 && selectedTemplate) {
+    } else if (step === 2 && selectedAccountType) {
+      setStep(3);
+    } else if (step === 3 && selectedTemplate) {
       setBusinessType(selectedType);
+      setAccountType(selectedAccountType);
       completeOnboarding();
       navigate('/build');
     }
   };
 
   const handleBack = () => {
-    if (step === 2) {
-      setStep(1);
+    if (step === 3) {
+      setStep(2);
       setSelectedTemplate(null);
+    } else if (step === 2) {
+      setStep(1);
+      setSelectedAccountType(null);
     }
   };
 
   const handleSkipTemplate = () => {
-    if (selectedType) {
+    if (selectedType && selectedAccountType) {
       setBusinessType(selectedType);
+      setAccountType(selectedAccountType);
       completeOnboarding();
       navigate('/dashboard');
     }
@@ -143,15 +151,23 @@ export function OnboardingModal() {
             <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold ${
               step >= 2 ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
             }`}>
-              2
+              {step > 2 ? <Check className="w-4 h-4" /> : '2'}
+            </div>
+            <div className={`w-12 h-0.5 ${step >= 3 ? 'bg-primary' : 'bg-muted'}`} />
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold ${
+              step >= 3 ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
+            }`}>
+              3
             </div>
           </div>
           <DialogTitle className="text-3xl font-bold text-center">
-            {step === 1 ? 'What will you build?' : 'Choose your starting template'}
+            {step === 1 ? 'What will you build?' : step === 2 ? 'Choose your workspace style' : 'Choose your starting template'}
           </DialogTitle>
           <p className="text-muted-foreground text-center mt-2">
             {step === 1 
               ? 'Choose the business type that fits your needs' 
+              : step === 2
+              ? 'Select how you want to work on your project'
               : 'Pick a template to get started quickly (you can customize it later)'}
           </p>
         </DialogHeader>
@@ -195,7 +211,7 @@ export function OnboardingModal() {
                   disabled={!selectedType}
                   className="px-8 bg-gradient-primary hover:opacity-90"
                 >
-                  Continue to Templates
+                  Continue
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </div>
@@ -203,6 +219,108 @@ export function OnboardingModal() {
           )}
 
           {step === 2 && (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 max-w-3xl mx-auto">
+                <button
+                  onClick={() => setSelectedAccountType('solo')}
+                  className={`
+                    p-8 rounded-xl border-2 text-left transition-all
+                    hover:shadow-lg hover:scale-[1.02]
+                    ${
+                      selectedAccountType === 'solo'
+                        ? 'border-primary bg-primary/5 shadow-md'
+                        : 'border-border bg-card hover:border-primary/50'
+                    }
+                  `}
+                >
+                  <div
+                    className={`
+                    w-16 h-16 rounded-lg flex items-center justify-center mb-4
+                    ${selectedAccountType === 'solo' ? 'bg-gradient-primary' : 'bg-muted'}
+                  `}
+                  >
+                    <User className={`w-8 h-8 ${selectedAccountType === 'solo' ? 'text-white' : 'text-foreground'}`} />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">Solo Workspace</h3>
+                  <p className="text-sm text-muted-foreground mb-4">Perfect for individual entrepreneurs</p>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex items-start gap-2">
+                      <Check className="w-4 h-4 text-success mt-0.5 flex-shrink-0" />
+                      <span>Clean, focused dashboard</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Check className="w-4 h-4 text-success mt-0.5 flex-shrink-0" />
+                      <span>All essential business features</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Check className="w-4 h-4 text-success mt-0.5 flex-shrink-0" />
+                      <span>Easy to upgrade to team later</span>
+                    </li>
+                  </ul>
+                </button>
+
+                <button
+                  onClick={() => setSelectedAccountType('team')}
+                  className={`
+                    p-8 rounded-xl border-2 text-left transition-all
+                    hover:shadow-lg hover:scale-[1.02]
+                    ${
+                      selectedAccountType === 'team'
+                        ? 'border-primary bg-primary/5 shadow-md'
+                        : 'border-border bg-card hover:border-primary/50'
+                    }
+                  `}
+                >
+                  <div
+                    className={`
+                    w-16 h-16 rounded-lg flex items-center justify-center mb-4
+                    ${selectedAccountType === 'team' ? 'bg-gradient-primary' : 'bg-muted'}
+                  `}
+                  >
+                    <Users className={`w-8 h-8 ${selectedAccountType === 'team' ? 'text-white' : 'text-foreground'}`} />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">Team Workspace</h3>
+                  <p className="text-sm text-muted-foreground mb-4">Built for teams and collaboration</p>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex items-start gap-2">
+                      <Check className="w-4 h-4 text-success mt-0.5 flex-shrink-0" />
+                      <span>Enterprise dashboard with team features</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Check className="w-4 h-4 text-success mt-0.5 flex-shrink-0" />
+                      <span>Member management & permissions</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Check className="w-4 h-4 text-success mt-0.5 flex-shrink-0" />
+                      <span>Advanced analytics & tools</span>
+                    </li>
+                  </ul>
+                </button>
+              </div>
+
+              <div className="flex items-center justify-between gap-4">
+                <Button
+                  variant="outline"
+                  onClick={handleBack}
+                  className="px-6"
+                >
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Back
+                </Button>
+                <Button
+                  size="lg"
+                  onClick={handleContinue}
+                  disabled={!selectedAccountType}
+                  className="px-8 bg-gradient-primary hover:opacity-90"
+                >
+                  Continue to Templates
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </div>
+            </>
+          )}
+
+          {step === 3 && (
             <>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 {currentTemplates.map((template) => (

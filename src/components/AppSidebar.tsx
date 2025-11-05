@@ -77,13 +77,14 @@ export function AppSidebar() {
       ];
     }
 
-    const advancedItems = [
+    // Team features only visible for team accounts
+    const advancedItems = businessProfile.accountType === 'team' ? [
       { title: 'Team', url: '/team', icon: UsersRound },
       { title: 'Security', url: '/security', icon: Shield },
       { title: 'Developer', url: '/developer', icon: Code },
       { title: 'Accessibility', url: '/accessibility', icon: Eye },
       { title: 'International', url: '/internationalization', icon: Globe },
-    ];
+    ] : [];
 
     const endItems = [
       { title: 'Tools', url: '/tools', icon: Wrench },

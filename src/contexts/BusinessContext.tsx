@@ -1,9 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { BusinessType, BusinessProfile } from '@/types/business';
+import { BusinessType, AccountType, BusinessProfile } from '@/types/business';
 
 interface BusinessContextType {
   businessProfile: BusinessProfile;
   setBusinessType: (type: BusinessType) => void;
+  setAccountType: (type: AccountType) => void;
   completeOnboarding: () => void;
 }
 
@@ -12,7 +13,7 @@ const BusinessContext = createContext<BusinessContextType | undefined>(undefined
 export function BusinessProvider({ children }: { children: React.ReactNode }) {
   const [businessProfile, setBusinessProfile] = useState<BusinessProfile>(() => {
     const stored = localStorage.getItem('nexus-business-profile');
-    return stored ? JSON.parse(stored) : { type: null, onboarded: false };
+    return stored ? JSON.parse(stored) : { type: null, accountType: null, onboarded: false };
   });
 
   useEffect(() => {
@@ -23,12 +24,16 @@ export function BusinessProvider({ children }: { children: React.ReactNode }) {
     setBusinessProfile(prev => ({ ...prev, type }));
   };
 
+  const setAccountType = (accountType: AccountType) => {
+    setBusinessProfile(prev => ({ ...prev, accountType }));
+  };
+
   const completeOnboarding = () => {
     setBusinessProfile(prev => ({ ...prev, onboarded: true }));
   };
 
   return (
-    <BusinessContext.Provider value={{ businessProfile, setBusinessType, completeOnboarding }}>
+    <BusinessContext.Provider value={{ businessProfile, setBusinessType, setAccountType, completeOnboarding }}>
       {children}
     </BusinessContext.Provider>
   );
