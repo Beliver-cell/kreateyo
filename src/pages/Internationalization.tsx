@@ -209,8 +209,82 @@ export default function Internationalization() {
         </CardContent>
       </Card>
 
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-gradient-accent flex items-center justify-center">
+              <DollarSign className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <CardTitle>Tax Configuration</CardTitle>
+              <CardDescription>Manage tax rates and collection rules</CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label>Business Location</Label>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <Select>
+                <SelectTrigger>
+                  <SelectValue placeholder="Country" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="us">United States</SelectItem>
+                  <SelectItem value="uk">United Kingdom</SelectItem>
+                  <SelectItem value="ca">Canada</SelectItem>
+                  <SelectItem value="au">Australia</SelectItem>
+                  <SelectItem value="de">Germany</SelectItem>
+                </SelectContent>
+              </Select>
+              <Input placeholder="State/Region" />
+              <Input placeholder="City" />
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <Label>Tax Rates</Label>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div className="p-4 border rounded-lg">
+                <p className="text-sm text-muted-foreground">Sales Tax</p>
+                <p className="text-2xl font-bold">8.5%</p>
+                <p className="text-xs text-muted-foreground mt-1">Auto-calculated</p>
+              </div>
+              <div className="p-4 border rounded-lg">
+                <p className="text-sm text-muted-foreground">VAT Rate</p>
+                <p className="text-2xl font-bold">0%</p>
+                <p className="text-xs text-muted-foreground mt-1">Auto-detected</p>
+              </div>
+              <div className="p-4 border rounded-lg">
+                <p className="text-sm text-muted-foreground">GST Rate</p>
+                <p className="text-2xl font-bold">0%</p>
+                <p className="text-xs text-muted-foreground mt-1">Auto-detected</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <Label>Tax Rules</Label>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between p-3 border rounded-lg">
+                <span className="text-sm">Tax included in prices</span>
+                <Switch defaultChecked />
+              </div>
+              <div className="flex items-center justify-between p-3 border rounded-lg">
+                <span className="text-sm">Charge tax on shipping</span>
+                <Switch defaultChecked />
+              </div>
+              <div className="flex items-center justify-between p-3 border rounded-lg">
+                <span className="text-sm">Digital products taxable</span>
+                <Switch defaultChecked />
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       <Button onClick={handleSaveSettings} size="lg">
-        Save Internationalization Settings
+        Save International Settings
       </Button>
     </div>
   );

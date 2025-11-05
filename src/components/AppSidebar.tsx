@@ -68,16 +68,22 @@ export function AppSidebar() {
       { title: 'Email Campaigns', url: '/email-campaigns', icon: Mail },
       { title: 'Social Media', url: '/social-media', icon: UsersRound },
       { title: 'SEO Manager', url: '/seo-manager', icon: Globe },
-      { title: 'Taxes Manager', url: '/taxes', icon: FileEdit },
     ];
 
-    const advancedTools = [
+    // Common tools for all business types
+    const commonTools = [
       { title: 'Analytics', url: '/analytics', icon: BarChart3 },
-      { title: 'Inventory', url: '/inventory', icon: Package },
-      { title: 'Loyalty Program', url: '/loyalty', icon: Users },
-      { title: 'Appointments', url: '/appointments', icon: Calendar },
+      { title: 'Discounts', url: '/discounts', icon: Users },
       { title: 'Affiliates', url: '/affiliates', icon: UsersRound },
     ];
+
+    // Business-specific tools
+    const businessSpecificTools = [];
+    if (businessProfile.type === 'ecommerce') {
+      businessSpecificTools.push({ title: 'Inventory', url: '/inventory', icon: Package });
+    } else if (businessProfile.type === 'services') {
+      businessSpecificTools.push({ title: 'Appointments', url: '/appointments', icon: Calendar });
+    }
 
     let specificItems = [];
     if (businessProfile.type === 'ecommerce') {
@@ -104,7 +110,6 @@ export function AppSidebar() {
     // Team features only visible for team accounts
     const advancedItems = businessProfile.accountType === 'team' ? [
       { title: 'Team', url: '/team', icon: UsersRound },
-      { title: 'Security', url: '/security', icon: Shield },
       { title: 'Developer', url: '/developer', icon: Code },
       { title: 'Accessibility', url: '/accessibility', icon: Eye },
       { title: 'International', url: '/internationalization', icon: Globe },
@@ -115,7 +120,7 @@ export function AppSidebar() {
       { title: 'Settings', url: '/settings', icon: Settings },
     ];
 
-    return [...baseItems, ...supportItems, ...businessTools, ...specificItems, ...advancedTools, ...advancedItems, ...endItems];
+    return [...baseItems, ...supportItems, ...businessTools, ...specificItems, ...commonTools, ...businessSpecificTools, ...advancedItems, ...endItems];
   };
 
   const menuItems = getMenuItems();

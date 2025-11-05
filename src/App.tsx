@@ -26,7 +26,6 @@ import MediaLibrary from "./pages/MediaLibrary";
 import TemplatePreview from "./pages/TemplatePreview";
 import NotFound from "./pages/NotFound";
 import Team from "./pages/Team";
-import Security from "./pages/Security";
 import Developer from "./pages/Developer";
 import Accessibility from "./pages/Accessibility";
 import Support from "./pages/Support";
@@ -37,10 +36,9 @@ import SupportAnalytics from "./pages/SupportAnalytics";
 import EmailCampaigns from "./pages/EmailCampaigns";
 import SocialMediaManager from "./pages/SocialMediaManager";
 import SEOManager from "./pages/SEOManager";
-import TaxesManager from "./pages/TaxesManager";
 import Analytics from "./pages/Analytics";
 import InventoryManager from "./pages/InventoryManager";
-import LoyaltyProgram from "./pages/LoyaltyProgram";
+import Discounts from "./pages/Discounts";
 import AppointmentManager from "./pages/AppointmentManager";
 import AffiliateProgram from "./pages/AffiliateProgram";
 
@@ -200,14 +198,6 @@ const App = () => (
               }
             />
             <Route
-              path="/security"
-              element={
-                <DashboardLayout>
-                  <Security />
-                </DashboardLayout>
-              }
-            />
-            <Route
               path="/developer"
               element={
                 <DashboardLayout>
@@ -266,10 +256,9 @@ const App = () => (
             <Route path="/email-campaigns" element={<DashboardLayout><EmailCampaigns /></DashboardLayout>} />
             <Route path="/social-media" element={<DashboardLayout><SocialMediaManager /></DashboardLayout>} />
             <Route path="/seo-manager" element={<DashboardLayout><SEOManager /></DashboardLayout>} />
-            <Route path="/taxes" element={<DashboardLayout><TaxesManager /></DashboardLayout>} />
             <Route path="/analytics" element={<DashboardLayout><Analytics /></DashboardLayout>} />
             <Route path="/inventory" element={<DashboardLayout><InventoryManager /></DashboardLayout>} />
-            <Route path="/loyalty" element={<DashboardLayout><LoyaltyProgram /></DashboardLayout>} />
+            <Route path="/discounts" element={<DashboardLayout><Discounts /></DashboardLayout>} />
             <Route path="/appointments" element={<DashboardLayout><AppointmentManager /></DashboardLayout>} />
             <Route path="/affiliates" element={<DashboardLayout><AffiliateProgram /></DashboardLayout>} />
             <Route path="*" element={<NotFound />} />
