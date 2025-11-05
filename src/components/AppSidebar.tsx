@@ -23,6 +23,9 @@ import {
   HelpCircle,
   Globe,
   UsersRound,
+  MessageSquare,
+  Headphones,
+  BarChart3,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -53,6 +56,13 @@ export function AppSidebar() {
     const baseItems = [
       { title: 'Dashboard', url: '/dashboard', icon: LayoutDashboard },
       { title: 'Build My Site', url: '/build', icon: Palette },
+    ];
+
+    // Customer Support Section
+    const supportItems = [
+      { title: 'AI Chatbot Manager', url: '/chatbot-manager', icon: MessageSquare },
+      { title: 'Human Support Links', url: '/human-support', icon: Headphones },
+      { title: 'Support Analytics', url: '/support-analytics', icon: BarChart3 },
     ];
 
     let specificItems = [];
@@ -90,11 +100,11 @@ export function AppSidebar() {
       { title: 'Tools', url: '/tools', icon: Wrench },
       { title: 'Payment Gateway', url: '/payments', icon: CreditCard },
       { title: 'Media Library', url: '/media', icon: Image },
-      { title: 'Support', url: '/support', icon: HelpCircle },
+      { title: 'Platform Support', url: '/support', icon: HelpCircle },
       { title: 'Settings', url: '/settings', icon: Settings },
     ];
 
-    return [...baseItems, ...specificItems, ...advancedItems, ...endItems];
+    return [...baseItems, ...supportItems, ...specificItems, ...advancedItems, ...endItems];
   };
 
   const menuItems = getMenuItems();

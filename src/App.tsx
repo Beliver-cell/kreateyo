@@ -31,6 +31,9 @@ import Developer from "./pages/Developer";
 import Accessibility from "./pages/Accessibility";
 import Support from "./pages/Support";
 import Internationalization from "./pages/Internationalization";
+import ChatbotManager from "./pages/ChatbotManager";
+import HumanSupportLinks from "./pages/HumanSupportLinks";
+import SupportAnalytics from "./pages/SupportAnalytics";
 
 const queryClient = new QueryClient();
 
@@ -216,6 +219,30 @@ const App = () => (
               element={
                 <DashboardLayout>
                   <Support />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/chatbot-manager"
+              element={
+                <DashboardLayout>
+                  <ChatbotManager />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/human-support"
+              element={
+                <DashboardLayout>
+                  <HumanSupportLinks />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/support-analytics"
+              element={
+                <DashboardLayout>
+                  <SupportAnalytics />
                 </DashboardLayout>
               }
             />
