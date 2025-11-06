@@ -65,6 +65,7 @@ export function AppSidebar() {
 
     const businessTools = [
       { title: 'Email Campaigns', url: '/email-campaigns', icon: Mail },
+      { title: 'Tools', url: '/tools', icon: Wrench },
     ];
 
     // Common tools for all business types
