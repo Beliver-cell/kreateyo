@@ -31,11 +31,7 @@ import Accessibility from "./pages/Accessibility";
 import Support from "./pages/Support";
 import Internationalization from "./pages/Internationalization";
 import ChatbotManager from "./pages/ChatbotManager";
-import HumanSupportLinks from "./pages/HumanSupportLinks";
-import SupportAnalytics from "./pages/SupportAnalytics";
 import EmailCampaigns from "./pages/EmailCampaigns";
-import SocialMediaManager from "./pages/SocialMediaManager";
-import SEOManager from "./pages/SEOManager";
 import Analytics from "./pages/Analytics";
 import InventoryManager from "./pages/InventoryManager";
 import Discounts from "./pages/Discounts";
@@ -230,22 +226,6 @@ const App = () => (
               }
             />
             <Route
-              path="/human-support"
-              element={
-                <DashboardLayout>
-                  <HumanSupportLinks />
-                </DashboardLayout>
-              }
-            />
-            <Route
-              path="/support-analytics"
-              element={
-                <DashboardLayout>
-                  <SupportAnalytics />
-                </DashboardLayout>
-              }
-            />
-            <Route
               path="/internationalization"
               element={
                 <DashboardLayout>
@@ -254,8 +234,6 @@ const App = () => (
               }
             />
             <Route path="/email-campaigns" element={<DashboardLayout><EmailCampaigns /></DashboardLayout>} />
-            <Route path="/social-media" element={<DashboardLayout><SocialMediaManager /></DashboardLayout>} />
-            <Route path="/seo-manager" element={<DashboardLayout><SEOManager /></DashboardLayout>} />
             <Route path="/analytics" element={<DashboardLayout><Analytics /></DashboardLayout>} />
             <Route path="/inventory" element={<DashboardLayout><InventoryManager /></DashboardLayout>} />
             <Route path="/discounts" element={<DashboardLayout><Discounts /></DashboardLayout>} />

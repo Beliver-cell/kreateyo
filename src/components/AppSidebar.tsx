@@ -60,14 +60,10 @@ export function AppSidebar() {
 
     const supportItems = [
       { title: 'AI Chatbot', url: '/chatbot-manager', icon: MessageSquare },
-      { title: 'Human Support', url: '/human-support', icon: Headphones },
-      { title: 'Support Analytics', url: '/support-analytics', icon: BarChart3 },
     ];
 
     const businessTools = [
       { title: 'Email Campaigns', url: '/email-campaigns', icon: Mail },
-      { title: 'Social Media', url: '/social-media', icon: UsersRound },
-      { title: 'SEO Manager', url: '/seo-manager', icon: Globe },
     ];
 
     // Common tools for all business types
