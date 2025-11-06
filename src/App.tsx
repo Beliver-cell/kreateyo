@@ -37,6 +37,12 @@ import InventoryManager from "./pages/InventoryManager";
 import Discounts from "./pages/Discounts";
 import AppointmentManager from "./pages/AppointmentManager";
 import AffiliateProgram from "./pages/AffiliateProgram";
+import SignUp from "./pages/SignUp";
+import Login from "./pages/Login";
+import VerifyEmail from "./pages/VerifyEmail";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import AdsSponsors from "./pages/AdsSponsors";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +55,11 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/verify" element={<VerifyEmail />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route
               path="/dashboard"
               element={
@@ -239,6 +250,7 @@ const App = () => (
             <Route path="/discounts" element={<DashboardLayout><Discounts /></DashboardLayout>} />
             <Route path="/appointments" element={<DashboardLayout><AppointmentManager /></DashboardLayout>} />
             <Route path="/affiliates" element={<DashboardLayout><AffiliateProgram /></DashboardLayout>} />
+            <Route path="/ads-sponsors" element={<DashboardLayout><AdsSponsors /></DashboardLayout>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <OnboardingModal />

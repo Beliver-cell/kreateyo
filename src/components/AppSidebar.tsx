@@ -26,6 +26,7 @@ import {
   MessageSquare,
   Headphones,
   BarChart3,
+  DollarSign,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -100,6 +101,7 @@ export function AppSidebar() {
         { title: 'Posts', url: '/posts', icon: FileEdit },
         { title: 'Pages', url: '/pages', icon: FolderKanban },
         { title: 'Subscribers', url: '/subscribers', icon: Mail },
+        { title: 'Ads & Sponsors', url: '/ads-sponsors', icon: DollarSign },
       ];
     }
 
