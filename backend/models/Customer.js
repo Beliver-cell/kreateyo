@@ -12,6 +12,10 @@ const customerSchema = new mongoose.Schema({
     lowercase: true,
     trim: true
   },
+  password: {
+    type: String,
+    select: false
+  },
   firstName: {
     type: String,
     trim: true
@@ -53,6 +57,22 @@ const customerSchema = new mongoose.Schema({
     type: String,
     enum: ['active', 'inactive'],
     default: 'active'
+  },
+  // Customer portal access
+  hasPortalAccess: {
+    type: Boolean,
+    default: false
+  },
+  emailVerified: {
+    type: Boolean,
+    default: false
+  },
+  verificationToken: String,
+  resetPasswordToken: String,
+  resetPasswordExpires: Date,
+  businessType: {
+    type: String,
+    enum: ['services', 'ecommerce', 'blogging']
   }
 }, {
   timestamps: true

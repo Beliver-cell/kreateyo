@@ -93,11 +93,33 @@ exports.createAppointment = async (req, res, next) => {
 
     req.body.endTime = endTime;
 
+    const appointment = await Appointment.create(req.body);
+
+    // Create Zoom meeting if video call is enabled
+    if (req.body.videoCallEnabled && service.videoCallEnabled) {
+      try {
+        const zoomService = require('../utils/zoomService');
+        const zoomMeeting = await zoomService.createMeeting({
+          serviceName: service.name,
+          startTime: startTime.toISOString(),
+          duration: service.duration.value,
+          timezone: 'UTC'
+        });
+
+        appointment.zoomMeetingId = zoomMeeting.id;
+        appointment.zoomJoinUrl = zoomMeeting.join_url;
+        appointment.zoomStartUrl = zoomMeeting.start_url;
+        appointment.zoomPassword = zoomMeeting.password;
+        await appointment.save();
+      } catch (zoomError) {
+        console.error('Zoom meeting creation failed:', zoomError);
+        // Continue without Zoom if it fails
+      }
+    }
+
     // Update service bookings count
     service.bookingsCount += 1;
     await service.save();
-
-    const appointment = await Appointment.create(req.body);
 
     res.status(201).json({
       success: true,

@@ -140,3 +140,118 @@ exports.sendNotificationEmail = async (email, subject, message) => {
     throw new Error('Failed to send notification email');
   }
 };
+
+// Send customer verification email
+exports.sendCustomerVerificationEmail = async (customer, token) => {
+  const verificationUrl = `${process.env.FRONTEND_URL}/customer/verify?token=${token}`;
+  
+  const mailOptions = {
+    from: `"NexusCreate" <${process.env.EMAIL_FROM}>`,
+    to: customer.email,
+    subject: 'Verify Your Email',
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h1 style="color: #333;">Email Verification</h1>
+        <p>Hi ${customer.firstName},</p>
+        <p>Please verify your email address by clicking the button below:</p>
+        <a href="${verificationUrl}" style="display: inline-block; padding: 12px 24px; background-color: #000; color: #fff; text-decoration: none; border-radius: 4px; margin: 20px 0;">
+          Verify Email
+        </a>
+        <p>Or copy and paste this link in your browser:</p>
+        <p style="color: #666; word-break: break-all;">${verificationUrl}</p>
+      </div>
+    `
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log('Customer verification email sent to:', customer.email);
+  } catch (error) {
+    console.error('Error sending customer verification email:', error);
+    throw new Error('Failed to send customer verification email');
+  }
+};
+
+// Send customer password reset
+exports.sendCustomerPasswordResetEmail = async (customer, token) => {
+  const resetUrl = `${process.env.FRONTEND_URL}/customer/reset-password?token=${token}`;
+  
+  const mailOptions = {
+    from: `"NexusCreate" <${process.env.EMAIL_FROM}>`,
+    to: customer.email,
+    subject: 'Password Reset',
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h1 style="color: #333;">Password Reset</h1>
+        <p>Hi ${customer.firstName},</p>
+        <p>Click the button below to reset your password:</p>
+        <a href="${resetUrl}" style="display: inline-block; padding: 12px 24px; background-color: #000; color: #fff; text-decoration: none; border-radius: 4px; margin: 20px 0;">
+          Reset Password
+        </a>
+        <p>Or copy and paste this link in your browser:</p>
+        <p style="color: #666; word-break: break-all;">${resetUrl}</p>
+        <p>This link expires in 30 minutes.</p>
+      </div>
+    `
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log('Customer password reset email sent to:', customer.email);
+  } catch (error) {
+    console.error('Error sending customer password reset email:', error);
+    throw new Error('Failed to send customer password reset email');
+  }
+};
+
+// Send appointment confirmation with Zoom details
+exports.sendAppointmentConfirmation = async (appointment, customer, service, business) => {
+  const zoomInfo = appointment.zoomJoinUrl ? `
+    <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
+      <h3 style="margin-top: 0; color: #333;">Video Call Details</h3>
+      <p><strong>Join URL:</strong> <a href="${appointment.zoomJoinUrl}" style="color: #0066cc;">Click to join meeting</a></p>
+      <p><strong>Meeting ID:</strong> ${appointment.zoomMeetingId}</p>
+      ${appointment.zoomPassword ? `<p><strong>Password:</strong> ${appointment.zoomPassword}</p>` : ''}
+      <p style="font-size: 12px; color: #666;">You can join the meeting 15 minutes before the scheduled time.</p>
+    </div>
+  ` : '';
+
+  const mailOptions = {
+    from: `"${business.name}" <${process.env.EMAIL_FROM}>`,
+    to: customer.email,
+    subject: `Appointment Confirmed - ${business.name}`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h1 style="color: #333;">Appointment Confirmation</h1>
+        <p>Hi ${customer.firstName},</p>
+        <p>Your appointment has been confirmed.</p>
+        
+        <div style="background-color: #f9f9f9; padding: 20px; border-radius: 5px; margin: 20px 0;">
+          <h3 style="margin-top: 0; color: #333;">Appointment Details</h3>
+          <p><strong>Service:</strong> ${service.name}</p>
+          <p><strong>Date:</strong> ${new Date(appointment.startTime).toLocaleDateString('en-US', { 
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+          })}</p>
+          <p><strong>Time:</strong> ${new Date(appointment.startTime).toLocaleTimeString('en-US', { 
+            hour: '2-digit', minute: '2-digit' 
+          })}</p>
+          <p><strong>Duration:</strong> ${service.duration.value} ${service.duration.unit}</p>
+        </div>
+        
+        ${zoomInfo}
+        
+        <p style="margin-top: 30px; color: #666; font-size: 12px;">
+          If you need to reschedule or cancel, please log in to your account.
+        </p>
+      </div>
+    `
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log('Appointment confirmation sent to:', customer.email);
+  } catch (error) {
+    console.error('Error sending appointment confirmation:', error);
+    throw new Error('Failed to send appointment confirmation');
+  }
+};

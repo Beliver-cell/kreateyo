@@ -54,6 +54,15 @@ const serviceSchema = new mongoose.Schema({
       end: String
     }]
   },
+  videoCallEnabled: {
+    type: Boolean,
+    default: false
+  },
+  videoCallProvider: {
+    type: String,
+    enum: ['zoom', 'meet', 'teams'],
+    default: 'zoom'
+  },
   status: {
     type: String,
     enum: ['active', 'inactive', 'archived'],

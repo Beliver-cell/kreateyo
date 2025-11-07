@@ -52,6 +52,12 @@ app.use('/api/businesses/:businessId/appointments', require('./routes/appointmen
 app.use('/api/businesses/:businessId/files', require('./routes/files'));
 app.use('/api/businesses/:businessId/analytics', require('./routes/analytics'));
 app.use('/api/businesses/:businessId/team', require('./routes/team'));
+app.use('/api/businesses/:businessId/api-keys', require('./routes/apiKeys'));
+app.use('/api/businesses/:businessId/domains', require('./routes/domains'));
+
+// Customer-facing routes (for user sites)
+app.use('/customer/auth', require('./routes/customerAuth'));
+app.use('/customer/dashboard', require('./routes/customerDashboard'));
 
 // Error Handler Middleware (add this after routes)
 app.use((err, req, res, next) => {

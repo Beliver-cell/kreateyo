@@ -42,6 +42,23 @@ const appointmentSchema = new mongoose.Schema({
   },
   cancellationReason: {
     type: String
+  },
+  // Zoom integration
+  zoomMeetingId: {
+    type: String
+  },
+  zoomJoinUrl: {
+    type: String
+  },
+  zoomStartUrl: {
+    type: String
+  },
+  zoomPassword: {
+    type: String
+  },
+  videoCallEnabled: {
+    type: Boolean,
+    default: false
   }
 }, {
   timestamps: true
