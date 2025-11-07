@@ -36,10 +36,10 @@ app.get('/health', (req, res) => {
   });
 });
 
-// API Routes will be added here
-// app.use('/api/auth', require('./routes/auth'));
-// app.use('/api/users', require('./routes/users'));
-// ... more routes
+// API Routes
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/businesses', require('./routes/businesses'));
+app.use('/api/ai', require('./routes/ai'));
 
 // Error Handler Middleware (add this after routes)
 app.use((err, req, res, next) => {
