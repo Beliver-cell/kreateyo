@@ -43,6 +43,12 @@ import VerifyEmail from "./pages/VerifyEmail";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import AdsSponsors from "./pages/AdsSponsors";
+import { CustomerAuthProvider } from "@/contexts/CustomerAuthContext";
+import CustomerLogin from "./pages/customer/auth/CustomerLogin";
+import CustomerSignup from "./pages/customer/auth/CustomerSignup";
+import ServicesDashboard from "./pages/customer/services/ServicesDashboard";
+import EcommerceOrders from "./pages/customer/ecommerce/EcommerceOrders";
+import BloggingReading from "./pages/customer/blogging/BloggingReading";
 
 const queryClient = new QueryClient();
 
@@ -53,7 +59,8 @@ const App = () => (
       <Sonner />
       <BusinessProvider>
         <BrowserRouter>
-          <Routes>
+          <CustomerAuthProvider>
+            <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
@@ -251,9 +258,18 @@ const App = () => (
             <Route path="/appointments" element={<DashboardLayout><AppointmentManager /></DashboardLayout>} />
             <Route path="/affiliates" element={<DashboardLayout><AffiliateProgram /></DashboardLayout>} />
             <Route path="/ads-sponsors" element={<DashboardLayout><AdsSponsors /></DashboardLayout>} />
+            
+            {/* Customer Portal Routes */}
+            <Route path="/customer/login" element={<CustomerLogin />} />
+            <Route path="/customer/signup" element={<CustomerSignup />} />
+            <Route path="/customer/services/dashboard" element={<ServicesDashboard />} />
+            <Route path="/customer/ecommerce/orders" element={<EcommerceOrders />} />
+            <Route path="/customer/blogging/reading" element={<BloggingReading />} />
+            
             <Route path="*" element={<NotFound />} />
           </Routes>
           <OnboardingModal />
+          </CustomerAuthProvider>
         </BrowserRouter>
       </BusinessProvider>
     </TooltipProvider>
