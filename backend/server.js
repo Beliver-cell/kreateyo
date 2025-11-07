@@ -40,6 +40,18 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/businesses', require('./routes/businesses'));
 app.use('/api/ai', require('./routes/ai'));
+app.use('/api/notifications', require('./routes/notifications'));
+
+// Business nested routes
+app.use('/api/businesses/:businessId/blog-posts', require('./routes/blogPosts'));
+app.use('/api/businesses/:businessId/products', require('./routes/products'));
+app.use('/api/businesses/:businessId/services', require('./routes/services'));
+app.use('/api/businesses/:businessId/customers', require('./routes/customers'));
+app.use('/api/businesses/:businessId/orders', require('./routes/orders'));
+app.use('/api/businesses/:businessId/appointments', require('./routes/appointments'));
+app.use('/api/businesses/:businessId/files', require('./routes/files'));
+app.use('/api/businesses/:businessId/analytics', require('./routes/analytics'));
+app.use('/api/businesses/:businessId/team', require('./routes/team'));
 
 // Error Handler Middleware (add this after routes)
 app.use((err, req, res, next) => {
