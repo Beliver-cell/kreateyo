@@ -4,11 +4,11 @@ const domainService = require('../utils/domainService');
 const subdomainHandler = async (req, res, next) => {
   try {
     const host = req.headers.host;
-    const mainDomain = process.env.MAIN_DOMAIN || 'nexuscreate.com';
+    const mainDomain = process.env.MAIN_DOMAIN || 'kreateyo.com';
     
-    // Skip if it's the main platform (app, www, or localhost)
+    // Skip if it's the main platform (app, www, api, or localhost)
     const subdomain = host.split('.')[0];
-    if (subdomain === 'app' || subdomain === 'www' || host.includes('localhost')) {
+    if (subdomain === 'app' || subdomain === 'www' || subdomain === 'api' || host.includes('localhost')) {
       return next();
     }
 

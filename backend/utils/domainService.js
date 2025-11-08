@@ -3,7 +3,7 @@ const Domain = require('../models/Domain');
 
 class DomainService {
   constructor() {
-    this.mainDomain = process.env.MAIN_DOMAIN || 'nexuscreate.com';
+    this.mainDomain = process.env.MAIN_DOMAIN || 'kreateyo.com';
     this.serverIP = process.env.SERVER_IP || '0.0.0.0';
   }
 

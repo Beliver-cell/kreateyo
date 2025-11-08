@@ -31,7 +31,7 @@ if (process.env.NODE_ENV === 'development') {
 app.get('/health', (req, res) => {
   res.status(200).json({
     success: true,
-    message: 'NexusCreate API is running',
+    message: 'Kreateyo API is running',
     timestamp: new Date().toISOString()
   });
 });

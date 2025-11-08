@@ -10,10 +10,10 @@ const LandingPage = () => {
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-20 text-center">
         <h1 className="text-5xl md:text-7xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-6">
-          NexusCreate
+          Kreateyo
         </h1>
         <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-          Build, manage, and grow your business with our all-in-one platform
+          Create. Grow. Succeed with your all-in-one business platform
         </p>
         <Button 
           size="lg" 
@@ -66,7 +66,7 @@ const LandingPage = () => {
           Ready to transform your business?
         </h2>
         <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
-          Join thousands of businesses already using NexusCreate
+          Join thousands of businesses already using Kreateyo
         </p>
         <Button 
           size="lg" 
