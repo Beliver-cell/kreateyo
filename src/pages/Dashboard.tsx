@@ -63,33 +63,33 @@ export default function Dashboard() {
   const activityData = getActivityData();
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 md:space-y-8">
       <div className="space-y-2">
-        <h1 className="text-4xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-lg text-muted-foreground">
+        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight">Dashboard</h1>
+        <p className="text-sm md:text-base lg:text-lg text-muted-foreground">
           Welcome back! Here's an overview of your {businessProfile.type} business.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6">
         {metrics.map((metric) => {
           const Icon = metric.icon;
           return (
             <Card key={metric.title} className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-border">
-              <CardHeader className="flex flex-row items-center justify-between pb-3 space-y-0">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
+              <CardHeader className="flex flex-row items-center justify-between pb-2 md:pb-3 space-y-0">
+                <CardTitle className="text-xs md:text-sm font-medium text-muted-foreground">
                   {metric.title}
                 </CardTitle>
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <Icon className="w-6 h-6 text-primary" />
+                <div className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 rounded-lg md:rounded-xl bg-primary/10 flex items-center justify-center">
+                  <Icon className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-primary" />
                 </div>
               </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold tracking-tight">{metric.value}</div>
-                <div className="flex items-center gap-1 mt-2">
-                  <TrendingUp className="w-4 h-4 text-primary" />
-                  <p className="text-sm text-primary font-medium">{metric.change}</p>
-                  <span className="text-xs text-muted-foreground ml-1">from last month</span>
+              <CardContent className="pb-3 md:pb-4">
+                <div className="text-xl md:text-2xl lg:text-3xl font-bold tracking-tight">{metric.value}</div>
+                <div className="flex items-center gap-0.5 md:gap-1 mt-1 md:mt-2">
+                  <TrendingUp className="w-3 h-3 md:w-4 md:h-4 text-primary" />
+                  <p className="text-xs md:text-sm text-primary font-medium">{metric.change}</p>
+                  <span className="text-[10px] md:text-xs text-muted-foreground ml-0.5 md:ml-1 hidden sm:inline">from last month</span>
                 </div>
               </CardContent>
             </Card>
@@ -97,24 +97,24 @@ export default function Dashboard() {
         })}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
         <Card className="border-border">
-          <CardHeader className="space-y-1 pb-4">
-            <CardTitle className="text-xl font-semibold">Recent Activity</CardTitle>
+          <CardHeader className="space-y-1 pb-3 md:pb-4">
+            <CardTitle className="text-lg md:text-xl font-semibold">Recent Activity</CardTitle>
             <CardDescription>
               {businessProfile.type === 'ecommerce' && 'Latest orders, inventory, and customer updates'}
               {businessProfile.type === 'services' && 'Today\'s appointments and client interactions'}
               {businessProfile.type === 'blog' && 'Subscriber growth and post performance'}
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
+          <CardContent className="px-4 md:px-6">
+            <div className="space-y-3 md:space-y-4">
               {activityData.map((activity, i) => (
-                <div key={i} className="flex items-start gap-4 p-4 rounded-xl bg-muted/50 hover:bg-muted/80 transition-all duration-200 border border-transparent hover:border-border">
-                  <div className="w-2 h-2 rounded-full bg-primary mt-2 flex-shrink-0"></div>
+                <div key={i} className="flex items-start gap-3 md:gap-4 p-3 md:p-4 rounded-lg md:rounded-xl bg-muted/50 hover:bg-muted/80 transition-all duration-200 border border-transparent hover:border-border">
+                  <div className="w-2 h-2 rounded-full bg-primary mt-1.5 md:mt-2 flex-shrink-0"></div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium leading-relaxed">{activity.text}</p>
-                    <p className="text-xs text-muted-foreground mt-1.5">{activity.time}</p>
+                    <p className="text-xs md:text-sm font-medium leading-relaxed">{activity.text}</p>
+                    <p className="text-[10px] md:text-xs text-muted-foreground mt-1 md:mt-1.5">{activity.time}</p>
                   </div>
                   {activity.type === 'alert' && (
                     <AlertCircle className="w-5 h-5 text-warning flex-shrink-0 mt-1" />
@@ -126,70 +126,70 @@ export default function Dashboard() {
         </Card>
 
         <Card className="border-border">
-          <CardHeader className="space-y-1 pb-4">
+          <CardHeader className="space-y-1 pb-3 md:pb-4">
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-xl font-semibold">Quick Actions</CardTitle>
-                <CardDescription>Common tasks and shortcuts</CardDescription>
+                <CardTitle className="text-lg md:text-xl font-semibold">Quick Actions</CardTitle>
+                <CardDescription className="text-xs md:text-sm">Common tasks and shortcuts</CardDescription>
               </div>
-              <Badge variant="outline" className="text-xs font-medium border-primary text-primary">
+              <Badge variant="outline" className="text-[10px] md:text-xs font-medium border-primary text-primary">
                 {businessProfile.type}
               </Badge>
             </div>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
+          <CardContent className="px-4 md:px-6">
+            <div className="space-y-2 md:space-y-3">
               <button 
                 onClick={() => {
                   if (businessProfile.type === 'ecommerce') navigate('/products');
                   else if (businessProfile.type === 'services') navigate('/calendar');
                   else navigate('/posts');
                 }}
-                className="w-full p-5 rounded-xl border-2 border-border hover:border-primary hover:bg-primary/5 transition-all duration-200 text-left group"
+                className="w-full p-4 md:p-5 rounded-lg md:rounded-xl border-2 border-border hover:border-primary hover:bg-primary/5 transition-all duration-200 text-left group"
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-semibold group-hover:text-primary transition-colors">
+                    <p className="text-xs md:text-sm font-semibold group-hover:text-primary transition-colors">
                       {businessProfile.type === 'ecommerce' && 'Add New Product'}
                       {businessProfile.type === 'services' && 'Create New Booking'}
                       {businessProfile.type === 'blog' && 'Write New Post'}
                     </p>
-                    <p className="text-xs text-muted-foreground mt-1.5">Start creating content</p>
+                    <p className="text-[10px] md:text-xs text-muted-foreground mt-1 md:mt-1.5">Start creating content</p>
                   </div>
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                    {businessProfile.type === 'ecommerce' && <Package className="w-5 h-5 text-primary" />}
-                    {businessProfile.type === 'services' && <Calendar className="w-5 h-5 text-primary" />}
-                    {businessProfile.type === 'blog' && <FileText className="w-5 h-5 text-primary" />}
+                  <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                    {businessProfile.type === 'ecommerce' && <Package className="w-4 h-4 md:w-5 md:h-5 text-primary" />}
+                    {businessProfile.type === 'services' && <Calendar className="w-4 h-4 md:w-5 md:h-5 text-primary" />}
+                    {businessProfile.type === 'blog' && <FileText className="w-4 h-4 md:w-5 md:h-5 text-primary" />}
                   </div>
                 </div>
               </button>
               
               <button 
                 onClick={() => navigate('/build')}
-                className="w-full p-5 rounded-xl border-2 border-border hover:border-primary hover:bg-primary/5 transition-all duration-200 text-left group"
+                className="w-full p-4 md:p-5 rounded-lg md:rounded-xl border-2 border-border hover:border-primary hover:bg-primary/5 transition-all duration-200 text-left group"
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-semibold group-hover:text-primary transition-colors">Customize Your Site</p>
-                    <p className="text-xs text-muted-foreground mt-1.5">Edit design and layout</p>
+                    <p className="text-xs md:text-sm font-semibold group-hover:text-primary transition-colors">Customize Your Site</p>
+                    <p className="text-[10px] md:text-xs text-muted-foreground mt-1 md:mt-1.5">Edit design and layout</p>
                   </div>
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                    <TrendingUp className="w-5 h-5 text-primary" />
+                  <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                    <TrendingUp className="w-4 h-4 md:w-5 md:h-5 text-primary" />
                   </div>
                 </div>
               </button>
               
               <button 
-                onClick={() => navigate('/dashboard')}
-                className="w-full p-5 rounded-xl border-2 border-border hover:border-primary hover:bg-primary/5 transition-all duration-200 text-left group"
+                onClick={() => navigate('/analytics')}
+                className="w-full p-4 md:p-5 rounded-lg md:rounded-xl border-2 border-border hover:border-primary hover:bg-primary/5 transition-all duration-200 text-left group"
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-semibold group-hover:text-primary transition-colors">View Full Analytics</p>
-                    <p className="text-xs text-muted-foreground mt-1.5">Track your performance</p>
+                    <p className="text-xs md:text-sm font-semibold group-hover:text-primary transition-colors">View Full Analytics</p>
+                    <p className="text-[10px] md:text-xs text-muted-foreground mt-1 md:mt-1.5">Track your performance</p>
                   </div>
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                    <TrendingUp className="w-5 h-5 text-primary" />
+                  <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                    <TrendingUp className="w-4 h-4 md:w-5 md:h-5 text-primary" />
                   </div>
                 </div>
               </button>

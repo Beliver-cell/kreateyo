@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus, Search, Clock, DollarSign, Users, Dumbbell, Heart, Apple, Sparkles, Zap, Copy, Pause, Play } from 'lucide-react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { servicesApi } from '@/services/api';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -64,8 +66,25 @@ export default function Services() {
   const [searchQuery, setSearchQuery] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedService, setSelectedService] = useState<any>(null);
+  const queryClient = useQueryClient();
 
-  const filteredServices = mockServices.filter((service) =>
+  const { data: services = [], isLoading } = useQuery({
+    queryKey: ['services'],
+    queryFn: servicesApi.getAll,
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: servicesApi.delete,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['services'] });
+      toast({ title: "Service deleted successfully" });
+    },
+    onError: () => {
+      toast({ title: "Failed to delete service", variant: "destructive" });
+    },
+  });
+
+  const filteredServices = (services.length > 0 ? services : mockServices).filter((service: any) =>
     service.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 

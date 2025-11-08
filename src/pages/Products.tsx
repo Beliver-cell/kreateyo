@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus, Search, MoreVertical, Headphones, Mouse, Keyboard, Usb, Laptop, Video, Filter, Copy, Trash2 } from 'lucide-react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { productsApi } from '@/services/api';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -30,8 +32,25 @@ export default function Products() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const queryClient = useQueryClient();
 
-  const filteredProducts = mockProducts.filter((product) =>
+  const { data: products = [], isLoading } = useQuery({
+    queryKey: ['products'],
+    queryFn: productsApi.getAll,
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: productsApi.delete,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+      toast({ title: "Product deleted successfully" });
+    },
+    onError: () => {
+      toast({ title: "Failed to delete product", variant: "destructive" });
+    },
+  });
+
+  const filteredProducts = (products.length > 0 ? products : mockProducts).filter((product: any) =>
     product.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -53,14 +72,14 @@ export default function Products() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 md:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold">Products</h1>
-          <p className="text-muted-foreground">Manage your product inventory</p>
+          <h1 className="text-2xl md:text-3xl font-bold">Products</h1>
+          <p className="text-muted-foreground text-sm md:text-base">Manage your product inventory</p>
         </div>
         <Button 
-          className="bg-primary hover:bg-primary/90"
+          className="bg-primary hover:bg-primary/90 w-full sm:w-auto"
           onClick={() => {
             setSelectedProduct(null);
             setDialogOpen(true);
@@ -72,8 +91,8 @@ export default function Products() {
       </div>
 
       <Card>
-        <CardContent className="p-6">
-          <div className="flex items-center gap-4 mb-6">
+        <CardContent className="p-4 md:p-6">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-6">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
@@ -83,7 +102,7 @@ export default function Products() {
                 className="pl-10"
               />
             </div>
-            <Button variant="outline">
+            <Button variant="outline" className="w-full sm:w-auto">
               <Filter className="w-4 h-4 mr-2" />
               Filters
             </Button>

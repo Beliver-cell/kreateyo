@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { ordersApi } from '@/services/api';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -28,7 +30,12 @@ export default function Orders() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedOrders, setSelectedOrders] = useState<string[]>([]);
 
-  const filteredOrders = mockOrders.filter(order =>
+  const { data: orders = [], isLoading } = useQuery({
+    queryKey: ['orders'],
+    queryFn: ordersApi.getAll,
+  });
+
+  const filteredOrders = (orders.length > 0 ? orders : mockOrders).filter((order: any) =>
     order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
     order.customer.toLowerCase().includes(searchQuery.toLowerCase())
   );
