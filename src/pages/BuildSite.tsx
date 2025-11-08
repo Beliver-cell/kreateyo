@@ -130,7 +130,7 @@ export default function BuildSite() {
   return (
     <div className="h-full flex flex-col overflow-hidden">
       {/* Header */}
-      <div className="flex-shrink-0 flex items-center justify-between mb-3 md:mb-4">
+      <div className="flex-shrink-0 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
         <div>
           <h1 className="text-xl md:text-2xl font-bold">Build My Site</h1>
           <p className="text-muted-foreground text-xs md:text-sm">
@@ -138,47 +138,54 @@ export default function BuildSite() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Button onClick={handleEdit} size="sm" variant="outline">
-            <Edit className="w-4 h-4 mr-1" />
-            <span className="hidden sm:inline">Edit</span>
+          <Button onClick={handleEdit} size="sm" variant="outline" className="flex-1 sm:flex-none">
+            <Edit className="w-4 h-4 sm:mr-2" />
+            <span className="sm:inline">Edit</span>
           </Button>
-          <Button onClick={handlePreview} size="sm">
-            <Eye className="w-4 h-4 mr-1" />
-            <span className="hidden sm:inline">Preview</span>
+          <Button onClick={handlePreview} size="sm" className="flex-1 sm:flex-none">
+            <Eye className="w-4 h-4 sm:mr-2" />
+            <span className="sm:inline">Preview</span>
           </Button>
         </div>
       </div>
 
       {/* Templates Grid */}
-      <div className="flex-1 overflow-y-auto">
-        <div className={`grid gap-3 md:gap-4 ${
-          selectedTemplate 
-            ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6' 
-            : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4'
-        }`}>
+      <div className="flex-1 overflow-y-auto pb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {currentTemplates.map((template) => (
             <Card
               key={template.id}
-              className={`group cursor-pointer transition-all ${
+              className={`group cursor-pointer transition-all hover:shadow-lg ${
                 selectedTemplate === template.id
-                  ? 'ring-2 ring-primary shadow-lg scale-105'
-                  : 'hover:shadow-md hover:scale-102'
-              } ${selectedTemplate && selectedTemplate !== template.id ? 'opacity-60' : ''}`}
+                  ? 'ring-2 ring-primary shadow-lg'
+                  : 'hover:shadow-md'
+              }`}
               onClick={() => handleSelectTemplate(template.id, template.name)}
             >
               <div className={`aspect-video bg-gradient-to-br ${template.gradient} flex items-center justify-center relative overflow-hidden rounded-t-lg`}>
+                {template.popular && (
+                  <div className="absolute top-2 right-2 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full">
+                    Popular
+                  </div>
+                )}
                 {selectedTemplate === template.id && (
                   <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                    <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-primary flex items-center justify-center">
-                      <Check className="w-4 h-4 md:w-5 md:h-5 text-white" />
+                    <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center">
+                      <Check className="w-6 h-6 text-white" />
                     </div>
                   </div>
                 )}
               </div>
-              <div className="p-2 md:p-3">
-                <h3 className="font-semibold text-xs md:text-sm text-center truncate">
-                  {template.name}
-                </h3>
+              <div className="p-4">
+                <h3 className="font-semibold text-sm mb-2">{template.name}</h3>
+                <p className="text-xs text-muted-foreground mb-3">{template.description}</p>
+                <div className="flex flex-wrap gap-1">
+                  {template.features.map((feature, idx) => (
+                    <span key={idx} className="text-xs bg-muted px-2 py-1 rounded">
+                      {feature}
+                    </span>
+                  ))}
+                </div>
               </div>
             </Card>
           ))}

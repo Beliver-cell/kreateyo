@@ -42,7 +42,7 @@ export default function CustomerLogin() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted/30 to-background p-4">
-      <div className="w-full max-w-md space-y-8 bg-card p-6 sm:p-8 rounded-2xl shadow-lg border border-border">
+      <div className="w-full max-w-md space-y-6 bg-card p-6 sm:p-8 rounded-2xl shadow-lg border border-border">
         <div className="text-center">
           <div className="flex justify-center mb-4">
             <Sparkles className="h-10 w-10 sm:h-12 sm:w-12 text-primary" />
@@ -51,36 +51,40 @@ export default function CustomerLogin() {
           <p className="text-muted-foreground mt-2 text-sm sm:text-base">Sign in to your account</p>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-6">
+        <form onSubmit={handleLogin} className="space-y-5">
           <div className="space-y-4">
             <div>
-              <Label htmlFor="email" className="text-foreground">Email Address</Label>
+              <Label htmlFor="email" className="text-foreground text-sm font-medium">
+                Email Address
+              </Label>
               <Input
                 id="email"
                 type="email"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 placeholder="you@example.com"
-                className="mt-1"
+                className="mt-1.5 h-11"
                 required
               />
             </div>
 
             <div>
-              <Label htmlFor="password" className="text-foreground">Password</Label>
+              <Label htmlFor="password" className="text-foreground text-sm font-medium">
+                Password
+              </Label>
               <Input
                 id="password"
                 type="password"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 placeholder="••••••••"
-                className="mt-1"
+                className="mt-1.5 h-11"
                 required
               />
             </div>
           </div>
 
-          <Button type="submit" className="w-full" disabled={loading}>
+          <Button type="submit" className="w-full h-11" disabled={loading}>
             {loading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -94,16 +98,24 @@ export default function CustomerLogin() {
           <div className="text-center">
             <Link
               to="/customer/forgot-password"
-              className="text-sm text-primary hover:underline"
+              className="text-sm text-primary hover:underline inline-block py-2"
             >
               Forgot your password?
             </Link>
           </div>
 
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-border" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-card px-2 text-muted-foreground">New here?</span>
+            </div>
+          </div>
+
           <p className="text-center text-sm text-muted-foreground">
-            Don't have an account?{' '}
             <Link to="/customer/signup" className="font-medium text-primary hover:underline">
-              Sign up
+              Create an account
             </Link>
           </p>
         </form>
