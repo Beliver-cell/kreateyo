@@ -1,15 +1,17 @@
-import { ShoppingCart, Heart, Search, Menu, User, Star, TrendingUp, Package, Shield } from 'lucide-react';
+import { useState } from 'react';
+import { ShoppingCart, Heart, Search, Loader2, Package, Shield, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import sneakersImg from '@/assets/products/sneakers.jpg';
-import watchImg from '@/assets/products/watch.jpg';
+import { useEcommerceProducts } from '@/hooks/useEcommerceProducts';
+import { useCart } from '@/contexts/CartContext';
+import { CartDrawer } from './CartDrawer';
+import { CheckoutDialog } from './CheckoutDialog';
+import { toast } from 'sonner';
 import bagImg from '@/assets/products/bag.jpg';
-import sunglassesImg from '@/assets/products/sunglasses.jpg';
-import earbudsImg from '@/assets/products/earbuds.jpg';
-import smartwatchImg from '@/assets/products/smartwatch.jpg';
 
 interface TemplateProps {
+  businessId: string;
   colors?: {
     primary: string;
     accent: string;
@@ -21,18 +23,25 @@ interface TemplateProps {
   };
 }
 
-export default function CozaStoreTemplate({ colors, fonts }: TemplateProps) {
+export default function CozaStoreTemplate({ businessId, colors, fonts }: TemplateProps) {
   const primaryColor = colors?.primary || 'hsl(var(--primary))';
   const accentColor = colors?.accent || 'hsl(var(--accent))';
+  const [cartOpen, setCartOpen] = useState(false);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  
+  const { data, isLoading } = useEcommerceProducts({ category: selectedCategory, limit: 12 });
+  const { addToCart, itemCount } = useCart();
 
-  const products = [
-    { id: 1, name: 'Esprit Ruffle Shirt', price: 16.64, oldPrice: 25.00, image: sneakersImg, badge: '-30%' },
-    { id: 2, name: 'Herschel Supply Co.', price: 35.31, image: watchImg, badge: 'New' },
-    { id: 3, name: 'Only Check Trouser', price: 25.50, image: bagImg },
-    { id: 4, name: 'Classic Trench Coat', price: 75.00, oldPrice: 95.00, image: sunglassesImg, badge: 'Sale' },
-    { id: 5, name: 'Front Pocket Jumper', price: 34.75, image: earbudsImg },
-    { id: 6, name: 'Vintage Inspired Classic', price: 93.20, image: smartwatchImg, badge: 'Hot' },
-  ];
+  const handleAddToCart = (product: any) => {
+    addToCart({
+      productId: product._id,
+      name: product.name,
+      price: product.price,
+      quantity: 1,
+      image: product.images?.[0] || bagImg,
+    });
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -68,11 +77,14 @@ export default function CozaStoreTemplate({ colors, fonts }: TemplateProps) {
               <Button variant="ghost" size="icon"><Search className="w-5 h-5" /></Button>
               <Button variant="ghost" size="icon" className="relative">
                 <Heart className="w-5 h-5" />
-                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-red-500 text-white text-[10px] flex items-center justify-center">1</span>
               </Button>
-              <Button variant="ghost" size="icon" className="relative">
+              <Button variant="ghost" size="icon" className="relative" onClick={() => setCartOpen(true)}>
                 <ShoppingCart className="w-5 h-5" />
-                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-[10px] flex items-center justify-center" style={{ backgroundColor: primaryColor, color: 'white' }}>2</span>
+                {itemCount > 0 && (
+                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-[10px] flex items-center justify-center" style={{ backgroundColor: primaryColor, color: 'white' }}>
+                    {itemCount}
+                  </span>
+                )}
               </Button>
             </div>
           </div>
@@ -142,49 +154,80 @@ export default function CozaStoreTemplate({ colors, fonts }: TemplateProps) {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h3 className="text-3xl md:text-4xl font-bold mb-4">PRODUCT OVERVIEW</h3>
-            <div className="flex justify-center gap-6 mt-6">
-              <button className="text-sm font-medium hover:text-primary transition-colors" style={{ color: primaryColor }}>All Products</button>
-              <button className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Women</button>
-              <button className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Men</button>
-              <button className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Bag</button>
-              <button className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Shoes</button>
+            <div className="flex justify-center gap-6 mt-6 flex-wrap">
+              <button 
+                className="text-sm font-medium transition-colors"
+                style={{ color: selectedCategory === 'all' ? primaryColor : 'hsl(var(--muted-foreground))' }}
+                onClick={() => setSelectedCategory('all')}
+              >
+                All Products
+              </button>
+              <button 
+                className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                onClick={() => setSelectedCategory('women')}
+              >
+                Women
+              </button>
+              <button 
+                className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                onClick={() => setSelectedCategory('men')}
+              >
+                Men
+              </button>
+              <button 
+                className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                onClick={() => setSelectedCategory('accessories')}
+              >
+                Accessories
+              </button>
             </div>
           </div>
           
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {products.map((product) => (
-              <Card key={product.id} className="group cursor-pointer border-0 shadow-none">
-                <CardContent className="p-0">
-                  <div className="aspect-[3/4] bg-muted relative overflow-hidden rounded-lg mb-4">
-                    <img 
-                      src={product.image} 
-                      alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-                    {product.badge && (
-                      <Badge className="absolute top-3 left-3" style={{ backgroundColor: primaryColor }}>
-                        {product.badge}
-                      </Badge>
-                    )}
-                    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <Button size="sm" className="rounded-full" style={{ backgroundColor: primaryColor }}>
-                        Quick View
-                      </Button>
-                    </div>
-                  </div>
-                  <div className="text-center">
-                    <h4 className="font-medium mb-2">{product.name}</h4>
-                    <div className="flex items-center justify-center gap-2">
-                      {product.oldPrice && (
-                        <span className="text-sm text-muted-foreground line-through">${product.oldPrice.toFixed(2)}</span>
+          {isLoading ? (
+            <div className="flex justify-center items-center py-20">
+              <Loader2 className="w-8 h-8 animate-spin" style={{ color: primaryColor }} />
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+              {data?.products?.map((product: any) => (
+                <Card key={product._id} className="group cursor-pointer border-0 shadow-none">
+                  <CardContent className="p-0">
+                    <div className="aspect-[3/4] bg-muted relative overflow-hidden rounded-lg mb-4">
+                      <img 
+                        src={product.images?.[0] || bagImg} 
+                        alt={product.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                      {product.stock < 10 && product.stock > 0 && (
+                        <Badge className="absolute top-3 left-3" style={{ backgroundColor: primaryColor }}>
+                          Low Stock
+                        </Badge>
                       )}
-                      <span className="text-lg font-semibold" style={{ color: primaryColor }}>${product.price.toFixed(2)}</span>
+                      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Button 
+                          size="sm" 
+                          className="rounded-full" 
+                          style={{ backgroundColor: primaryColor }}
+                          onClick={() => handleAddToCart(product)}
+                          disabled={product.stock === 0}
+                        >
+                          {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                    <div className="text-center">
+                      <h4 className="font-medium mb-2 line-clamp-1">{product.name}</h4>
+                      <div className="flex items-center justify-center gap-2">
+                        <span className="text-lg font-semibold" style={{ color: primaryColor }}>
+                          ${product.price.toFixed(2)}
+                        </span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -252,6 +295,23 @@ export default function CozaStoreTemplate({ colors, fonts }: TemplateProps) {
           </div>
         </div>
       </footer>
+
+      <CartDrawer 
+        open={cartOpen} 
+        onOpenChange={setCartOpen}
+        onCheckout={() => {
+          setCartOpen(false);
+          setCheckoutOpen(true);
+        }}
+        primaryColor={primaryColor}
+      />
+
+      <CheckoutDialog
+        open={checkoutOpen}
+        onOpenChange={setCheckoutOpen}
+        businessId={businessId}
+        primaryColor={primaryColor}
+      />
     </div>
   );
 }

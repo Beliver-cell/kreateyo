@@ -1,15 +1,20 @@
-import { ShoppingCart, Heart, Search, Menu, User, Star, ChevronRight, TrendingUp } from 'lucide-react';
+import { useState } from 'react';
+import { ShoppingCart, Heart, Search, Star, ChevronRight, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { useEcommerceProducts } from '@/hooks/useEcommerceProducts';
+import { useCart } from '@/contexts/CartContext';
+import { CartDrawer } from './CartDrawer';
+import { CheckoutDialog } from './CheckoutDialog';
+import bagImg from '@/assets/products/bag.jpg';
 import sneakersImg from '@/assets/products/sneakers.jpg';
 import watchImg from '@/assets/products/watch.jpg';
-import bagImg from '@/assets/products/bag.jpg';
 import sunglassesImg from '@/assets/products/sunglasses.jpg';
 import earbudsImg from '@/assets/products/earbuds.jpg';
 import smartwatchImg from '@/assets/products/smartwatch.jpg';
 
 interface TemplateProps {
+  businessId: string;
   colors?: {
     primary: string;
     accent: string;
@@ -21,18 +26,26 @@ interface TemplateProps {
   };
 }
 
-export default function MaleFashionTemplate({ colors, fonts }: TemplateProps) {
+export default function MaleFashionTemplate({ businessId, colors, fonts }: TemplateProps) {
   const primaryColor = colors?.primary || 'hsl(var(--primary))';
   const accentColor = colors?.accent || 'hsl(var(--accent))';
+  const [cartOpen, setCartOpen] = useState(false);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [page, setPage] = useState(1);
 
-  const products = [
-    { id: 1, name: 'Piqué Biker Jacket', price: 67.24, rating: 5, image: sneakersImg },
-    { id: 2, name: 'Multi-pocket Chest Bag', price: 43.48, rating: 5, image: watchImg },
-    { id: 3, name: 'Diagonal Textured Cap', price: 60.90, rating: 4, image: bagImg },
-    { id: 4, name: 'Lether Backpack', price: 31.37, rating: 5, image: sunglassesImg },
-    { id: 5, name: 'Ankle Boots', price: 98.49, rating: 5, image: earbudsImg },
-    { id: 6, name: 'T-shirt Contrast Pocket', price: 49.66, rating: 4, image: smartwatchImg },
-  ];
+  const { data, isLoading } = useEcommerceProducts({ category: selectedCategory, page, limit: 6 });
+  const { addToCart, itemCount } = useCart();
+
+  const handleAddToCart = (product: any) => {
+    addToCart({
+      productId: product._id,
+      name: product.name,
+      price: product.price,
+      quantity: 1,
+      image: product.images?.[0] || bagImg,
+    });
+  };
 
   const categories = [
     { name: "Men's", count: 358, image: sneakersImg },
@@ -80,13 +93,15 @@ export default function MaleFashionTemplate({ colors, fonts }: TemplateProps) {
               <Button variant="ghost" size="icon"><Search className="w-5 h-5" /></Button>
               <Button variant="ghost" size="icon" className="relative">
                 <Heart className="w-5 h-5" />
-                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-primary text-primary-foreground text-[10px] flex items-center justify-center">1</span>
               </Button>
-              <Button variant="ghost" size="icon" className="relative">
+              <Button variant="ghost" size="icon" className="relative" onClick={() => setCartOpen(true)}>
                 <ShoppingCart className="w-5 h-5" />
-                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-[10px] flex items-center justify-center" style={{ backgroundColor: primaryColor, color: 'white' }}>3</span>
+                {itemCount > 0 && (
+                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-[10px] flex items-center justify-center" style={{ backgroundColor: primaryColor, color: 'white' }}>
+                    {itemCount}
+                  </span>
+                )}
               </Button>
-              <div className="text-sm font-medium">item: <span style={{ color: primaryColor }}>$150.00</span></div>
             </div>
           </div>
         </div>
@@ -148,59 +163,104 @@ export default function MaleFashionTemplate({ colors, fonts }: TemplateProps) {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-12">
             <h3 className="text-3xl font-bold">Product Overview</h3>
-            <div className="flex gap-6">
-              <button className="text-sm font-medium transition-colors" style={{ color: primaryColor }}>All</button>
-              <button className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Women's</button>
-              <button className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Men's</button>
-              <button className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Kid's</button>
+            <div className="flex gap-6 flex-wrap">
+              <button 
+                className="text-sm font-medium transition-colors"
+                style={{ color: selectedCategory === 'all' ? primaryColor : 'hsl(var(--muted-foreground))' }}
+                onClick={() => setSelectedCategory('all')}
+              >
+                All
+              </button>
+              <button 
+                className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                onClick={() => setSelectedCategory('women')}
+              >
+                Women's
+              </button>
+              <button 
+                className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                onClick={() => setSelectedCategory('men')}
+              >
+                Men's
+              </button>
+              <button 
+                className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                onClick={() => setSelectedCategory('kids')}
+              >
+                Kid's
+              </button>
             </div>
           </div>
           
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
-            {products.map((product) => (
-              <Card key={product.id} className="group cursor-pointer border-0 shadow-md hover:shadow-xl transition-shadow">
-                <CardContent className="p-0">
-                  <div className="aspect-square bg-muted relative overflow-hidden">
-                    <img 
-                      src={product.image} 
-                      alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                    <Button 
-                      size="icon" 
-                      variant="secondary" 
-                      className="absolute top-4 right-4 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      <Heart className="w-4 h-4" />
-                    </Button>
-                  </div>
-                  <div className="p-5">
-                    <div className="flex gap-1 mb-2">
-                      {[...Array(5)].map((_, idx) => (
-                        <Star 
-                          key={idx} 
-                          className={`w-3 h-3 ${idx < product.rating ? 'fill-yellow-400 text-yellow-400' : 'text-muted'}`} 
+          {isLoading ? (
+            <div className="flex justify-center items-center py-20">
+              <Loader2 className="w-8 h-8 animate-spin" style={{ color: primaryColor }} />
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
+                {data?.products?.map((product: any) => (
+                  <Card key={product._id} className="group cursor-pointer border-0 shadow-md hover:shadow-xl transition-shadow">
+                    <CardContent className="p-0">
+                      <div className="aspect-square bg-muted relative overflow-hidden">
+                        <img 
+                          src={product.images?.[0] || bagImg} 
+                          alt={product.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />
-                      ))}
-                    </div>
-                    <h4 className="font-medium mb-3 line-clamp-1">{product.name}</h4>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xl font-bold" style={{ color: primaryColor }}>${product.price}</span>
-                      <Button size="sm" variant="ghost" className="text-xs">
-                        + ADD TO CART
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                        <Button 
+                          size="icon" 
+                          variant="secondary" 
+                          className="absolute top-4 right-4 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <Heart className="w-4 h-4" />
+                        </Button>
+                      </div>
+                      <div className="p-5">
+                        <div className="flex gap-1 mb-2">
+                          {[...Array(5)].map((_, idx) => (
+                            <Star 
+                              key={idx} 
+                              className={`w-3 h-3 ${idx < 4 ? 'fill-yellow-400 text-yellow-400' : 'text-muted'}`} 
+                            />
+                          ))}
+                        </div>
+                        <h4 className="font-medium mb-3 line-clamp-1">{product.name}</h4>
+                        <div className="flex items-center justify-between">
+                          <span className="text-xl font-bold" style={{ color: primaryColor }}>
+                            ${product.price.toFixed(2)}
+                          </span>
+                          <Button 
+                            size="sm" 
+                            variant="ghost" 
+                            className="text-xs"
+                            onClick={() => handleAddToCart(product)}
+                            disabled={product.stock === 0}
+                          >
+                            {product.stock === 0 ? 'OUT OF STOCK' : '+ ADD TO CART'}
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
 
-          <div className="text-center mt-12">
-            <Button variant="outline" size="lg" className="rounded-full px-8">
-              LOAD MORE
-            </Button>
-          </div>
+              {data && data.totalPages > 1 && (
+                <div className="text-center mt-12">
+                  <Button 
+                    variant="outline" 
+                    size="lg" 
+                    className="rounded-full px-8"
+                    onClick={() => setPage(p => p + 1)}
+                    disabled={page >= data.totalPages}
+                  >
+                    {page >= data.totalPages ? 'NO MORE PRODUCTS' : 'LOAD MORE'}
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
         </div>
       </section>
 
@@ -286,6 +346,23 @@ export default function MaleFashionTemplate({ colors, fonts }: TemplateProps) {
           </div>
         </div>
       </footer>
+
+      <CartDrawer 
+        open={cartOpen} 
+        onOpenChange={setCartOpen}
+        onCheckout={() => {
+          setCartOpen(false);
+          setCheckoutOpen(true);
+        }}
+        primaryColor={primaryColor}
+      />
+
+      <CheckoutDialog
+        open={checkoutOpen}
+        onOpenChange={setCheckoutOpen}
+        businessId={businessId}
+        primaryColor={primaryColor}
+      />
     </div>
   );
 }

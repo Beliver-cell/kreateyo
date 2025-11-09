@@ -349,6 +349,7 @@ export default function TemplatePreview() {
               <ScrollArea className="h-[calc(100vh-250px)]">
                 <div className={viewModeWidths[viewMode]}>
                   <CurrentTemplate 
+                    businessId="preview-business-id"
                     colors={selectedColor}
                     fonts={selectedFont}
                   />
