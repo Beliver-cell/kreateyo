@@ -17,6 +17,21 @@ const templates = {
       popular: true
     },
     {
+      id: 'ecom-coza',
+      name: 'Coza Store',
+      description: 'Professional fashion store with elegant product showcase',
+      gradient: 'from-gray-900 via-gray-700 to-gray-900',
+      features: ['Free shipping banner', 'Quick view', 'Category filters'],
+      popular: true
+    },
+    {
+      id: 'ecom-male',
+      name: 'Male Fashion',
+      description: 'Modern masculine design perfect for menswear brands',
+      gradient: 'from-slate-800 via-blue-900 to-slate-800',
+      features: ['Category showcase', 'Instagram feed', 'Rating system']
+    },
+    {
       id: 'ecom-vibrant',
       name: 'Vibrant Store',
       description: 'Bold colors and dynamic layouts perfect for fashion and lifestyle',

@@ -16,6 +16,8 @@ import {
   Sliders
 } from 'lucide-react';
 import EcommerceTemplate from '@/components/templates/EcommerceTemplate';
+import CozaStoreTemplate from '@/components/templates/CozaStoreTemplate';
+import MaleFashionTemplate from '@/components/templates/MaleFashionTemplate';
 import BlogTemplate from '@/components/templates/BlogTemplate';
 import ServiceTemplate from '@/components/templates/ServiceTemplate';
 import { Slider } from '@/components/ui/slider';
@@ -42,7 +44,7 @@ export default function TemplatePreview() {
   const { businessProfile } = useBusinessContext();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [selectedTemplate, setSelectedTemplate] = useState<'ecommerce' | 'blog' | 'service'>(
+  const [selectedTemplate, setSelectedTemplate] = useState<'ecommerce' | 'cozastore' | 'malefashion' | 'blog' | 'service'>(
     businessProfile.type === 'ecommerce' ? 'ecommerce' : 
     businessProfile.type === 'blog' ? 'blog' : 'service'
   );
@@ -69,6 +71,30 @@ export default function TemplatePreview() {
         'Wishlist & favorites',
         'Payment-ready design',
         'Mobile-optimized checkout'
+      ]
+    },
+    cozastore: {
+      name: 'Coza Store',
+      component: CozaStoreTemplate,
+      features: [
+        'Fashion-focused design',
+        'Free shipping banner',
+        'Category filtering',
+        'Quick product view',
+        'Newsletter integration',
+        'Sale badge system'
+      ]
+    },
+    malefashion: {
+      name: 'Male Fashion',
+      component: MaleFashionTemplate,
+      features: [
+        'Masculine design aesthetic',
+        'Category showcase cards',
+        'Product rating system',
+        'Instagram feed integration',
+        'Multi-currency support',
+        'Load more pagination'
       ]
     },
     blog: {
