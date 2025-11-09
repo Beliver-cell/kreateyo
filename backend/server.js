@@ -54,6 +54,7 @@ app.use('/api/businesses/:businessId/analytics', require('./routes/analytics'));
 app.use('/api/businesses/:businessId/team', require('./routes/team'));
 app.use('/api/businesses/:businessId/api-keys', require('./routes/apiKeys'));
 app.use('/api/businesses/:businessId/domains', require('./routes/domains'));
+app.use('/api/businesses/:businessId/yopay', require('./routes/yopay'));
 
 // Customer-facing routes (for user sites)
 app.use('/customer/auth', require('./routes/customerAuth'));
