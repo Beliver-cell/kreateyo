@@ -2,10 +2,11 @@ const express = require('express');
 const router = express.Router({ mergeParams: true });
 const yopayController = require('../controllers/yopayController');
 const { protect } = require('../middleware/auth');
+const { paymentLimiter, onboardingLimiter, webhookLimiter } = require('../middleware/yopayRateLimit');
 
-// Onboarding routes
-router.post('/:businessId/onboarding/start', protect, yopayController.startOnboarding);
-router.post('/onboarding/:sessionId/step', protect, yopayController.processStep);
+// Onboarding routes (with rate limiting)
+router.post('/:businessId/onboarding/start', protect, onboardingLimiter, yopayController.startOnboarding);
+router.post('/onboarding/:sessionId/step', protect, onboardingLimiter, yopayController.processStep);
 router.get('/onboarding/:sessionId/status', protect, yopayController.getOnboardingStatus);
 
 // Account management
@@ -13,8 +14,8 @@ router.post('/:businessId/account', protect, yopayController.createYopayAccount)
 router.get('/:businessId/account', protect, yopayController.getAccount);
 router.put('/:businessId/account', protect, yopayController.updateAccount);
 
-// Payment processing
-router.post('/:businessId/payment', protect, yopayController.processPayment);
+// Payment processing (with rate limiting)
+router.post('/:businessId/payment', protect, paymentLimiter, yopayController.processPayment);
 
 // Dashboard & Analytics
 router.get('/:businessId/dashboard', protect, yopayController.getDashboard);
@@ -28,7 +29,7 @@ router.put('/:businessId/tier', protect, yopayController.updateTier);
 router.get('/banks', protect, yopayController.getBanks);
 router.post('/resolve-account', protect, yopayController.resolveBankAccount);
 
-// Webhook (no auth required)
-router.post('/webhook', yopayController.webhookHandler);
+// Webhook (no auth, but rate limited)
+router.post('/webhook', webhookLimiter, yopayController.webhookHandler);
 
 module.exports = router;

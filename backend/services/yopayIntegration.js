@@ -1,7 +1,8 @@
 const YopayConfig = require('../config/yopay');
 
 class YopayIntegration {
-  static async injectYopayPayments(website, yopayAccount) {
+  static async injectYopayPayments(businessId, yopayAccount) {
+    const Business = require('../models/Business');
     const paymentConfig = {
       provider: 'yopay',
       public_key: process.env.FLUTTERWAVE_PUBLIC_KEY,
@@ -21,11 +22,20 @@ class YopayIntegration {
       }
     };
 
+    // Update business with Yopay integration status
+    await Business.findByIdAndUpdate(businessId, {
+      'paymentSettings.provider': 'yopay',
+      'paymentSettings.status': 'active',
+      'paymentSettings.activatedAt': new Date()
+    });
+
     const yopayScript = this.generateUniversalScript(paymentConfig, yopayAccount.businessType);
     
     return {
       script: yopayScript,
-      buttons: this.generatePaymentButtons(website, yopayAccount)
+      buttons: this.generatePaymentButtons(yopayAccount),
+      integrated: true,
+      message: 'Yopay payments are now active on your website'
     };
   }
 
@@ -193,7 +203,7 @@ class YopayIntegration {
     `;
   }
 
-  static generatePaymentButtons(website, yopayAccount) {
+  static generatePaymentButtons(yopayAccount) {
     return {
       product: `
         <button onclick="Yopay.payForProduct({name: '{{product_name}}', price: {{product_price}}}, {email: '{{customer_email}}', name: '{{customer_name}}', phone: '{{customer_phone}}'})" class="yopay-button">

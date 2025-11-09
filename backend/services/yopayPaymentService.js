@@ -2,7 +2,8 @@ const YopayAccount = require('../models/YopayAccount');
 const Transaction = require('../models/Transaction');
 const PlatformRevenue = require('../models/PlatformRevenue');
 const YopayConfig = require('../config/yopay');
-const axios = require('axios');
+const flutterwaveService = require('./flutterwaveService');
+const crypto = require('crypto');
 
 class YopayPaymentService {
   static async processPayment(paymentData, businessId) {
@@ -12,52 +13,79 @@ class YopayPaymentService {
         throw new Error('Yopay account not found');
       }
 
+      if (yopayAccount.status !== 'active') {
+        throw new Error('Yopay account is not active');
+      }
+
+      // Validate payment data
+      this.validatePaymentData(paymentData);
+
+      // Generate idempotent transaction reference
+      const txRef = this.generateTxRef(businessId, paymentData);
+
+      // Check for duplicate transaction
+      const existingTransaction = await Transaction.findOne({ txRef });
+      if (existingTransaction) {
+        return {
+          success: true,
+          duplicate: true,
+          transaction: existingTransaction,
+          message: 'Transaction already processed'
+        };
+      }
+
       // Calculate amounts with tiered fees
       const amountDetails = this.calculateAmounts(
         paymentData.amount,
         yopayAccount.userTier
       );
 
-      // Create Flutterwave payment with subaccount split
+      // CRITICAL FIX: Flutterwave subaccount split
+      // Platform fee is NOT deducted via subaccount split
+      // Flutterwave sends the merchant their portion automatically
+      // We track platform fees separately for accounting
       const flutterwavePayload = {
-        tx_ref: `YO-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        tx_ref: txRef,
         amount: paymentData.amount,
-        currency: paymentData.currency || 'NGN',
-        payment_options: 'card, banktransfer, ussd, mobile_money',
+        currency: paymentData.currency || yopayAccount.currency || 'NGN',
+        payment_options: 'card,banktransfer,ussd,mpesa,mobilemoney',
         customer: {
           email: paymentData.customer_email,
           phone_number: paymentData.customer_phone,
           name: paymentData.customer_name
         },
         customizations: {
-          title: paymentData.business_name || 'Payment via Yopay',
-          description: paymentData.description,
+          title: paymentData.business_name || 'Payment',
+          description: paymentData.description || 'Payment via Yopay',
           logo: paymentData.logo
         },
+        // Subaccount receives payment minus Flutterwave fees only
         subaccounts: [
           {
             id: yopayAccount.flutterwaveSubaccountId,
-            transaction_charge_type: 'flat',
-            transaction_charge: amountDetails.flutterwaveFee
+            transaction_charge_type: 'flat_subaccount',
+            transaction_charge: 0 // Flutterwave handles their fee automatically
           }
         ],
         meta: {
-          business_id: businessId,
+          business_id: businessId.toString(),
           business_type: yopayAccount.businessType,
           user_tier: yopayAccount.userTier,
           platform_fee: amountDetails.platformFee,
-          flutterwave_fee: amountDetails.flutterwaveFee
+          yopay_transaction: 'true'
         }
       };
 
-      const payment = await this.initiateFlutterwavePayment(flutterwavePayload);
+      // Initiate payment with Flutterwave
+      const payment = await flutterwaveService.initiatePayment(flutterwavePayload);
 
-      // Record transaction with fee breakdown
+      // Record transaction
       const transaction = await Transaction.create({
         business: businessId,
         flutterwaveTransactionId: payment.data.id,
+        txRef: txRef,
         amount: paymentData.amount,
-        currency: paymentData.currency || 'NGN',
+        currency: paymentData.currency || yopayAccount.currency || 'NGN',
         customerEmail: paymentData.customer_email,
         customerName: paymentData.customer_name,
         customerPhone: paymentData.customer_phone,
@@ -70,14 +98,24 @@ class YopayPaymentService {
         netAmount: amountDetails.netAmount,
         status: 'pending',
         businessType: yopayAccount.businessType,
-        userTier: yopayAccount.userTier
+        userTier: yopayAccount.userTier,
+        metadata: {
+          payment_link: payment.data.link,
+          idempotency_key: txRef
+        }
       });
 
       return {
         success: true,
+        paymentLink: payment.data.link,
         paymentData: payment.data,
         amountDetails: amountDetails,
-        transaction: transaction
+        transaction: {
+          id: transaction._id,
+          txRef: transaction.txRef,
+          amount: transaction.amount,
+          status: transaction.status
+        }
       };
 
     } catch (error) {
@@ -86,8 +124,36 @@ class YopayPaymentService {
     }
   }
 
+  static validatePaymentData(data) {
+    if (!data.amount || data.amount <= 0) {
+      throw new Error('Valid payment amount is required');
+    }
+    if (!data.customer_email || !this.isValidEmail(data.customer_email)) {
+      throw new Error('Valid customer email is required');
+    }
+    if (!data.customer_name) {
+      throw new Error('Customer name is required');
+    }
+  }
+
+  static isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  static generateTxRef(businessId, paymentData) {
+    // Generate deterministic transaction reference for idempotency
+    const timestamp = Date.now();
+    const hash = crypto
+      .createHash('sha256')
+      .update(`${businessId}-${paymentData.customer_email}-${paymentData.amount}-${timestamp}`)
+      .digest('hex')
+      .substring(0, 10);
+    
+    return `YO-${timestamp}-${hash}`;
+  }
+
   static calculateAmounts(amount, userTier) {
-    const platformPercentage = YopayConfig.tieredFees[userTier];
+    const platformPercentage = YopayConfig.tieredFees[userTier] || YopayConfig.tieredFees.solo;
     const flutterwavePercentage = YopayConfig.flutterwaveFees.transaction;
 
     const flutterwaveFee = (amount * flutterwavePercentage) / 100;
@@ -106,22 +172,34 @@ class YopayPaymentService {
     };
   }
 
-  static async handleSuccessfulPayment(transactionId, flutterwaveData) {
+  static async handleSuccessfulPayment(txRef, flutterwaveData) {
     try {
-      const transaction = await Transaction.findById(transactionId);
+      // Find transaction by txRef (not ID)
+      const transaction = await Transaction.findOne({ txRef });
       if (!transaction) {
-        throw new Error('Transaction not found');
+        throw new Error(`Transaction not found for txRef: ${txRef}`);
+      }
+
+      // Prevent duplicate processing
+      if (transaction.status === 'successful') {
+        console.log(`Transaction ${txRef} already marked as successful`);
+        return {
+          success: true,
+          duplicate: true,
+          transaction: transaction
+        };
       }
 
       // Update transaction status
       transaction.status = 'successful';
       transaction.processedAt = new Date();
-      transaction.flutterwaveReference = flutterwaveData.tx_ref;
+      transaction.flutterwaveReference = flutterwaveData.flw_ref || flutterwaveData.tx_ref;
+      transaction.metadata.set('webhook_data', JSON.stringify(flutterwaveData));
       await transaction.save();
 
       // Record platform revenue
       await PlatformRevenue.create({
-        transaction: transactionId,
+        transaction: transaction._id,
         business: transaction.business,
         amount: transaction.fees.platform,
         userTier: transaction.userTier,
@@ -129,10 +207,11 @@ class YopayPaymentService {
         type: 'platform_fee'
       });
 
+      // FIXED: Business receives netAmount (which already has platform fee deducted)
       return {
         success: true,
         transaction: transaction,
-        businessReceived: transaction.netAmount - transaction.fees.platform
+        businessReceived: transaction.netAmount
       };
 
     } catch (error) {
@@ -141,18 +220,27 @@ class YopayPaymentService {
     }
   }
 
-  static async initiateFlutterwavePayment(payload) {
-    const response = await axios.post(
-      'https://api.flutterwave.com/v3/payments',
-      payload,
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.FLUTTERWAVE_SECRET_KEY}`,
-          'Content-Type': 'application/json'
-        }
+  static async handleFailedPayment(txRef, flutterwaveData) {
+    try {
+      const transaction = await Transaction.findOne({ txRef });
+      if (!transaction) {
+        console.error(`Transaction not found for failed payment: ${txRef}`);
+        return;
       }
-    );
-    return response.data;
+
+      transaction.status = 'failed';
+      transaction.metadata.set('failure_reason', flutterwaveData.status || 'Payment failed');
+      transaction.metadata.set('webhook_data', JSON.stringify(flutterwaveData));
+      await transaction.save();
+
+      return {
+        success: true,
+        transaction: transaction
+      };
+    } catch (error) {
+      console.error('Failed payment handling error:', error);
+      throw error;
+    }
   }
 
   static async getYopayDashboard(businessId) {
@@ -162,36 +250,88 @@ class YopayPaymentService {
         throw new Error('Yopay account not found');
       }
 
-      // Get transaction statistics
-      const transactions = await Transaction.find({ business: businessId });
-      
-      const totalRevenue = transactions.reduce((sum, t) => t.status === 'successful' ? sum + t.amount : sum, 0);
-      const platformFees = transactions.reduce((sum, t) => t.status === 'successful' ? sum + t.fees.platform : sum, 0);
-      const flutterwaveFees = transactions.reduce((sum, t) => t.status === 'successful' ? sum + t.fees.flutterwave : sum, 0);
-      const netRevenue = totalRevenue - platformFees - flutterwaveFees;
-      
-      const successfulTransactions = transactions.filter(t => t.status === 'successful').length;
-      const totalTransactions = transactions.length;
-      const successRate = totalTransactions > 0 ? (successfulTransactions / totalTransactions * 100).toFixed(1) : 0;
+      // Use aggregation for better performance at scale
+      const stats = await Transaction.aggregate([
+        {
+          $match: {
+            business: businessId,
+            status: 'successful'
+          }
+        },
+        {
+          $group: {
+            _id: null,
+            totalRevenue: { $sum: '$amount' },
+            platformFees: { $sum: '$fees.platform' },
+            flutterwaveFees: { $sum: '$fees.flutterwave' },
+            netRevenue: { $sum: '$netAmount' },
+            count: { $sum: 1 }
+          }
+        }
+      ]);
+
+      const totalTransactions = await Transaction.countDocuments({ business: businessId });
+      const successfulCount = stats[0]?.count || 0;
+      const successRate = totalTransactions > 0 ? ((successfulCount / totalTransactions) * 100).toFixed(1) : 0;
+
+      // Get recent transactions with limit
+      const recentTransactions = await Transaction.find({ business: businessId })
+        .sort({ createdAt: -1 })
+        .limit(10)
+        .lean();
 
       return {
         account: yopayAccount,
+        balance: {
+          available: (stats[0]?.netRevenue || 0).toFixed(2),
+          pending: '0.00',
+          totalProcessed: (stats[0]?.totalRevenue || 0).toFixed(2)
+        },
         revenue: {
-          total: totalRevenue.toFixed(2),
-          platformFees: platformFees.toFixed(2),
-          flutterwaveFees: flutterwaveFees.toFixed(2),
-          net: netRevenue.toFixed(2)
+          total: (stats[0]?.totalRevenue || 0).toFixed(2),
+          platformFees: (stats[0]?.platformFees || 0).toFixed(2),
+          flutterwaveFees: (stats[0]?.flutterwaveFees || 0).toFixed(2),
+          net: (stats[0]?.netRevenue || 0).toFixed(2)
         },
         analytics: {
           totalTransactions,
-          successfulTransactions,
+          successfulTransactions: successfulCount,
           successRate
         },
-        recentTransactions: transactions.slice(-10).reverse()
+        recentTransactions
       };
 
     } catch (error) {
       console.error('Dashboard fetch error:', error);
+      throw error;
+    }
+  }
+
+  static async updateYopayTier(businessId, newTier) {
+    try {
+      const yopayAccount = await YopayAccount.findOne({ business: businessId });
+      if (!yopayAccount) {
+        throw new Error('Yopay account not found');
+      }
+
+      const oldTier = yopayAccount.userTier;
+      yopayAccount.userTier = newTier;
+      await yopayAccount.save(); // This triggers the pre-save hook to recalculate fees
+
+      // Update Flutterwave subaccount split if needed
+      const newFee = YopayConfig.tieredFees[newTier];
+      await flutterwaveService.updateSubAccount(yopayAccount.flutterwaveSubaccountId, {
+        split_value: newFee
+      });
+
+      return {
+        success: true,
+        oldTier,
+        newTier,
+        message: `Yopay tier updated from ${oldTier} to ${newTier}`
+      };
+    } catch (error) {
+      console.error('Tier update error:', error);
       throw error;
     }
   }

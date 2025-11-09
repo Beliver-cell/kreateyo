@@ -92,4 +92,10 @@ yopayAccountSchema.pre('save', function(next) {
   next();
 });
 
+// Indexes for scalability
+yopayAccountSchema.index({ business: 1 }, { unique: true });
+yopayAccountSchema.index({ flutterwaveSubaccountId: 1 });
+yopayAccountSchema.index({ status: 1 });
+yopayAccountSchema.index({ userTier: 1 });
+
 module.exports = mongoose.model('YopayAccount', yopayAccountSchema);

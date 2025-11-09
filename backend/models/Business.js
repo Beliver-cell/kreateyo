@@ -49,6 +49,19 @@ const businessSchema = new mongoose.Schema({
       default: 'en'
     }
   },
+  paymentSettings: {
+    provider: {
+      type: String,
+      enum: ['yopay', 'stripe', 'none'],
+      default: 'none'
+    },
+    status: {
+      type: String,
+      enum: ['active', 'inactive', 'suspended'],
+      default: 'inactive'
+    },
+    activatedAt: Date
+  },
   isActive: {
     type: Boolean,
     default: true

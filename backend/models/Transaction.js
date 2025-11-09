@@ -4,12 +4,21 @@ const transactionSchema = new mongoose.Schema({
   business: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Business',
-    required: true
+    required: true,
+    index: true
   },
   
   flutterwaveTransactionId: {
     type: String,
-    required: true
+    required: true,
+    index: true
+  },
+  
+  txRef: {
+    type: String,
+    required: true,
+    unique: true,
+    index: true
   },
   
   flutterwaveReference: String,
@@ -58,7 +67,8 @@ const transactionSchema = new mongoose.Schema({
   status: {
     type: String,
     enum: ['pending', 'successful', 'failed', 'cancelled'],
-    default: 'pending'
+    default: 'pending',
+    index: true
   },
   
   businessType: {
@@ -73,14 +83,21 @@ const transactionSchema = new mongoose.Schema({
     required: true
   },
   
-  processedAt: Date
+  processedAt: Date,
+  
+  metadata: {
+    type: Map,
+    of: mongoose.Schema.Types.Mixed
+  }
 }, {
   timestamps: true
 });
 
-// Index for queries
+// Compound indexes for common queries at scale
 transactionSchema.index({ business: 1, status: 1 });
-transactionSchema.index({ flutterwaveTransactionId: 1 });
+transactionSchema.index({ business: 1, createdAt: -1 });
+transactionSchema.index({ txRef: 1 });
 transactionSchema.index({ createdAt: -1 });
+transactionSchema.index({ status: 1, createdAt: -1 });
 
 module.exports = mongoose.model('Transaction', transactionSchema);
