@@ -5,6 +5,8 @@ import { useState } from 'react';
 import { useBusinessContext } from '@/contexts/BusinessContext';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
+import cozaPreview from '@/assets/templates/coza-store-preview.jpg';
+import maleFashionPreview from '@/assets/templates/male-fashion-preview.jpg';
 
 const templates = {
   ecommerce: [
@@ -22,14 +24,16 @@ const templates = {
       description: 'Professional fashion store with elegant product showcase',
       gradient: 'from-gray-900 via-gray-700 to-gray-900',
       features: ['Free shipping banner', 'Quick view', 'Category filters'],
-      popular: true
+      popular: true,
+      previewImage: cozaPreview
     },
     {
       id: 'ecom-male',
       name: 'Male Fashion',
       description: 'Modern masculine design perfect for menswear brands',
       gradient: 'from-slate-800 via-blue-900 to-slate-800',
-      features: ['Category showcase', 'Instagram feed', 'Rating system']
+      features: ['Category showcase', 'Instagram feed', 'Rating system'],
+      previewImage: maleFashionPreview
     },
     {
       id: 'ecom-vibrant',
@@ -139,7 +143,7 @@ export default function BuildSite() {
       });
       return;
     }
-    navigate('/template-preview');
+    navigate(`/template-preview?template=${selectedTemplate}`);
   };
 
   return (
@@ -177,7 +181,16 @@ export default function BuildSite() {
               }`}
               onClick={() => handleSelectTemplate(template.id, template.name)}
             >
-              <div className={`aspect-video bg-gradient-to-br ${template.gradient} flex items-center justify-center relative overflow-hidden rounded-t-lg`}>
+              <div className="aspect-video relative overflow-hidden rounded-t-lg bg-muted">
+                {(template as any).previewImage ? (
+                  <img 
+                    src={(template as any).previewImage} 
+                    alt={template.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className={`w-full h-full bg-gradient-to-br ${template.gradient} flex items-center justify-center`} />
+                )}
                 {template.popular && (
                   <div className="absolute top-2 right-2 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full">
                     Popular
