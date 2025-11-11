@@ -145,47 +145,45 @@ export function AppSidebar() {
   // Mobile menu
   if (isMobile) {
     return (
-      <>
-        <Sheet open={open} onOpenChange={setOpen}>
-          <SheetTrigger asChild>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="fixed top-4 left-4 z-50 lg:hidden hover:bg-accent hover:scale-110 transition-all duration-300 shadow-md hover:shadow-xl backdrop-blur-sm bg-card/80 border border-border"
-            >
-              <Menu className="h-5 w-5" />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="w-64 p-0 border-r border-border backdrop-blur-xl bg-card/95">
-            <div className="p-4 border-b border-sidebar-border bg-gradient-to-r from-card to-muted">
-              <h2 className="text-lg font-bold bg-gradient-premium bg-clip-text text-transparent">NexusCreate</h2>
-            </div>
-            <div className="overflow-y-auto h-[calc(100vh-73px)]">
-              <div className="p-4">
-                <div className="space-y-1">
-                  {menuItems.map((item) => (
-                    <NavLink
-                      key={item.title}
-                      to={item.url}
-                      onClick={() => setOpen(false)}
-                      className={({ isActive }) =>
-                        `flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-300 hover:scale-[1.02] ${
-                          isActive
-                            ? 'bg-gradient-primary text-primary-foreground font-medium shadow-md'
-                            : 'hover:bg-accent/80 hover:shadow-sm'
-                        }`
-                      }
-                    >
-                      <item.icon className="w-4 h-4" />
-                      <span>{item.title}</span>
-                    </NavLink>
-                  ))}
-                </div>
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetTrigger asChild>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="fixed top-4 left-4 z-50 md:hidden hover:bg-accent hover:scale-110 transition-all duration-300 shadow-md hover:shadow-xl backdrop-blur-sm bg-card/80 border border-border"
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
+        </SheetTrigger>
+        <SheetContent side="left" className="w-64 p-0 border-r border-border backdrop-blur-xl bg-card/95">
+          <div className="p-4 border-b border-sidebar-border bg-gradient-to-r from-card to-muted">
+            <h2 className="text-lg font-bold bg-gradient-premium bg-clip-text text-transparent">NexusCreate</h2>
+          </div>
+          <div className="overflow-y-auto h-[calc(100vh-73px)]">
+            <div className="p-4">
+              <div className="space-y-1">
+                {menuItems.map((item) => (
+                  <NavLink
+                    key={item.title}
+                    to={item.url}
+                    onClick={() => setOpen(false)}
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-300 hover:scale-[1.02] ${
+                        isActive
+                          ? 'bg-gradient-primary text-primary-foreground font-medium shadow-md'
+                          : 'hover:bg-accent/80 hover:shadow-sm'
+                      }`
+                    }
+                  >
+                    <item.icon className="w-4 h-4" />
+                    <span>{item.title}</span>
+                  </NavLink>
+                ))}
               </div>
             </div>
-          </SheetContent>
-        </Sheet>
-      </>
+          </div>
+        </SheetContent>
+      </Sheet>
     );
   }
 
