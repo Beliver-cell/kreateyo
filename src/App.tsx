@@ -45,6 +45,9 @@ import ResetPassword from "./pages/ResetPassword";
 import AdsSponsors from "./pages/AdsSponsors";
 import SupplierManager from "./pages/SupplierManager";
 import DigitalProducts from "./pages/DigitalProducts";
+import MarketingCampaigns from "./pages/MarketingCampaigns";
+import DesignProjects from "./pages/DesignProjects";
+import ContentCalendar from "./pages/ContentCalendar";
 import { CustomerAuthProvider } from "@/contexts/CustomerAuthContext";
 import CustomerLogin from "./pages/customer/auth/CustomerLogin";
 import CustomerSignup from "./pages/customer/auth/CustomerSignup";
@@ -262,6 +265,9 @@ const App = () => (
             <Route path="/ads-sponsors" element={<DashboardLayout><AdsSponsors /></DashboardLayout>} />
             <Route path="/suppliers" element={<DashboardLayout><SupplierManager /></DashboardLayout>} />
             <Route path="/digital-products" element={<DashboardLayout><DigitalProducts /></DashboardLayout>} />
+            <Route path="/marketing-campaigns" element={<DashboardLayout><MarketingCampaigns /></DashboardLayout>} />
+            <Route path="/design-projects" element={<DashboardLayout><DesignProjects /></DashboardLayout>} />
+            <Route path="/content-calendar" element={<DashboardLayout><ContentCalendar /></DashboardLayout>} />
             
             {/* Customer Portal Routes */}
             <Route path="/customer/login" element={<CustomerLogin />} />

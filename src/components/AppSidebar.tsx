@@ -91,8 +91,14 @@ export function AppSidebar() {
       if (businessProfile.subType === 'digital') {
         businessSpecificTools.push({ title: 'Digital Products', url: '/digital-products', icon: Download });
       }
+      
+      // Marketing campaigns for all ecommerce types
+      businessSpecificTools.push({ title: 'Marketing', url: '/marketing-campaigns', icon: BarChart3 });
     } else if (businessProfile.type === 'services') {
       businessSpecificTools.push({ title: 'Appointments', url: '/appointments', icon: Calendar });
+      // Service-specific tools available for all services
+      businessSpecificTools.push({ title: 'Projects', url: '/design-projects', icon: Briefcase });
+      businessSpecificTools.push({ title: 'Content Calendar', url: '/content-calendar', icon: FileEdit });
     }
 
     let specificItems = [];

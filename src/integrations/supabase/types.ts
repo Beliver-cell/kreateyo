@@ -74,6 +74,155 @@ export type Database = {
         }
         Relationships: []
       }
+      content_calendar: {
+        Row: {
+          author: string | null
+          content_type: string
+          created_at: string
+          description: string | null
+          id: string
+          metadata: Json | null
+          platform: string | null
+          scheduled_date: string
+          status: string
+          tags: string[] | null
+          title: string
+          updated_at: string
+          user_id: string
+          word_count: number | null
+        }
+        Insert: {
+          author?: string | null
+          content_type: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          platform?: string | null
+          scheduled_date: string
+          status?: string
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          user_id: string
+          word_count?: number | null
+        }
+        Update: {
+          author?: string | null
+          content_type?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          platform?: string | null
+          scheduled_date?: string
+          status?: string
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+          word_count?: number | null
+        }
+        Relationships: []
+      }
+      design_milestones: {
+        Row: {
+          completed: boolean | null
+          completed_at: string | null
+          created_at: string
+          description: string | null
+          due_date: string | null
+          id: string
+          order_index: number | null
+          project_id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          completed?: boolean | null
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          order_index?: number | null
+          project_id: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          completed?: boolean | null
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          order_index?: number | null
+          project_id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "design_milestones_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "design_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      design_projects: {
+        Row: {
+          budget: number | null
+          client_name: string
+          completion_percentage: number | null
+          created_at: string
+          deadline: string | null
+          description: string | null
+          id: string
+          metadata: Json | null
+          project_name: string
+          project_type: string | null
+          start_date: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          budget?: number | null
+          client_name: string
+          completion_percentage?: number | null
+          created_at?: string
+          deadline?: string | null
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          project_name: string
+          project_type?: string | null
+          start_date?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          budget?: number | null
+          client_name?: string
+          completion_percentage?: number | null
+          created_at?: string
+          deadline?: string | null
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          project_name?: string
+          project_type?: string | null
+          start_date?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       digital_products: {
         Row: {
           access_duration_days: number | null
@@ -445,6 +594,66 @@ export type Database = {
           },
         ]
       }
+      marketing_campaigns: {
+        Row: {
+          budget: number | null
+          clicks: number | null
+          conversions: number | null
+          created_at: string
+          description: string | null
+          end_date: string | null
+          id: string
+          impressions: number | null
+          metadata: Json | null
+          name: string
+          platform: string
+          revenue: number | null
+          spent: number | null
+          start_date: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          budget?: number | null
+          clicks?: number | null
+          conversions?: number | null
+          created_at?: string
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          impressions?: number | null
+          metadata?: Json | null
+          name: string
+          platform: string
+          revenue?: number | null
+          spent?: number | null
+          start_date?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          budget?: number | null
+          clicks?: number | null
+          conversions?: number | null
+          created_at?: string
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          impressions?: number | null
+          metadata?: Json | null
+          name?: string
+          platform?: string
+          revenue?: number | null
+          spent?: number | null
+          start_date?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           category: string
@@ -474,6 +683,51 @@ export type Database = {
           metadata?: Json | null
           read?: boolean
           title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      order_notifications: {
+        Row: {
+          carrier: string | null
+          created_at: string
+          customer_email: string
+          error_message: string | null
+          id: string
+          metadata: Json | null
+          notification_type: string
+          order_id: string
+          sent_at: string | null
+          status: string
+          tracking_number: string | null
+          user_id: string
+        }
+        Insert: {
+          carrier?: string | null
+          created_at?: string
+          customer_email: string
+          error_message?: string | null
+          id?: string
+          metadata?: Json | null
+          notification_type: string
+          order_id: string
+          sent_at?: string | null
+          status?: string
+          tracking_number?: string | null
+          user_id: string
+        }
+        Update: {
+          carrier?: string | null
+          created_at?: string
+          customer_email?: string
+          error_message?: string | null
+          id?: string
+          metadata?: Json | null
+          notification_type?: string
+          order_id?: string
+          sent_at?: string | null
+          status?: string
+          tracking_number?: string | null
           user_id?: string
         }
         Relationships: []
