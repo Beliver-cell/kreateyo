@@ -14,3 +14,15 @@ verify_jwt = true
 
 [functions.sync-inventory]
 verify_jwt = true
+
+[functions.generate-license]
+verify_jwt = true
+
+[functions.create-download-link]
+verify_jwt = false
+
+[functions.send-digital-product]
+verify_jwt = true
+
+[functions.validate-license]
+verify_jwt = false

@@ -28,6 +28,7 @@ import {
   BarChart3,
   DollarSign,
   Truck,
+  Download,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -84,6 +85,11 @@ export function AppSidebar() {
       // Add Supplier Manager for dropshipping businesses
       if (businessProfile.subType === 'dropshipping') {
         businessSpecificTools.push({ title: 'Suppliers', url: '/suppliers', icon: Truck });
+      }
+      
+      // Add Digital Products for digital businesses
+      if (businessProfile.subType === 'digital') {
+        businessSpecificTools.push({ title: 'Digital Products', url: '/digital-products', icon: Download });
       }
     } else if (businessProfile.type === 'services') {
       businessSpecificTools.push({ title: 'Appointments', url: '/appointments', icon: Calendar });

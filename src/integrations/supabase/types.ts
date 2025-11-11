@@ -74,6 +74,193 @@ export type Database = {
         }
         Relationships: []
       }
+      digital_products: {
+        Row: {
+          access_duration_days: number | null
+          created_at: string
+          description: string | null
+          download_limit: number | null
+          file_size: number | null
+          file_type: string | null
+          file_url: string
+          id: string
+          is_active: boolean | null
+          license_type: string
+          metadata: Json | null
+          name: string
+          price: number
+          product_id: string | null
+          requires_activation: boolean | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          access_duration_days?: number | null
+          created_at?: string
+          description?: string | null
+          download_limit?: number | null
+          file_size?: number | null
+          file_type?: string | null
+          file_url: string
+          id?: string
+          is_active?: boolean | null
+          license_type?: string
+          metadata?: Json | null
+          name: string
+          price: number
+          product_id?: string | null
+          requires_activation?: boolean | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          access_duration_days?: number | null
+          created_at?: string
+          description?: string | null
+          download_limit?: number | null
+          file_size?: number | null
+          file_type?: string | null
+          file_url?: string
+          id?: string
+          is_active?: boolean | null
+          license_type?: string
+          metadata?: Json | null
+          name?: string
+          price?: number
+          product_id?: string | null
+          requires_activation?: boolean | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      download_links: {
+        Row: {
+          created_at: string
+          digital_product_id: string
+          download_url: string
+          downloaded: boolean | null
+          downloaded_at: string | null
+          expires_at: string
+          id: string
+          ip_address: string | null
+          license_key_id: string
+          secure_token: string
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          digital_product_id: string
+          download_url: string
+          downloaded?: boolean | null
+          downloaded_at?: string | null
+          expires_at: string
+          id?: string
+          ip_address?: string | null
+          license_key_id: string
+          secure_token: string
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          digital_product_id?: string
+          download_url?: string
+          downloaded?: boolean | null
+          downloaded_at?: string | null
+          expires_at?: string
+          id?: string
+          ip_address?: string | null
+          license_key_id?: string
+          secure_token?: string
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "download_links_digital_product_id_fkey"
+            columns: ["digital_product_id"]
+            isOneToOne: false
+            referencedRelation: "digital_products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "download_links_license_key_id_fkey"
+            columns: ["license_key_id"]
+            isOneToOne: false
+            referencedRelation: "license_keys"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      download_logs: {
+        Row: {
+          city: string | null
+          country: string | null
+          created_at: string
+          customer_email: string
+          device_info: Json | null
+          digital_product_id: string
+          download_link_id: string | null
+          error_message: string | null
+          id: string
+          ip_address: string | null
+          license_key_id: string
+          success: boolean | null
+          user_agent: string | null
+        }
+        Insert: {
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          customer_email: string
+          device_info?: Json | null
+          digital_product_id: string
+          download_link_id?: string | null
+          error_message?: string | null
+          id?: string
+          ip_address?: string | null
+          license_key_id: string
+          success?: boolean | null
+          user_agent?: string | null
+        }
+        Update: {
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          customer_email?: string
+          device_info?: Json | null
+          digital_product_id?: string
+          download_link_id?: string | null
+          error_message?: string | null
+          id?: string
+          ip_address?: string | null
+          license_key_id?: string
+          success?: boolean | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "download_logs_digital_product_id_fkey"
+            columns: ["digital_product_id"]
+            isOneToOne: false
+            referencedRelation: "digital_products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "download_logs_download_link_id_fkey"
+            columns: ["download_link_id"]
+            isOneToOne: false
+            referencedRelation: "download_links"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "download_logs_license_key_id_fkey"
+            columns: ["license_key_id"]
+            isOneToOne: false
+            referencedRelation: "license_keys"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       import_history: {
         Row: {
           completed_at: string | null
@@ -190,6 +377,74 @@ export type Database = {
           },
         ]
       }
+      license_keys: {
+        Row: {
+          activation_count: number | null
+          created_at: string
+          customer_email: string
+          customer_order_id: string | null
+          device_fingerprints: Json | null
+          digital_product_id: string
+          download_count: number | null
+          expires_at: string | null
+          id: string
+          ip_addresses: Json | null
+          last_accessed_at: string | null
+          license_key: string
+          max_activations: number | null
+          max_downloads: number | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          activation_count?: number | null
+          created_at?: string
+          customer_email: string
+          customer_order_id?: string | null
+          device_fingerprints?: Json | null
+          digital_product_id: string
+          download_count?: number | null
+          expires_at?: string | null
+          id?: string
+          ip_addresses?: Json | null
+          last_accessed_at?: string | null
+          license_key: string
+          max_activations?: number | null
+          max_downloads?: number | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          activation_count?: number | null
+          created_at?: string
+          customer_email?: string
+          customer_order_id?: string | null
+          device_fingerprints?: Json | null
+          digital_product_id?: string
+          download_count?: number | null
+          expires_at?: string | null
+          id?: string
+          ip_addresses?: Json | null
+          last_accessed_at?: string | null
+          license_key?: string
+          max_activations?: number | null
+          max_downloads?: number | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "license_keys_digital_product_id_fkey"
+            columns: ["digital_product_id"]
+            isOneToOne: false
+            referencedRelation: "digital_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notifications: {
         Row: {
           category: string
@@ -222,6 +477,60 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      piracy_alerts: {
+        Row: {
+          alert_type: string
+          created_at: string
+          details: Json | null
+          digital_product_id: string | null
+          id: string
+          license_key_id: string | null
+          resolved: boolean | null
+          resolved_at: string | null
+          severity: string
+          user_id: string
+        }
+        Insert: {
+          alert_type: string
+          created_at?: string
+          details?: Json | null
+          digital_product_id?: string | null
+          id?: string
+          license_key_id?: string | null
+          resolved?: boolean | null
+          resolved_at?: string | null
+          severity?: string
+          user_id: string
+        }
+        Update: {
+          alert_type?: string
+          created_at?: string
+          details?: Json | null
+          digital_product_id?: string | null
+          id?: string
+          license_key_id?: string | null
+          resolved?: boolean | null
+          resolved_at?: string | null
+          severity?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "piracy_alerts_digital_product_id_fkey"
+            columns: ["digital_product_id"]
+            isOneToOne: false
+            referencedRelation: "digital_products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "piracy_alerts_license_key_id_fkey"
+            columns: ["license_key_id"]
+            isOneToOne: false
+            referencedRelation: "license_keys"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       supplier_orders: {
         Row: {
