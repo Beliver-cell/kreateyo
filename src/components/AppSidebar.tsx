@@ -27,6 +27,7 @@ import {
   Headphones,
   BarChart3,
   DollarSign,
+  Truck,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -79,6 +80,11 @@ export function AppSidebar() {
     const businessSpecificTools = [];
     if (businessProfile.type === 'ecommerce') {
       businessSpecificTools.push({ title: 'Inventory', url: '/inventory', icon: Package });
+      
+      // Add Supplier Manager for dropshipping businesses
+      if (businessProfile.subType === 'dropshipping') {
+        businessSpecificTools.push({ title: 'Suppliers', url: '/suppliers', icon: Truck });
+      }
     } else if (businessProfile.type === 'services') {
       businessSpecificTools.push({ title: 'Appointments', url: '/appointments', icon: Calendar });
     }

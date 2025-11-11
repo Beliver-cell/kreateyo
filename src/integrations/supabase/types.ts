@@ -116,6 +116,80 @@ export type Database = {
         }
         Relationships: []
       }
+      imported_products: {
+        Row: {
+          compare_at_price: number | null
+          cost: number
+          created_at: string
+          description: string | null
+          external_id: string
+          id: string
+          images: Json | null
+          last_synced_at: string | null
+          metadata: Json | null
+          name: string
+          price: number
+          profit_margin: number | null
+          shipping_time: string | null
+          stock_quantity: number | null
+          supplier_id: string
+          sync_status: string
+          updated_at: string
+          user_id: string
+          variants: Json | null
+        }
+        Insert: {
+          compare_at_price?: number | null
+          cost: number
+          created_at?: string
+          description?: string | null
+          external_id: string
+          id?: string
+          images?: Json | null
+          last_synced_at?: string | null
+          metadata?: Json | null
+          name: string
+          price: number
+          profit_margin?: number | null
+          shipping_time?: string | null
+          stock_quantity?: number | null
+          supplier_id: string
+          sync_status?: string
+          updated_at?: string
+          user_id: string
+          variants?: Json | null
+        }
+        Update: {
+          compare_at_price?: number | null
+          cost?: number
+          created_at?: string
+          description?: string | null
+          external_id?: string
+          id?: string
+          images?: Json | null
+          last_synced_at?: string | null
+          metadata?: Json | null
+          name?: string
+          price?: number
+          profit_margin?: number | null
+          shipping_time?: string | null
+          stock_quantity?: number | null
+          supplier_id?: string
+          sync_status?: string
+          updated_at?: string
+          user_id?: string
+          variants?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "imported_products_supplier_id_fkey"
+            columns: ["supplier_id"]
+            isOneToOne: false
+            referencedRelation: "suppliers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notifications: {
         Row: {
           category: string
@@ -145,6 +219,117 @@ export type Database = {
           metadata?: Json | null
           read?: boolean
           title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      supplier_orders: {
+        Row: {
+          created_at: string
+          customer_order_id: string
+          error_message: string | null
+          external_order_id: string | null
+          id: string
+          imported_product_id: string | null
+          order_details: Json | null
+          shipping_carrier: string | null
+          status: string
+          supplier_id: string
+          total_cost: number | null
+          tracking_number: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          customer_order_id: string
+          error_message?: string | null
+          external_order_id?: string | null
+          id?: string
+          imported_product_id?: string | null
+          order_details?: Json | null
+          shipping_carrier?: string | null
+          status?: string
+          supplier_id: string
+          total_cost?: number | null
+          tracking_number?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          customer_order_id?: string
+          error_message?: string | null
+          external_order_id?: string | null
+          id?: string
+          imported_product_id?: string | null
+          order_details?: Json | null
+          shipping_carrier?: string | null
+          status?: string
+          supplier_id?: string
+          total_cost?: number | null
+          tracking_number?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "supplier_orders_imported_product_id_fkey"
+            columns: ["imported_product_id"]
+            isOneToOne: false
+            referencedRelation: "imported_products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "supplier_orders_supplier_id_fkey"
+            columns: ["supplier_id"]
+            isOneToOne: false
+            referencedRelation: "suppliers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      suppliers: {
+        Row: {
+          api_key: string | null
+          api_secret: string | null
+          created_at: string
+          id: string
+          last_sync_at: string | null
+          name: string
+          platform: string
+          settings: Json | null
+          status: string
+          store_url: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          api_key?: string | null
+          api_secret?: string | null
+          created_at?: string
+          id?: string
+          last_sync_at?: string | null
+          name: string
+          platform: string
+          settings?: Json | null
+          status?: string
+          store_url?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          api_key?: string | null
+          api_secret?: string | null
+          created_at?: string
+          id?: string
+          last_sync_at?: string | null
+          name?: string
+          platform?: string
+          settings?: Json | null
+          status?: string
+          store_url?: string | null
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
@@ -181,6 +366,50 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      sync_logs: {
+        Row: {
+          created_at: string
+          error_details: Json | null
+          id: string
+          items_failed: number | null
+          items_processed: number | null
+          status: string
+          supplier_id: string | null
+          sync_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          error_details?: Json | null
+          id?: string
+          items_failed?: number | null
+          items_processed?: number | null
+          status: string
+          supplier_id?: string | null
+          sync_type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          error_details?: Json | null
+          id?: string
+          items_failed?: number | null
+          items_processed?: number | null
+          status?: string
+          supplier_id?: string | null
+          sync_type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sync_logs_supplier_id_fkey"
+            columns: ["supplier_id"]
+            isOneToOne: false
+            referencedRelation: "suppliers"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       team_invitations: {
         Row: {

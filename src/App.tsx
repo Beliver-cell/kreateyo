@@ -43,6 +43,7 @@ import VerifyEmail from "./pages/VerifyEmail";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import AdsSponsors from "./pages/AdsSponsors";
+import SupplierManager from "./pages/SupplierManager";
 import { CustomerAuthProvider } from "@/contexts/CustomerAuthContext";
 import CustomerLogin from "./pages/customer/auth/CustomerLogin";
 import CustomerSignup from "./pages/customer/auth/CustomerSignup";
@@ -258,6 +259,7 @@ const App = () => (
             <Route path="/appointments" element={<DashboardLayout><AppointmentManager /></DashboardLayout>} />
             <Route path="/affiliates" element={<DashboardLayout><AffiliateProgram /></DashboardLayout>} />
             <Route path="/ads-sponsors" element={<DashboardLayout><AdsSponsors /></DashboardLayout>} />
+            <Route path="/suppliers" element={<DashboardLayout><SupplierManager /></DashboardLayout>} />
             
             {/* Customer Portal Routes */}
             <Route path="/customer/login" element={<CustomerLogin />} />
