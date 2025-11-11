@@ -4,10 +4,10 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { BusinessProvider } from "@/contexts/BusinessContext";
-import { OnboardingModal } from "@/components/OnboardingModal";
+import { OnboardingModalWrapper } from "@/components/OnboardingModalWrapper";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import Index from "./pages/Index";
-import Dashboard from "./pages/Dashboard";
+import DashboardEnhanced from "./pages/DashboardEnhanced";
 import Products from "./pages/Products";
 import Orders from "./pages/Orders";
 import BuildSite from "./pages/BuildSite";
@@ -71,7 +71,7 @@ const App = () => (
               path="/dashboard"
               element={
                 <DashboardLayout>
-                  <Dashboard />
+                  <DashboardEnhanced />
                 </DashboardLayout>
               }
             />
@@ -268,7 +268,7 @@ const App = () => (
             
             <Route path="*" element={<NotFound />} />
           </Routes>
-          <OnboardingModal />
+          <OnboardingModalWrapper />
           </CustomerAuthProvider>
         </BrowserRouter>
       </BusinessProvider>

@@ -1,10 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { BusinessType, AccountType, BusinessProfile } from '@/types/business';
+import { BusinessType, AccountType, BusinessProfile, EcommerceSubType, ServicesSubType } from '@/types/business';
 
 interface BusinessContextType {
   businessProfile: BusinessProfile;
   setBusinessType: (type: BusinessType) => void;
   setAccountType: (type: AccountType) => void;
+  setBusinessSubType: (subType: EcommerceSubType | ServicesSubType) => void;
   completeOnboarding: () => void;
 }
 
@@ -28,12 +29,16 @@ export function BusinessProvider({ children }: { children: React.ReactNode }) {
     setBusinessProfile(prev => ({ ...prev, accountType }));
   };
 
+  const setBusinessSubType = (subType: EcommerceSubType | ServicesSubType) => {
+    setBusinessProfile(prev => ({ ...prev, subType }));
+  };
+
   const completeOnboarding = () => {
     setBusinessProfile(prev => ({ ...prev, onboarded: true }));
   };
 
   return (
-    <BusinessContext.Provider value={{ businessProfile, setBusinessType, setAccountType, completeOnboarding }}>
+    <BusinessContext.Provider value={{ businessProfile, setBusinessType, setAccountType, setBusinessSubType, completeOnboarding }}>
       {children}
     </BusinessContext.Provider>
   );
