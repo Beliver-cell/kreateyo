@@ -1,4 +1,3 @@
-import { DashboardLayout } from '@/components/DashboardLayout';
 import { useBusinessContext } from '@/contexts/BusinessContext';
 import { EcommercePhysicalDashboard } from '@/components/dashboards/EcommercePhysicalDashboard';
 import { EcommerceDigitalDashboard } from '@/components/dashboards/EcommerceDigitalDashboard';
@@ -160,5 +159,5 @@ export default function DashboardEnhanced() {
     );
   };
 
-  return <DashboardLayout>{renderDashboard()}</DashboardLayout>;
+  return <>{renderDashboard()}</>;
 }
