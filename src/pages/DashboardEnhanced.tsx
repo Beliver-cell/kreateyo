@@ -26,96 +26,96 @@ export default function DashboardEnhanced() {
     if (businessProfile.type === 'services') {
       const categoryWidgets: Record<string, React.ReactNode> = {
         marketing: (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card className="p-4">
-              <BarChart3 className="h-6 w-6 text-primary mb-2" />
-              <h3 className="font-semibold text-sm mb-1">Campaign Performance</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+            <Card className="p-3 md:p-4">
+              <BarChart3 className="h-5 w-5 md:h-6 md:w-6 text-primary mb-2" />
+              <h3 className="font-semibold text-xs md:text-sm mb-1">Campaign Performance</h3>
               <p className="text-xs text-muted-foreground">Track ROI & conversions</p>
             </Card>
-            <Card className="p-4">
-              <Target className="h-6 w-6 text-primary mb-2" />
-              <h3 className="font-semibold text-sm mb-1">Lead Tracker</h3>
+            <Card className="p-3 md:p-4">
+              <Target className="h-5 w-5 md:h-6 md:w-6 text-primary mb-2" />
+              <h3 className="font-semibold text-xs md:text-sm mb-1">Lead Tracker</h3>
               <p className="text-xs text-muted-foreground">Monitor conversion rates</p>
             </Card>
-            <Card className="p-4">
-              <Lightbulb className="h-6 w-6 text-primary mb-2" />
-              <h3 className="font-semibold text-sm mb-1">A/B Testing</h3>
+            <Card className="p-3 md:p-4">
+              <Lightbulb className="h-5 w-5 md:h-6 md:w-6 text-primary mb-2" />
+              <h3 className="font-semibold text-xs md:text-sm mb-1">A/B Testing</h3>
               <p className="text-xs text-muted-foreground">Optimize campaigns</p>
             </Card>
           </div>
         ),
         design: (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card className="p-4">
-              <CheckCircle className="h-6 w-6 text-primary mb-2" />
-              <h3 className="font-semibold text-sm mb-1">Project Milestones</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+            <Card className="p-3 md:p-4">
+              <CheckCircle className="h-5 w-5 md:h-6 md:w-6 text-primary mb-2" />
+              <h3 className="font-semibold text-xs md:text-sm mb-1">Project Milestones</h3>
               <p className="text-xs text-muted-foreground">Track progress & deadlines</p>
             </Card>
-            <Card className="p-4">
-              <MessageSquare className="h-6 w-6 text-primary mb-2" />
-              <h3 className="font-semibold text-sm mb-1">Client Feedback</h3>
+            <Card className="p-3 md:p-4">
+              <MessageSquare className="h-5 w-5 md:h-6 md:w-6 text-primary mb-2" />
+              <h3 className="font-semibold text-xs md:text-sm mb-1">Client Feedback</h3>
               <p className="text-xs text-muted-foreground">Gather & manage reviews</p>
             </Card>
-            <Card className="p-4">
-              <FileCheck className="h-6 w-6 text-primary mb-2" />
-              <h3 className="font-semibold text-sm mb-1">Approval Workflow</h3>
+            <Card className="p-3 md:p-4">
+              <FileCheck className="h-5 w-5 md:h-6 md:w-6 text-primary mb-2" />
+              <h3 className="font-semibold text-xs md:text-sm mb-1">Approval Workflow</h3>
               <p className="text-xs text-muted-foreground">Streamline approvals</p>
             </Card>
           </div>
         ),
         operations: (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card className="p-4">
-              <BookOpen className="h-6 w-6 text-primary mb-2" />
-              <h3 className="font-semibold text-sm mb-1">SOPs</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+            <Card className="p-3 md:p-4">
+              <BookOpen className="h-5 w-5 md:h-6 md:w-6 text-primary mb-2" />
+              <h3 className="font-semibold text-xs md:text-sm mb-1">SOPs</h3>
               <p className="text-xs text-muted-foreground">Standard procedures</p>
             </Card>
-            <Card className="p-4">
-              <CheckCircle className="h-6 w-6 text-primary mb-2" />
-              <h3 className="font-semibold text-sm mb-1">Compliance</h3>
+            <Card className="p-3 md:p-4">
+              <CheckCircle className="h-5 w-5 md:h-6 md:w-6 text-primary mb-2" />
+              <h3 className="font-semibold text-xs md:text-sm mb-1">Compliance</h3>
               <p className="text-xs text-muted-foreground">Checklists & audits</p>
             </Card>
-            <Card className="p-4">
-              <Target className="h-6 w-6 text-primary mb-2" />
-              <h3 className="font-semibold text-sm mb-1">Automation</h3>
+            <Card className="p-3 md:p-4">
+              <Target className="h-5 w-5 md:h-6 md:w-6 text-primary mb-2" />
+              <h3 className="font-semibold text-xs md:text-sm mb-1">Automation</h3>
               <p className="text-xs text-muted-foreground">Workflow optimization</p>
             </Card>
           </div>
         ),
         writing: (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card className="p-4">
-              <Calendar className="h-6 w-6 text-primary mb-2" />
-              <h3 className="font-semibold text-sm mb-1">Content Calendar</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+            <Card className="p-3 md:p-4">
+              <Calendar className="h-5 w-5 md:h-6 md:w-6 text-primary mb-2" />
+              <h3 className="font-semibold text-xs md:text-sm mb-1">Content Calendar</h3>
               <p className="text-xs text-muted-foreground">Plan & schedule content</p>
             </Card>
-            <Card className="p-4">
-              <FileCheck className="h-6 w-6 text-primary mb-2" />
-              <h3 className="font-semibold text-sm mb-1">Editorial Workflow</h3>
+            <Card className="p-3 md:p-4">
+              <FileCheck className="h-5 w-5 md:h-6 md:w-6 text-primary mb-2" />
+              <h3 className="font-semibold text-xs md:text-sm mb-1">Editorial Workflow</h3>
               <p className="text-xs text-muted-foreground">Manage revisions</p>
             </Card>
-            <Card className="p-4">
-              <BarChart3 className="h-6 w-6 text-primary mb-2" />
-              <h3 className="font-semibold text-sm mb-1">Performance</h3>
+            <Card className="p-3 md:p-4">
+              <BarChart3 className="h-5 w-5 md:h-6 md:w-6 text-primary mb-2" />
+              <h3 className="font-semibold text-xs md:text-sm mb-1">Performance</h3>
               <p className="text-xs text-muted-foreground">Content analytics</p>
             </Card>
           </div>
         ),
         coaching: (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card className="p-4">
-              <Calendar className="h-6 w-6 text-primary mb-2" />
-              <h3 className="font-semibold text-sm mb-1">Session Scheduler</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+            <Card className="p-3 md:p-4">
+              <Calendar className="h-5 w-5 md:h-6 md:w-6 text-primary mb-2" />
+              <h3 className="font-semibold text-xs md:text-sm mb-1">Session Scheduler</h3>
               <p className="text-xs text-muted-foreground">Book & manage sessions</p>
             </Card>
-            <Card className="p-4">
-              <Target className="h-6 w-6 text-primary mb-2" />
-              <h3 className="font-semibold text-sm mb-1">Progress Tracker</h3>
+            <Card className="p-3 md:p-4">
+              <Target className="h-5 w-5 md:h-6 md:w-6 text-primary mb-2" />
+              <h3 className="font-semibold text-xs md:text-sm mb-1">Progress Tracker</h3>
               <p className="text-xs text-muted-foreground">Client goals & milestones</p>
             </Card>
-            <Card className="p-4">
-              <BookOpen className="h-6 w-6 text-primary mb-2" />
-              <h3 className="font-semibold text-sm mb-1">Resource Library</h3>
+            <Card className="p-3 md:p-4">
+              <BookOpen className="h-5 w-5 md:h-6 md:w-6 text-primary mb-2" />
+              <h3 className="font-semibold text-xs md:text-sm mb-1">Resource Library</h3>
               <p className="text-xs text-muted-foreground">Share materials</p>
             </Card>
           </div>
@@ -150,10 +150,10 @@ export default function DashboardEnhanced() {
 
     // Blog dashboard - use existing dashboard logic
     return (
-      <div className="space-y-6">
+      <div className="space-y-4 md:space-y-6">
         <div>
-          <h1 className="text-3xl font-bold mb-2">Blog Dashboard</h1>
-          <p className="text-muted-foreground">Manage your content and engage with your audience</p>
+          <h1 className="text-2xl md:text-3xl font-bold mb-2">Blog Dashboard</h1>
+          <p className="text-sm md:text-base text-muted-foreground">Manage your content and engage with your audience</p>
         </div>
       </div>
     );

@@ -28,34 +28,34 @@ export function ServicesBaseDashboard({ title, description, categorySpecificWidg
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       <div>
-        <h1 className="text-3xl font-bold mb-2">{title}</h1>
-        <p className="text-muted-foreground">{description}</p>
+        <h1 className="text-2xl md:text-3xl font-bold mb-2">{title}</h1>
+        <p className="text-sm md:text-base text-muted-foreground">{description}</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
         {metrics.map((metric) => (
-          <Card key={metric.title} className="p-6">
+          <Card key={metric.title} className="p-4 md:p-6">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-muted-foreground">{metric.title}</span>
-              <metric.icon className="h-5 w-5 text-muted-foreground" />
+              <span className="text-xs md:text-sm font-medium text-muted-foreground">{metric.title}</span>
+              <metric.icon className="h-4 w-4 md:h-5 md:w-5 text-muted-foreground" />
             </div>
-            <div className="text-2xl font-bold mb-1">{metric.value}</div>
+            <div className="text-xl md:text-2xl font-bold mb-1">{metric.value}</div>
             <div className="text-xs text-green-600">{metric.change}</div>
           </Card>
         ))}
       </div>
 
       {categorySpecificWidgets && (
-        <div className="mb-6">
+        <div className="mb-4 md:mb-6">
           {categorySpecificWidgets}
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Recent Activity</h2>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+        <Card className="p-4 md:p-6">
+          <h2 className="text-lg md:text-xl font-semibold mb-4">Recent Activity</h2>
           <div className="space-y-4">
             {recentActivity.map((activity, index) => (
               <div key={index} className="flex items-start gap-3 pb-3 border-b last:border-0">
@@ -69,14 +69,14 @@ export function ServicesBaseDashboard({ title, description, categorySpecificWidg
           </div>
         </Card>
 
-        <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-1 gap-3">
+        <Card className="p-4 md:p-6">
+          <h2 className="text-lg md:text-xl font-semibold mb-4">Quick Actions</h2>
+          <div className="grid grid-cols-1 gap-2 md:gap-3">
             <Button onClick={() => navigate('/clients')} className="w-full justify-start" variant="outline">
               <Plus className="h-4 w-4 mr-2" />
               Add New Client
             </Button>
-            <Button onClick={() => navigate('/appointment-manager')} className="w-full justify-start" variant="outline">
+            <Button onClick={() => navigate('/appointments')} className="w-full justify-start" variant="outline">
               <Calendar className="h-4 w-4 mr-2" />
               Schedule Booking
             </Button>

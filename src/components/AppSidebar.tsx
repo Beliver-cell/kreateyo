@@ -133,6 +133,7 @@ export function AppSidebar() {
     ] : [];
 
     const endItems = [
+      { title: 'Billing', url: '/billing', icon: CreditCard },
       { title: 'Platform Support', url: '/support', icon: HelpCircle },
       { title: 'Settings', url: '/settings', icon: Settings },
     ];

@@ -48,6 +48,7 @@ import DigitalProducts from "./pages/DigitalProducts";
 import MarketingCampaigns from "./pages/MarketingCampaigns";
 import DesignProjects from "./pages/DesignProjects";
 import ContentCalendar from "./pages/ContentCalendar";
+import Billing from "./pages/Billing";
 import { CustomerAuthProvider } from "@/contexts/CustomerAuthContext";
 import CustomerLogin from "./pages/customer/auth/CustomerLogin";
 import CustomerSignup from "./pages/customer/auth/CustomerSignup";
@@ -268,6 +269,7 @@ const App = () => (
             <Route path="/marketing-campaigns" element={<DashboardLayout><MarketingCampaigns /></DashboardLayout>} />
             <Route path="/design-projects" element={<DashboardLayout><DesignProjects /></DashboardLayout>} />
             <Route path="/content-calendar" element={<DashboardLayout><ContentCalendar /></DashboardLayout>} />
+            <Route path="/billing" element={<DashboardLayout><Billing /></DashboardLayout>} />
             
             {/* Customer Portal Routes */}
             <Route path="/customer/login" element={<CustomerLogin />} />

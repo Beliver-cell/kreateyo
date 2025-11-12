@@ -21,10 +21,16 @@ export function Navbar() {
   const { toast } = useToast();
 
   const handleLogout = () => {
+    // Clear business profile on logout
+    localStorage.removeItem('nexus-business-profile');
+    
     toast({
       title: "Logged out",
       description: "You have been successfully logged out.",
     });
+    
+    // Redirect to landing page
+    navigate('/');
   };
 
   return (
@@ -70,7 +76,7 @@ export function Navbar() {
             </DropdownMenuItem>
             <DropdownMenuItem 
               className="cursor-pointer hover:bg-accent/80 transition-all duration-300"
-              onClick={() => navigate('/payments')}
+              onClick={() => navigate('/billing')}
             >
               <CreditCard className="w-4 h-4 mr-2" />
               Billing
