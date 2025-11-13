@@ -54,7 +54,8 @@ import CustomerLogin from "./pages/customer/auth/CustomerLogin";
 import CustomerSignup from "./pages/customer/auth/CustomerSignup";
 import ServicesDashboard from "./pages/customer/services/ServicesDashboard";
 import EcommerceOrders from "./pages/customer/ecommerce/EcommerceOrders";
-import BloggingReading from "./pages/customer/blogging/BloggingReading";
+import BloggingReading from './pages/customer/blogging/BloggingReading';
+import CustomerServicePortal from './components/customer/CustomerServicePortal';
 
 const queryClient = new QueryClient();
 
@@ -276,7 +277,8 @@ const App = () => (
             <Route path="/customer/signup" element={<CustomerSignup />} />
             <Route path="/customer/services/dashboard" element={<ServicesDashboard />} />
             <Route path="/customer/ecommerce/orders" element={<EcommerceOrders />} />
-            <Route path="/customer/blogging/reading" element={<BloggingReading />} />
+            <Route path="/customer/blog/:slug" element={<BloggingReading />} />
+            <Route path="/customer/services/:businessId" element={<CustomerServicePortal />} />
             
             <Route path="*" element={<NotFound />} />
           </Routes>

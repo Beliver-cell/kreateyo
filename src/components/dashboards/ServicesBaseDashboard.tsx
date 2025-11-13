@@ -80,9 +80,9 @@ export function ServicesBaseDashboard({ title, description, categorySpecificWidg
               <Calendar className="h-4 w-4 mr-2" />
               Schedule Booking
             </Button>
-            <Button onClick={() => navigate('/services')} className="w-full justify-start" variant="outline">
+            <Button onClick={() => navigate('/clients')} className="w-full justify-start" variant="outline">
               <Eye className="h-4 w-4 mr-2" />
-              View All Services
+              View All Clients
             </Button>
             <Button onClick={() => navigate('/analytics')} className="w-full justify-start" variant="outline">
               <TrendingUp className="h-4 w-4 mr-2" />

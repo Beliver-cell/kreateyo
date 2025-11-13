@@ -8,6 +8,11 @@ import { useNavigate } from 'react-router-dom';
 import cozaPreview from '@/assets/templates/coza-store-preview.jpg';
 import maleFashionPreview from '@/assets/templates/male-fashion-preview.jpg';
 
+// Generate placeholder preview images for templates without images
+const generatePlaceholderImage = (gradient: string, name: string) => {
+  return `data:image/svg+xml,%3Csvg width='400' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23${gradient.includes('slate') ? '1e293b' : gradient.includes('purple') ? '581c87' : gradient.includes('pink') ? 'ec4899' : gradient.includes('blue') ? '1e3a8a' : gradient.includes('green') ? '065f46' : gradient.includes('amber') ? '78350f' : gradient.includes('indigo') ? '312e81' : gradient.includes('gray') ? '1f2937' : gradient.includes('rose') ? 'e11d48' : '1e293b'};stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23${gradient.includes('cyan') ? '0e7490' : gradient.includes('teal') ? '0f766e' : gradient.includes('yellow') ? 'ca8a04' : gradient.includes('orange') ? 'ea580c' : '64748b'};stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='300' fill='url(%23grad)' /%3E%3Ctext x='50%25' y='50%25' font-family='Arial' font-size='24' fill='white' text-anchor='middle' dominant-baseline='middle'%3E${encodeURIComponent(name)}%3C/text%3E%3C/svg%3E`;
+};
+
 const templates = {
   ecommerce: [
     {
@@ -16,7 +21,8 @@ const templates = {
       description: 'Clean design with large product imagery and smooth animations',
       gradient: 'from-slate-900 via-purple-900 to-slate-900',
       features: ['Hero slider', 'Quick view', 'Instagram feed'],
-      popular: true
+      popular: true,
+      previewImage: generatePlaceholderImage('from-slate-900 via-purple-900 to-slate-900', 'Modern Minimalist')
     },
     {
       id: 'ecom-coza',
@@ -40,14 +46,16 @@ const templates = {
       name: 'Vibrant Store',
       description: 'Bold colors and dynamic layouts perfect for fashion and lifestyle',
       gradient: 'from-pink-500 via-red-500 to-yellow-500',
-      features: ['Mega menu', 'Video sections', 'Collection filters']
+      features: ['Mega menu', 'Video sections', 'Collection filters'],
+      previewImage: generatePlaceholderImage('from-pink-500 via-red-500 to-yellow-500', 'Vibrant Store')
     },
     {
       id: 'ecom-luxury',
       name: 'Luxury Boutique',
       description: 'Elegant and sophisticated design for premium products',
       gradient: 'from-amber-900 via-yellow-600 to-amber-900',
-      features: ['Parallax effects', 'Lookbook', 'Size guide']
+      features: ['Parallax effects', 'Lookbook', 'Size guide'],
+      previewImage: generatePlaceholderImage('from-amber-900 via-yellow-600 to-amber-900', 'Luxury Boutique')
     }
   ],
   services: [
@@ -57,21 +65,24 @@ const templates = {
       description: 'Trust-building design ideal for consultants and agencies',
       gradient: 'from-blue-900 via-blue-700 to-cyan-900',
       features: ['Team showcase', 'Case studies', 'Testimonials'],
-      popular: true
+      popular: true,
+      previewImage: generatePlaceholderImage('from-blue-900 via-blue-700 to-cyan-900', 'Professional Services')
     },
     {
       id: 'serv-wellness',
       name: 'Wellness & Health',
       description: 'Calming design perfect for yoga, spa, and wellness businesses',
       gradient: 'from-green-800 via-teal-600 to-green-800',
-      features: ['Class schedule', 'Instructor bios', 'Pricing tables']
+      features: ['Class schedule', 'Instructor bios', 'Pricing tables'],
+      previewImage: generatePlaceholderImage('from-green-800 via-teal-600 to-green-800', 'Wellness & Health')
     },
     {
       id: 'serv-creative',
       name: 'Creative Studio',
       description: 'Bold and artistic layout for designers and photographers',
       gradient: 'from-purple-900 via-pink-800 to-purple-900',
-      features: ['Portfolio grid', 'Project showcase', 'Client logos']
+      features: ['Portfolio grid', 'Project showcase', 'Client logos'],
+      previewImage: generatePlaceholderImage('from-purple-900 via-pink-800 to-purple-900', 'Creative Studio')
     }
   ],
   blog: [
@@ -81,21 +92,24 @@ const templates = {
       description: 'Editorial layout with featured stories and categories',
       gradient: 'from-indigo-900 via-blue-800 to-indigo-900',
       features: ['Featured posts', 'Author boxes', 'Related articles'],
-      popular: true
+      popular: true,
+      previewImage: generatePlaceholderImage('from-indigo-900 via-blue-800 to-indigo-900', 'Digital Magazine')
     },
     {
       id: 'blog-minimal',
       name: 'Minimal Blog',
       description: 'Distraction-free reading experience with clean typography',
       gradient: 'from-gray-800 via-gray-700 to-gray-900',
-      features: ['Reading time', 'Table of contents', 'Dark mode']
+      features: ['Reading time', 'Table of contents', 'Dark mode'],
+      previewImage: generatePlaceholderImage('from-gray-800 via-gray-700 to-gray-900', 'Minimal Blog')
     },
     {
       id: 'blog-lifestyle',
       name: 'Lifestyle Blog',
       description: 'Instagram-style layout perfect for lifestyle and travel content',
       gradient: 'from-rose-500 via-orange-500 to-yellow-500',
-      features: ['Image galleries', 'Social sharing', 'Newsletter popup']
+      features: ['Image galleries', 'Social sharing', 'Newsletter popup'],
+      previewImage: generatePlaceholderImage('from-rose-500 via-orange-500 to-yellow-500', 'Lifestyle Blog')
     }
   ]
 };
