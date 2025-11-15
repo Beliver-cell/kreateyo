@@ -7,8 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Search, Filter, Download, Printer, MoreVertical, CheckSquare, Package, Mail } from 'lucide-react';
+import { Search, Filter, Download, Printer, MoreVertical, CheckSquare, Package, Mail, Eye } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import { OrderDetailsDialog } from '@/components/OrderDetailsDialog';
 import {
   Table,
   TableBody,
@@ -29,6 +30,8 @@ const mockOrders = [
 export default function Orders() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedOrders, setSelectedOrders] = useState<string[]>([]);
+  const [selectedOrder, setSelectedOrder] = useState<any>(null);
+  const [detailsOpen, setDetailsOpen] = useState(false);
 
   const { data: orders = [], isLoading } = useQuery({
     queryKey: ['orders'],
@@ -154,33 +157,40 @@ export default function Orders() {
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                          <MoreVertical className="w-4 h-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem>
-                          <Package className="w-4 h-4 mr-2" />
-                          Fulfill Order
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <Printer className="w-4 h-4 mr-2" />
-                          Print Invoice
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <Printer className="w-4 h-4 mr-2" />
-                          Print Packing Slip
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <Mail className="w-4 h-4 mr-2" />
-                          Email Customer
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>View Details</DropdownMenuItem>
-                        <DropdownMenuItem className="text-destructive">Cancel Order</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setSelectedOrder(order);
+                          setDetailsOpen(true);
+                        }}
+                      >
+                        <Eye className="w-4 h-4 mr-2" />
+                        View
+                      </Button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                            <MoreVertical className="w-4 h-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem>
+                            <Package className="w-4 h-4 mr-2" />
+                            Fulfill Order
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <Printer className="w-4 h-4 mr-2" />
+                            Print Invoice
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <Mail className="w-4 h-4 mr-2" />
+                            Email Customer
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
@@ -189,6 +199,12 @@ export default function Orders() {
           </div>
         </CardContent>
       </Card>
+
+      <OrderDetailsDialog
+        open={detailsOpen}
+        onOpenChange={setDetailsOpen}
+        order={selectedOrder}
+      />
     </div>
   );
 }
