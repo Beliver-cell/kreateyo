@@ -17,6 +17,7 @@ import {
   Image,
   Menu,
   X,
+  Sparkles,
   Shield,
   Code,
   Eye,
@@ -67,6 +68,8 @@ export function AppSidebar() {
 
     const businessTools = [
       { title: 'Email Campaigns', url: '/email-campaigns', icon: Mail },
+      { title: 'AI Marketing', url: '/marketing-ai', icon: Sparkles },
+      { title: 'Theme Customizer', url: '/theme', icon: Palette },
       { title: 'Tools', url: '/tools', icon: Wrench },
     ];
 
