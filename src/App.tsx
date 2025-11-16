@@ -18,6 +18,8 @@ import Services from "./pages/Services";
 import Calendar from "./pages/Calendar";
 import Clients from "./pages/Clients";
 import Posts from "./pages/Posts";
+import MarketingAI from "./pages/MarketingAI";
+import ThemeCustomizer from "./pages/ThemeCustomizer";
 import Pages from "./pages/Pages";
 import Subscribers from "./pages/Subscribers";
 import Tools from "./pages/Tools";
@@ -143,6 +145,22 @@ const App = () => (
               element={
                 <DashboardLayout>
                   <Calendar />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/marketing-ai"
+              element={
+                <DashboardLayout>
+                  <MarketingAI />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/theme"
+              element={
+                <DashboardLayout>
+                  <ThemeCustomizer />
                 </DashboardLayout>
               }
             />

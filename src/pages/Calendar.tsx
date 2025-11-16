@@ -1,171 +1,273 @@
 import { useState } from 'react';
-import { ChevronLeft, ChevronRight, Plus, Calendar as CalendarIcon, Settings, Printer, Download, MoreVertical } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Calendar as CalendarIcon, Clock, User, Plus, Filter, Search } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { BookingDialog } from '@/components/BookingDialog';
-import { toast } from '@/hooks/use-toast';
+import { Badge } from '@/components/ui/badge';
+import { Calendar } from '@/components/ui/calendar';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 
-const mockAppointments = [
-  { id: 1, time: '09:00', client: 'John Doe', service: 'Personal Training', duration: '60 min', status: 'confirmed' },
-  { id: 2, time: '10:30', client: 'Jane Smith', service: 'Yoga Class', duration: '90 min', status: 'confirmed' },
-  { id: 3, time: '13:00', client: 'Bob Johnson', service: 'Nutrition Consultation', duration: '45 min', status: 'pending' },
-  { id: 4, time: '15:00', client: 'Alice Brown', service: 'Massage Therapy', duration: '60 min', status: 'confirmed' },
-  { id: 5, time: '16:30', client: 'Charlie Wilson', service: 'Boot Camp', duration: '45 min', status: 'confirmed' },
-];
+const CalendarPage = () => {
+  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [selectedView, setSelectedView] = useState<'day' | 'week' | 'month'>('week');
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
 
-const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-const dates = [12, 13, 14, 15, 16, 17, 18];
+  const timeSlots = [
+    '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
+    '12:00', '12:30', '13:00', '13:30', '14:00', '14:30',
+    '15:00', '15:30', '16:00', '16:30', '17:00', '17:30'
+  ];
 
-export default function Calendar() {
-  const [selectedDate, setSelectedDate] = useState(14);
-  const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
-  const [selectedBooking, setSelectedBooking] = useState<any>(null);
-  const [viewMode, setViewMode] = useState('week');
-
-  const handlePrintSchedule = () => {
-    toast({ title: "Printing schedule...", description: "Your schedule is being prepared for printing." });
-    window.print();
-  };
-
-  const handleExportCalendar = () => {
-    toast({ title: "Exporting calendar...", description: "Downloading calendar.ics file." });
-  };
-
-  const handleReschedule = (booking: any) => {
-    setSelectedBooking(booking);
-    setBookingDialogOpen(true);
-  };
-
-  const handleCancelBooking = (booking: any) => {
-    toast({ title: "Booking cancelled", description: `${booking.client}'s appointment has been cancelled.` });
-  };
+  const mockAppointments = [
+    {
+      id: 1,
+      time: '10:00',
+      duration: 60,
+      client: 'John Doe',
+      service: 'Hair Cut',
+      status: 'confirmed',
+      staff: 'Sarah'
+    },
+    {
+      id: 2,
+      time: '14:30',
+      duration: 90,
+      client: 'Jane Smith',
+      service: 'Color Treatment',
+      status: 'pending',
+      staff: 'Mike'
+    }
+  ];
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold">Calendar</h1>
-          <p className="text-muted-foreground">
-            Manage your bookings and appointments
-          </p>
+    <div className="min-h-screen bg-background p-4 md:p-8 animate-fade-in">
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">Calendar & Bookings</h1>
+            <p className="text-muted-foreground">Manage appointments and schedule</p>
+          </div>
+          <Dialog open={isBookingOpen} onOpenChange={setIsBookingOpen}>
+            <DialogTrigger asChild>
+              <Button size="lg" className="w-full md:w-auto shadow-lg hover:shadow-xl">
+                <Plus className="mr-2 h-5 w-5" />
+                New Appointment
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl">
+              <DialogHeader>
+                <DialogTitle className="text-2xl">Create New Appointment</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-6 py-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Client Name</Label>
+                    <Input placeholder="Enter client name" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Client Phone</Label>
+                    <Input placeholder="+234..." />
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label>Service</Label>
+                  <Select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select service" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="haircut">Hair Cut</SelectItem>
+                      <SelectItem value="color">Color Treatment</SelectItem>
+                      <SelectItem value="styling">Styling</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Date</Label>
+                    <Input type="date" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Time</Label>
+                    <Select>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select time" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {timeSlots.map(time => (
+                          <SelectItem key={time} value={time}>{time}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Assign Staff</Label>
+                  <Select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select staff member" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="sarah">Sarah Johnson</SelectItem>
+                      <SelectItem value="mike">Mike Williams</SelectItem>
+                      <SelectItem value="emma">Emma Davis</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Notes</Label>
+                  <Textarea placeholder="Add any special notes or requirements..." rows={3} />
+                </div>
+
+                <div className="flex gap-3 justify-end pt-4">
+                  <Button variant="outline" onClick={() => setIsBookingOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button>Create Appointment</Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <Select value={viewMode} onValueChange={setViewMode}>
-            <SelectTrigger className="w-[130px]">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="day">Day View</SelectItem>
-              <SelectItem value="week">Week View</SelectItem>
-              <SelectItem value="month">Month View</SelectItem>
-            </SelectContent>
-          </Select>
-          <Button variant="outline" size="sm" onClick={handlePrintSchedule}>
-            <Printer className="w-4 h-4 mr-2" />
-            Print
-          </Button>
-          <Button variant="outline" size="sm" onClick={handleExportCalendar}>
-            <Download className="w-4 h-4 mr-2" />
-            Export
-          </Button>
-          <Button 
-            className="bg-primary hover:bg-primary/90"
-            onClick={() => {
-              setSelectedBooking(null);
-              setBookingDialogOpen(true);
-            }}
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            New Booking
-          </Button>
+
+        {/* Stats Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">Today's Bookings</p>
+                  <p className="text-3xl font-bold text-foreground mt-1">12</p>
+                </div>
+                <CalendarIcon className="h-10 w-10 text-primary opacity-80" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">Total Hours</p>
+                  <p className="text-3xl font-bold text-foreground mt-1">18.5</p>
+                </div>
+                <Clock className="h-10 w-10 text-accent opacity-80" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">Active Staff</p>
+                  <p className="text-3xl font-bold text-foreground mt-1">5</p>
+                </div>
+                <User className="h-10 w-10 text-info opacity-80" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">Pending</p>
+                  <p className="text-3xl font-bold text-warning mt-1">3</p>
+                </div>
+                <Filter className="h-10 w-10 text-warning opacity-80" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Calendar View */}
+          <Card className="lg:col-span-1">
+            <CardHeader>
+              <CardTitle>Select Date</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Calendar
+                mode="single"
+                selected={date}
+                onSelect={setDate}
+                className="rounded-md border"
+              />
+            </CardContent>
+          </Card>
+
+          {/* Appointments List */}
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <CardTitle>Appointments</CardTitle>
+                <div className="flex gap-2 w-full md:w-auto">
+                  <Select value={selectedView} onValueChange={(v) => setSelectedView(v as any)}>
+                    <SelectTrigger className="w-32">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="day">Day</SelectItem>
+                      <SelectItem value="week">Week</SelectItem>
+                      <SelectItem value="month">Month</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <div className="relative flex-1 md:w-64">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input placeholder="Search appointments..." className="pl-10" />
+                  </div>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {mockAppointments.map((apt) => (
+                  <div
+                    key={apt.id}
+                    className="p-4 border border-border rounded-xl hover:border-primary hover:shadow-md transition-all cursor-pointer group"
+                  >
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+                      <div className="flex-1 space-y-2">
+                        <div className="flex items-center gap-3">
+                          <span className="font-semibold text-lg text-foreground">{apt.time}</span>
+                          <Badge variant={apt.status === 'confirmed' ? 'default' : 'secondary'}>
+                            {apt.status}
+                          </Badge>
+                        </div>
+                        <div>
+                          <p className="font-medium text-foreground">{apt.client}</p>
+                          <p className="text-sm text-muted-foreground">{apt.service}</p>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <User className="h-4 w-4" />
+                          <span>{apt.staff}</span>
+                          <Clock className="h-4 w-4 ml-2" />
+                          <span>{apt.duration} mins</span>
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button variant="outline" size="sm">Reschedule</Button>
+                        <Button size="sm">Details</Button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
-
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>January 2024</CardTitle>
-            <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" className="h-9 w-9 p-0">
-                <ChevronLeft className="w-4 h-4" />
-              </Button>
-              <Button variant="outline" size="sm">Today</Button>
-              <Button variant="outline" size="sm" className="h-9 w-9 p-0">
-                <ChevronRight className="w-4 h-4" />
-              </Button>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-7 gap-2 mb-6">
-            {weekDays.map((day, index) => (
-              <button
-                key={day}
-                onClick={() => setSelectedDate(dates[index])}
-                className={`
-                  p-3 rounded-lg text-center transition-all
-                  ${selectedDate === dates[index] 
-                    ? 'bg-gradient-primary text-white shadow-md' 
-                    : 'hover:bg-muted'
-                  }
-                `}
-              >
-                <div className="text-xs font-medium mb-1">{day}</div>
-                <div className="text-lg font-bold">{dates[index]}</div>
-              </button>
-            ))}
-          </div>
-
-          <div className="space-y-3">
-            <h3 className="text-sm font-semibold mb-3">Today's Schedule</h3>
-            {mockAppointments.map((appointment) => (
-              <Card key={appointment.id} className="hover:shadow-md transition-shadow">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-4">
-                    <div className="text-center min-w-[60px]">
-                      <div className="text-sm font-semibold">{appointment.time}</div>
-                      <div className="text-xs text-muted-foreground">{appointment.duration}</div>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-semibold">{appointment.client}</h4>
-                      <p className="text-sm text-muted-foreground">{appointment.service}</p>
-                    </div>
-                    <Badge variant={appointment.status === 'confirmed' ? 'default' : 'secondary'}>
-                      {appointment.status}
-                    </Badge>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                          <MoreVertical className="w-4 h-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => handleReschedule(appointment)}>
-                          Reschedule
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleCancelBooking(appointment)}>
-                          Cancel Booking
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>Add Note</DropdownMenuItem>
-                        <DropdownMenuItem>Send Reminder</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      <BookingDialog 
-        open={bookingDialogOpen}
-        onOpenChange={setBookingDialogOpen}
-        booking={selectedBooking}
-      />
     </div>
   );
-}
+};
+
+export default CalendarPage;
