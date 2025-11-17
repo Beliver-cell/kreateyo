@@ -9,7 +9,7 @@ import {
   Wrench,
   CreditCard,
   Settings,
-  Calendar,
+  Calendar as CalendarIcon,
   Briefcase,
   FileEdit,
   FolderKanban,
@@ -30,6 +30,7 @@ import {
   DollarSign,
   Truck,
   Download,
+  Megaphone,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -68,8 +69,11 @@ export function AppSidebar() {
 
     const businessTools = [
       { title: 'Email Campaigns', url: '/email-campaigns', icon: Mail },
-      { title: 'AI Marketing', url: '/marketing-ai', icon: Sparkles },
+      { title: 'AI Marketing', url: '/marketing-ai', icon: Megaphone },
+      { title: 'Calendar', url: '/calendar', icon: CalendarIcon },
       { title: 'Theme Customizer', url: '/theme', icon: Palette },
+      { title: 'Chat & Support', url: '/chat-support', icon: MessageSquare },
+      { title: 'Logistics', url: '/logistics', icon: Truck },
       { title: 'Tools', url: '/tools', icon: Wrench },
     ];
 
@@ -98,7 +102,7 @@ export function AppSidebar() {
       // Marketing campaigns for all ecommerce types
       businessSpecificTools.push({ title: 'Marketing', url: '/marketing-campaigns', icon: BarChart3 });
     } else if (businessProfile.type === 'services') {
-      businessSpecificTools.push({ title: 'Appointments', url: '/appointments', icon: Calendar });
+      businessSpecificTools.push({ title: 'Appointments', url: '/appointments', icon: CalendarIcon });
       // Service-specific tools available for all services
       businessSpecificTools.push({ title: 'Projects', url: '/design-projects', icon: Briefcase });
       businessSpecificTools.push({ title: 'Content Calendar', url: '/content-calendar', icon: FileEdit });

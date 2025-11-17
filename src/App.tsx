@@ -20,6 +20,9 @@ import Clients from "./pages/Clients";
 import Posts from "./pages/Posts";
 import MarketingAI from "./pages/MarketingAI";
 import ThemeCustomizer from "./pages/ThemeCustomizer";
+import ChatSupport from "./pages/ChatSupport";
+import Checkout from "./pages/Checkout";
+import Logistics from "./pages/Logistics";
 import Pages from "./pages/Pages";
 import Subscribers from "./pages/Subscribers";
 import Tools from "./pages/Tools";
@@ -289,6 +292,12 @@ const App = () => (
             <Route path="/design-projects" element={<DashboardLayout><DesignProjects /></DashboardLayout>} />
             <Route path="/content-calendar" element={<DashboardLayout><ContentCalendar /></DashboardLayout>} />
             <Route path="/billing" element={<DashboardLayout><Billing /></DashboardLayout>} />
+            <Route path="/calendar" element={<DashboardLayout><Calendar /></DashboardLayout>} />
+            <Route path="/marketing-ai" element={<DashboardLayout><MarketingAI /></DashboardLayout>} />
+            <Route path="/theme" element={<DashboardLayout><ThemeCustomizer /></DashboardLayout>} />
+            <Route path="/chat-support" element={<DashboardLayout><ChatSupport /></DashboardLayout>} />
+            <Route path="/checkout" element={<DashboardLayout><Checkout /></DashboardLayout>} />
+            <Route path="/logistics" element={<DashboardLayout><Logistics /></DashboardLayout>} />
             
             {/* Customer Portal Routes */}
             <Route path="/customer/login" element={<CustomerLogin />} />
