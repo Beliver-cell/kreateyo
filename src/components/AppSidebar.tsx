@@ -120,7 +120,7 @@ export function AppSidebar() {
       specificItems = [
         // Only show generic "Services" if user hasn't selected a specialty
         ...(businessProfile.subType ? [] : [{ title: 'Services', url: '/services', icon: Briefcase }]),
-        { title: 'Calendar', url: '/calendar', icon: Calendar },
+        { title: 'Calendar', url: '/calendar', icon: CalendarIcon },
         { title: 'Clients', url: '/clients', icon: Users },
       ];
     } else if (businessProfile.type === 'blog') {
