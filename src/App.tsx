@@ -1,4 +1,11 @@
 import { Toaster } from "@/components/ui/toaster";
+import POS from "@/pages/POS";
+import Payroll from "@/pages/Payroll";
+import Branches from "@/pages/Branches";
+import Subscriptions from "@/pages/Subscriptions";
+import Memberships from "@/pages/Memberships";
+import Invoices from "@/pages/Invoices";
+import Messaging from "@/pages/Messaging";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";

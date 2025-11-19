@@ -104,7 +104,7 @@ export default function Dashboard() {
             <CardDescription>
               {businessProfile.type === 'ecommerce' && 'Latest orders, inventory, and customer updates'}
               {businessProfile.type === 'services' && 'Today\'s appointments and client interactions'}
-              {businessProfile.type === 'blog' && 'Subscriber growth and post performance'}
+              {(businessProfile.type === 'digital' || businessProfile.type === 'community') && 'Subscriber growth and post performance'}
             </CardDescription>
           </CardHeader>
           <CardContent className="px-4 md:px-6">
@@ -152,14 +152,14 @@ export default function Dashboard() {
                     <p className="text-xs md:text-sm font-semibold group-hover:text-primary transition-colors">
                       {businessProfile.type === 'ecommerce' && 'Add New Product'}
                       {businessProfile.type === 'services' && 'Create New Booking'}
-                      {businessProfile.type === 'blog' && 'Write New Post'}
+                      {(businessProfile.type === 'digital' || businessProfile.type === 'community') && 'Write New Post'}
                     </p>
                     <p className="text-[10px] md:text-xs text-muted-foreground mt-1 md:mt-1.5">Start creating content</p>
                   </div>
                   <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                     {businessProfile.type === 'ecommerce' && <Package className="w-4 h-4 md:w-5 md:h-5 text-primary" />}
                     {businessProfile.type === 'services' && <Calendar className="w-4 h-4 md:w-5 md:h-5 text-primary" />}
-                    {businessProfile.type === 'blog' && <FileText className="w-4 h-4 md:w-5 md:h-5 text-primary" />}
+                    {(businessProfile.type === 'digital' || businessProfile.type === 'community') && <FileText className="w-4 h-4 md:w-5 md:h-5 text-primary" />}
                   </div>
                 </div>
               </button>

@@ -52,7 +52,7 @@ export default function Analytics() {
   const renderMetrics = () => {
     let metrics = ecommerceMetrics;
     if (businessProfile.type === 'services') metrics = servicesMetrics;
-    if (businessProfile.type === 'blog') metrics = blogMetrics;
+    if (businessProfile.type === 'digital' || businessProfile.type === 'community') metrics = blogMetrics;
 
     return metrics.map((metric, index) => (
       <Card key={index}>
@@ -156,7 +156,7 @@ export default function Analytics() {
           <p className="text-muted-foreground">
             {businessProfile.type === 'ecommerce' && 'Track your store performance and sales metrics'}
             {businessProfile.type === 'services' && 'Monitor your service bookings and client engagement'}
-            {businessProfile.type === 'blog' && 'Analyze your content performance and audience growth'}
+            {(businessProfile.type === 'digital' || businessProfile.type === 'community') && 'Analyze your content performance and audience growth'}
           </p>
         </div>
         <div className="flex gap-2">
@@ -180,7 +180,7 @@ export default function Analytics() {
             <CardTitle>
               {businessProfile.type === 'ecommerce' && 'Customer Behavior'}
               {businessProfile.type === 'services' && 'Client Insights'}
-              {businessProfile.type === 'blog' && 'Audience Insights'}
+              {(businessProfile.type === 'digital' || businessProfile.type === 'community') && 'Audience Insights'}
             </CardTitle>
             <CardDescription>Key behavioral metrics</CardDescription>
           </CardHeader>
@@ -235,7 +235,7 @@ export default function Analytics() {
                 </div>
               </>
             )}
-            {businessProfile.type === 'blog' && (
+            {(businessProfile.type === 'digital' || businessProfile.type === 'community') && (
               <>
                 <div>
                   <div className="flex items-center justify-between mb-2">

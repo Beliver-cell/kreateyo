@@ -32,7 +32,7 @@ export function OnboardingModalEnhanced({ open, onOpenChange }: { open: boolean;
   ];
 
   const handleMainSelection = (type: BusinessType) => {
-    if (type === 'blog') {
+    if (type === 'community') {
       setBusinessType(type);
       completeOnboarding();
       navigate('/dashboard');
