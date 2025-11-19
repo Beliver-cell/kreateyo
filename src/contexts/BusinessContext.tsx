@@ -1,12 +1,22 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { BusinessType, AccountType, BusinessProfile, EcommerceSubType, ServicesSubType } from '@/types/business';
+import { 
+  BusinessType, 
+  AccountType, 
+  BusinessProfile, 
+  EcommerceSubType, 
+  ServicesSubType,
+  DigitalSubType,
+  CommunitySubType,
+  getBusinessFeatures 
+} from '@/types/business';
 
 interface BusinessContextType {
   businessProfile: BusinessProfile;
   setBusinessType: (type: BusinessType) => void;
   setAccountType: (type: AccountType) => void;
-  setBusinessSubType: (subType: EcommerceSubType | ServicesSubType) => void;
+  setBusinessSubType: (subType: EcommerceSubType | ServicesSubType | DigitalSubType | CommunitySubType) => void;
   completeOnboarding: () => void;
+  features: ReturnType<typeof getBusinessFeatures>;
 }
 
 const BusinessContext = createContext<BusinessContextType | undefined>(undefined);
@@ -16,6 +26,8 @@ export function BusinessProvider({ children }: { children: React.ReactNode }) {
     const stored = localStorage.getItem('nexus-business-profile');
     return stored ? JSON.parse(stored) : { type: null, accountType: null, onboarded: false };
   });
+
+  const features = getBusinessFeatures(businessProfile.type, businessProfile.subType || undefined);
 
   useEffect(() => {
     localStorage.setItem('nexus-business-profile', JSON.stringify(businessProfile));
@@ -29,7 +41,7 @@ export function BusinessProvider({ children }: { children: React.ReactNode }) {
     setBusinessProfile(prev => ({ ...prev, accountType }));
   };
 
-  const setBusinessSubType = (subType: EcommerceSubType | ServicesSubType) => {
+  const setBusinessSubType = (subType: EcommerceSubType | ServicesSubType | DigitalSubType | CommunitySubType) => {
     setBusinessProfile(prev => ({ ...prev, subType }));
   };
 
@@ -38,7 +50,14 @@ export function BusinessProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <BusinessContext.Provider value={{ businessProfile, setBusinessType, setAccountType, setBusinessSubType, completeOnboarding }}>
+    <BusinessContext.Provider value={{ 
+      businessProfile, 
+      setBusinessType, 
+      setAccountType, 
+      setBusinessSubType, 
+      completeOnboarding,
+      features 
+    }}>
       {children}
     </BusinessContext.Provider>
   );
