@@ -69,187 +69,185 @@ export function NestedSidebar() {
 
   const getMenuStructure = (): MenuItem[] => {
     const structure: MenuItem[] = [
-      { title: 'Dashboard', url: '/dashboard', icon: LayoutDashboard },
+      { title: 'Home', url: '/dashboard', icon: LayoutDashboard },
     ];
 
-    // Management Section
-    const management: MenuItem = {
-      title: 'Management',
+    // My Business Section
+    const business: MenuItem = {
+      title: 'My Business',
       icon: Briefcase,
       children: [],
     };
 
     if (businessProfile.type === 'ecommerce') {
-      management.children?.push(
-        {
-          title: 'Products',
-          icon: Package,
+      business.children?.push({ title: 'Dashboard', url: '/dashboard', icon: LayoutDashboard });
+      
+      business.children?.push({
+        title: 'Store',
+        icon: ShoppingBag,
+        children: [
+          { title: 'Products', url: '/products', icon: Package },
+          { title: 'Collections', url: '/collections', icon: ShoppingBag },
+          { title: 'Orders', url: '/orders', icon: ShoppingCart },
+        ],
+      });
+
+      if (features.inventory) {
+        business.children?.push({
+          title: 'Inventory',
+          icon: Warehouse,
           children: [
-            { title: 'All Products', url: '/products', icon: Package },
-            { title: 'Collections', url: '/collections', icon: ShoppingBag },
-            { title: 'Inventory', url: '/inventory', icon: Warehouse },
+            { title: 'Stock', url: '/inventory', icon: Warehouse },
+            { title: 'Alerts', url: '/inventory', icon: Bell },
           ],
-        },
-        { title: 'Orders', url: '/orders', icon: ShoppingCart },
-      );
+        });
+      }
 
       if (features.pos) {
-        management.children?.push({ title: 'POS System', url: '/pos', icon: CreditCard });
+        business.children?.push({ title: 'POS', url: '/pos', icon: CreditCard });
+      }
+
+      if (features.dispatch) {
+        business.children?.push({
+          title: 'Delivery',
+          icon: Truck,
+          children: [
+            { title: 'Dispatch', url: '/logistics', icon: Truck },
+            { title: 'Tracking', url: '/logistics', icon: TrendingUp },
+          ],
+        });
       }
     }
 
     if (businessProfile.type === 'services') {
-      management.children?.push(
-        { title: 'Services', url: '/services', icon: Briefcase },
-        {
+      business.children?.push({ title: 'Dashboard', url: '/dashboard', icon: LayoutDashboard });
+      business.children?.push({ title: 'Services', url: '/services', icon: Briefcase });
+      
+      if (features.appointments) {
+        business.children?.push({
           title: 'Appointments',
           icon: CalendarIcon,
           children: [
             { title: 'Calendar', url: '/calendar', icon: CalendarIcon },
             { title: 'Bookings', url: '/appointments', icon: CalendarIcon },
           ],
-        },
-      );
+        });
+      }
     }
 
     if (businessProfile.type === 'digital') {
-      management.children?.push(
-        { title: 'Digital Products', url: '/digital-products', icon: Download },
-        { title: 'Orders', url: '/orders', icon: ShoppingCart },
-      );
+      business.children?.push({ title: 'Dashboard', url: '/dashboard', icon: LayoutDashboard });
+      business.children?.push({ title: 'Digital Products', url: '/digital-products', icon: Download });
+      business.children?.push({ title: 'Orders', url: '/orders', icon: ShoppingCart });
 
       if (features.membership) {
-        management.children?.push({ title: 'Memberships', url: '/memberships', icon: UsersRound });
+        business.children?.push({ title: 'Members', url: '/memberships', icon: UsersRound });
       }
     }
 
     if (businessProfile.type === 'community') {
-      management.children?.push(
-        { title: 'Members', url: '/members', icon: Users },
-        { title: 'Donations', url: '/donations', icon: Heart },
-        { title: 'Events', url: '/events', icon: CalendarIcon },
-      );
+      business.children?.push({ title: 'Dashboard', url: '/dashboard', icon: LayoutDashboard });
+      business.children?.push({ title: 'Members', url: '/customers', icon: Users });
+      business.children?.push({ title: 'Donations', url: '/payments', icon: Heart });
+      business.children?.push({ title: 'Events', url: '/calendar', icon: CalendarIcon });
     }
 
-    structure.push(management);
-
-    // Operations Section (if applicable)
-    if (features.dispatch || features.invoicing || features.payroll) {
-      const operations: MenuItem = {
-        title: 'Operations',
-        icon: Truck,
-        children: [],
-      };
-
-      if (features.dispatch) {
-        operations.children?.push({
-          title: 'Logistics',
-          icon: Truck,
-          children: [
-            { title: 'Dispatch', url: '/logistics', icon: Truck },
-            { title: 'Tracking', url: '/tracking', icon: TrendingUp },
-          ],
-        });
-      }
-
-      if (features.invoicing) {
-        operations.children?.push({ title: 'Invoices', url: '/invoices', icon: FileText });
-      }
-
-      if (features.payroll) {
-        operations.children?.push({ title: 'Payroll', url: '/payroll', icon: DollarSign });
-      }
-
-      if (features.multiStore) {
-        operations.children?.push({ title: 'Multi-Branch', url: '/branches', icon: ShoppingBag });
-      }
-
-      structure.push(operations);
-    }
-
-    // Customers Section
-    const customers: MenuItem = {
-      title: 'Customers',
-      icon: Users,
-      children: [
-        { title: 'CRM', url: '/customers', icon: Users },
-      ],
-    };
-
-    if (features.subscriptions) {
-      customers.children?.push({ title: 'Subscriptions', url: '/subscriptions', icon: Gift });
-    }
-
-    structure.push(customers);
+    structure.push(business);
 
     // Marketing Section
+    const marketing: MenuItem = {
+      title: 'Marketing',
+      icon: Sparkles,
+      children: [],
+    };
+
     if (features.aiMarketing || features.aiSeo) {
-      const marketing: MenuItem = {
-        title: 'Marketing',
-        icon: Sparkles,
-        children: [],
-      };
-
-      if (features.aiMarketing) {
-        marketing.children?.push(
-          { title: 'AI Marketing', url: '/marketing-ai', icon: Sparkles },
-          { title: 'Campaigns', url: '/marketing-campaigns', icon: TrendingUp },
-        );
-      }
-
-      if (features.aiSeo) {
-        marketing.children?.push({ title: 'AI SEO Tools', url: '/ai-seo', icon: TrendingUp });
-      }
-
-      marketing.children?.push(
-        { title: 'Email Campaigns', url: '/email-campaigns', icon: Mail },
-        { title: 'WhatsApp/SMS', url: '/messaging', icon: MessageSquare },
-      );
-
-      structure.push(marketing);
+      marketing.children?.push({ title: 'AI Marketing', url: '/marketing-ai', icon: Sparkles });
+      marketing.children?.push({ title: 'Campaigns', url: '/marketing-campaigns', icon: TrendingUp });
+      marketing.children?.push({ title: 'SEO Tools', url: '/marketing-ai', icon: TrendingUp });
     }
 
-    // AI Automation Section
+    marketing.children?.push(
+      { title: 'Email', url: '/email-campaigns', icon: Mail },
+      { title: 'WhatsApp/SMS', url: '/messaging', icon: MessageSquare },
+    );
+
+    structure.push(marketing);
+
+    // Store Builder / Website Section
+    structure.push({
+      title: 'Store Builder',
+      icon: Globe,
+      children: [
+        { title: 'Editor', url: '/build', icon: Palette },
+        { title: 'Themes', url: '/theme', icon: Palette },
+        { title: 'Pages', url: '/pages', icon: FileText },
+        { title: 'Media', url: '/media-library', icon: Image },
+      ],
+    });
+
+    // AI Tools Section
     if (features.aiContent) {
       structure.push({
-        title: 'AI Automation',
+        title: 'AI Tools',
         icon: Sparkles,
         children: [
-          { title: 'AI Assistant', url: '/ai-automation', icon: Sparkles },
-          { title: 'Chatbot', url: '/chatbot-manager', icon: MessageSquare },
+          { title: 'Branding', url: '/ai-automation', icon: Sparkles },
+          { title: 'Writing', url: '/ai-automation', icon: Sparkles },
+          { title: 'Optimization', url: '/ai-automation', icon: Sparkles },
         ],
       });
     }
 
-    // Website Section
-    structure.push({
-      title: 'Website',
-      icon: Globe,
-      children: [
-        { title: 'Editor', url: '/build', icon: Palette },
-        { title: 'Theme', url: '/theme', icon: Palette },
-      ],
-    });
-
-    // Payments Section
-    structure.push({
-      title: 'Payments',
-      icon: CreditCard,
+    // Finances Section
+    const finances: MenuItem = {
+      title: 'Finances',
+      icon: DollarSign,
       children: [
         { title: 'YoPay', url: '/payments', icon: CreditCard },
+      ],
+    };
+
+    if (features.invoicing) {
+      finances.children?.push({ title: 'Invoices', url: '/invoices', icon: FileText });
+    }
+
+    if (features.payroll) {
+      finances.children?.push({ title: 'Payroll', url: '/payroll', icon: DollarSign });
+    }
+
+    if (features.pos) {
+      finances.children?.push({ title: 'POS', url: '/pos', icon: CreditCard });
+    }
+
+    finances.children?.push({ title: 'Reports', url: '/analytics', icon: BarChart3 });
+
+    structure.push(finances);
+
+    // Customers Section
+    structure.push({
+      title: 'Customers',
+      icon: Users,
+      children: [
+        { title: 'CRM', url: '/customers', icon: Users },
+        { title: 'Segments', url: '/customers', icon: Users },
+        { title: 'Messages', url: '/chat-support', icon: MessageSquare },
       ],
     });
 
     // Analytics
     structure.push({ title: 'Analytics', url: '/analytics', icon: BarChart3 });
 
-    // Media Library
-    if (features.mediaLibrary) {
-      structure.push({ title: 'Media Library', url: '/media-library', icon: Image });
-    }
-
     // Settings
-    structure.push({ title: 'Settings', url: '/settings', icon: Settings });
+    structure.push({
+      title: 'Settings',
+      icon: Settings,
+      children: [
+        { title: 'Business', url: '/settings', icon: Settings },
+        { title: 'Staff', url: '/team', icon: UsersRound },
+        { title: 'Billing', url: '/billing', icon: CreditCard },
+      ],
+    });
 
     return structure;
   };

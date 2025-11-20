@@ -6,6 +6,7 @@ import Subscriptions from "@/pages/Subscriptions";
 import Memberships from "@/pages/Memberships";
 import Invoices from "@/pages/Invoices";
 import Messaging from "@/pages/Messaging";
+import AIAutomation from "@/pages/AIAutomation";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -305,6 +306,15 @@ const App = () => (
             <Route path="/chat-support" element={<DashboardLayout><ChatSupport /></DashboardLayout>} />
             <Route path="/checkout" element={<DashboardLayout><Checkout /></DashboardLayout>} />
             <Route path="/logistics" element={<DashboardLayout><Logistics /></DashboardLayout>} />
+            <Route path="/pos" element={<DashboardLayout><POS /></DashboardLayout>} />
+            <Route path="/payroll" element={<DashboardLayout><Payroll /></DashboardLayout>} />
+            <Route path="/branches" element={<DashboardLayout><Branches /></DashboardLayout>} />
+            <Route path="/subscriptions" element={<DashboardLayout><Subscriptions /></DashboardLayout>} />
+            <Route path="/memberships" element={<DashboardLayout><Memberships /></DashboardLayout>} />
+            <Route path="/invoices" element={<DashboardLayout><Invoices /></DashboardLayout>} />
+            <Route path="/messaging" element={<DashboardLayout><Messaging /></DashboardLayout>} />
+            <Route path="/ai-automation" element={<DashboardLayout><AIAutomation /></DashboardLayout>} />
+            <Route path="/media-library" element={<DashboardLayout><MediaLibrary /></DashboardLayout>} />
             
             {/* Customer Portal Routes */}
             <Route path="/customer/login" element={<CustomerLogin />} />
