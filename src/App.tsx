@@ -15,6 +15,7 @@ import { BusinessProvider } from "@/contexts/BusinessContext";
 import { OnboardingModalWrapper } from "@/components/OnboardingModalWrapper";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import Index from "./pages/Index";
+import LandingPage from "./pages/LandingPage";
 import DashboardEnhanced from "./pages/DashboardEnhanced";
 import Products from "./pages/Products";
 import Orders from "./pages/Orders";
@@ -81,7 +82,8 @@ const App = () => (
         <BrowserRouter>
           <CustomerAuthProvider>
             <Routes>
-            <Route path="/" element={<Index />} />
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/old-home" element={<Index />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
             <Route path="/verify" element={<VerifyEmail />} />
