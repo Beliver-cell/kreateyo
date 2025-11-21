@@ -7,6 +7,9 @@ import Memberships from "@/pages/Memberships";
 import Invoices from "@/pages/Invoices";
 import Messaging from "@/pages/Messaging";
 import AIAutomation from "@/pages/AIAutomation";
+import ServiceBuilder from "@/pages/ServiceBuilder";
+import BookingCalendar from "@/pages/BookingCalendar";
+import Upsells from "@/pages/Upsells";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -317,6 +320,10 @@ const App = () => (
             <Route path="/messaging" element={<DashboardLayout><Messaging /></DashboardLayout>} />
             <Route path="/ai-automation" element={<DashboardLayout><AIAutomation /></DashboardLayout>} />
             <Route path="/media-library" element={<DashboardLayout><MediaLibrary /></DashboardLayout>} />
+            <Route path="/service-builder" element={<DashboardLayout><ServiceBuilder /></DashboardLayout>} />
+            <Route path="/booking-calendar" element={<DashboardLayout><BookingCalendar /></DashboardLayout>} />
+            <Route path="/upsells" element={<DashboardLayout><Upsells /></DashboardLayout>} />
+            <Route path="/supplier-manager" element={<DashboardLayout><SupplierManager /></DashboardLayout>} />
             
             {/* Customer Portal Routes */}
             <Route path="/customer/login" element={<CustomerLogin />} />
