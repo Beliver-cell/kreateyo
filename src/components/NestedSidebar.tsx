@@ -20,21 +20,23 @@ import {
   Download,
   UsersRound,
   Briefcase,
-  Gift,
   ShoppingBag,
   Warehouse,
-  Bell,
   TrendingUp,
-  Heart,
   ChevronDown,
   ChevronRight,
+  Store,
+  Zap,
+  Gift,
+  Link as LinkIcon,
+  Receipt,
+  Target,
 } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -57,9 +59,9 @@ interface MenuItem {
 
 export function NestedSidebar() {
   const { state } = useSidebar();
-  const { businessProfile, features } = useBusinessContext();
+  const { businessProfile } = useBusinessContext();
   const collapsed = state === 'collapsed';
-  const [openGroups, setOpenGroups] = useState<string[]>(['management']);
+  const [openGroups, setOpenGroups] = useState<string[]>(['dashboard']);
 
   const toggleGroup = (title: string) => {
     setOpenGroups(prev =>
@@ -68,184 +70,114 @@ export function NestedSidebar() {
   };
 
   const getMenuStructure = (): MenuItem[] => {
-    const structure: MenuItem[] = [
-      { title: 'Home', url: '/dashboard', icon: LayoutDashboard },
-    ];
+    const structure: MenuItem[] = [];
 
-    // My Business Section
-    const business: MenuItem = {
-      title: 'My Business',
-      icon: Briefcase,
+    // Dashboard Section
+    structure.push({
+      title: 'Dashboard',
+      icon: LayoutDashboard,
+      children: [
+        { title: 'Overview', url: '/dashboard', icon: LayoutDashboard },
+        { title: 'Analytics', url: '/analytics', icon: BarChart3 },
+      ],
+    });
+
+    // Products & Services Section
+    const productsServices: MenuItem = {
+      title: 'Products & Services',
+      icon: Package,
       children: [],
     };
 
-    if (businessProfile.type === 'ecommerce') {
-      business.children?.push({ title: 'Dashboard', url: '/dashboard', icon: LayoutDashboard });
-      
-      business.children?.push({
-        title: 'Store',
-        icon: ShoppingBag,
-        children: [
-          { title: 'Products', url: '/products', icon: Package },
-          { title: 'Collections', url: '/collections', icon: ShoppingBag },
-          { title: 'Orders', url: '/orders', icon: ShoppingCart },
-        ],
-      });
+    if (businessProfile.type === 'digital' || businessProfile.subType === 'digital') {
+      productsServices.children?.push({ title: 'Digital Products', url: '/digital-products', icon: Download });
+    }
 
-      if (features.inventory) {
-        business.children?.push({
-          title: 'Inventory',
-          icon: Warehouse,
-          children: [
-            { title: 'Stock', url: '/inventory', icon: Warehouse },
-            { title: 'Alerts', url: '/inventory', icon: Bell },
-          ],
-        });
-      }
+    if (businessProfile.type === 'ecommerce' && businessProfile.subType === 'physical') {
+      productsServices.children?.push({ title: 'Physical Products', url: '/products', icon: Package });
+      productsServices.children?.push({ title: 'Inventory', url: '/inventory', icon: Warehouse });
+    }
 
-      if (features.pos) {
-        business.children?.push({ title: 'POS', url: '/pos', icon: CreditCard });
-      }
-
-      if (features.dispatch) {
-        business.children?.push({
-          title: 'Delivery',
-          icon: Truck,
-          children: [
-            { title: 'Dispatch', url: '/logistics', icon: Truck },
-            { title: 'Tracking', url: '/logistics', icon: TrendingUp },
-          ],
-        });
-      }
+    if (businessProfile.subType === 'dropshipping') {
+      productsServices.children?.push({ title: 'Dropshipping', url: '/supplier-manager', icon: Truck });
     }
 
     if (businessProfile.type === 'services') {
-      business.children?.push({ title: 'Dashboard', url: '/dashboard', icon: LayoutDashboard });
-      business.children?.push({ title: 'Services', url: '/services', icon: Briefcase });
-      
-      if (features.appointments) {
-        business.children?.push({
-          title: 'Appointments',
-          icon: CalendarIcon,
-          children: [
-            { title: 'Calendar', url: '/calendar', icon: CalendarIcon },
-            { title: 'Bookings', url: '/appointments', icon: CalendarIcon },
-          ],
-        });
-      }
+      productsServices.children?.push({ title: 'Online Services', url: '/services', icon: Briefcase });
     }
 
-    if (businessProfile.type === 'digital') {
-      business.children?.push({ title: 'Dashboard', url: '/dashboard', icon: LayoutDashboard });
-      business.children?.push({ title: 'Digital Products', url: '/digital-products', icon: Download });
-      business.children?.push({ title: 'Orders', url: '/orders', icon: ShoppingCart });
-
-      if (features.membership) {
-        business.children?.push({ title: 'Members', url: '/memberships', icon: UsersRound });
-      }
+    if (productsServices.children && productsServices.children.length > 0) {
+      structure.push(productsServices);
     }
 
-    if (businessProfile.type === 'community') {
-      business.children?.push({ title: 'Dashboard', url: '/dashboard', icon: LayoutDashboard });
-      business.children?.push({ title: 'Members', url: '/customers', icon: Users });
-      business.children?.push({ title: 'Donations', url: '/payments', icon: Heart });
-      business.children?.push({ title: 'Events', url: '/calendar', icon: CalendarIcon });
-    }
-
-    structure.push(business);
-
-    // Marketing Section
-    const marketing: MenuItem = {
-      title: 'Marketing',
-      icon: Sparkles,
+    // Orders & Bookings Section
+    const ordersBookings: MenuItem = {
+      title: 'Orders & Bookings',
+      icon: ShoppingCart,
       children: [],
     };
 
-    if (features.aiMarketing || features.aiSeo) {
-      marketing.children?.push({ title: 'AI Marketing', url: '/marketing-ai', icon: Sparkles });
-      marketing.children?.push({ title: 'Campaigns', url: '/marketing-campaigns', icon: TrendingUp });
-      marketing.children?.push({ title: 'SEO Tools', url: '/marketing-ai', icon: TrendingUp });
+    if (businessProfile.type === 'ecommerce' || businessProfile.type === 'digital') {
+      ordersBookings.children?.push({ title: 'Orders', url: '/orders', icon: ShoppingCart });
     }
 
-    marketing.children?.push(
-      { title: 'Email', url: '/email-campaigns', icon: Mail },
-      { title: 'WhatsApp/SMS', url: '/messaging', icon: MessageSquare },
-    );
+    if (businessProfile.type === 'services') {
+      ordersBookings.children?.push({ title: 'Bookings', url: '/appointments', icon: CalendarIcon });
+      ordersBookings.children?.push({ title: 'Calendar', url: '/calendar', icon: CalendarIcon });
+    }
 
-    structure.push(marketing);
+    ordersBookings.children?.push({ title: 'Clients', url: '/customers', icon: Users });
 
-    // Store Builder / Website Section
+    if (ordersBookings.children && ordersBookings.children.length > 0) {
+      structure.push(ordersBookings);
+    }
+
+    // Payments (YoPay) Section
     structure.push({
-      title: 'Store Builder',
-      icon: Globe,
+      title: 'Payments (YoPay)',
+      icon: CreditCard,
       children: [
-        { title: 'Editor', url: '/build', icon: Palette },
+        { title: 'Transactions', url: '/payments', icon: CreditCard },
+        { title: 'Payout Wallet', url: '/payments', icon: DollarSign },
+        { title: 'Payment Links', url: '/payments', icon: LinkIcon },
+        { title: 'Subscriptions', url: '/subscriptions', icon: Receipt },
+      ],
+    });
+
+    // Marketing & Automation Section
+    structure.push({
+      title: 'Marketing & Automation',
+      icon: Target,
+      children: [
+        { title: 'AI Tools', url: '/marketing-ai', icon: Sparkles },
+        { title: 'Email Automation', url: '/email-campaigns', icon: Mail },
+        { title: 'WhatsApp Automation', url: '/messaging', icon: MessageSquare },
+        { title: 'SEO Tools', url: '/marketing-ai', icon: TrendingUp },
+        { title: 'Campaigns', url: '/marketing-campaigns', icon: Target },
+      ],
+    });
+
+    // Store Design Section
+    structure.push({
+      title: 'Store Design',
+      icon: Palette,
+      children: [
         { title: 'Themes', url: '/theme', icon: Palette },
-        { title: 'Pages', url: '/pages', icon: FileText },
+        { title: 'Sections', url: '/build', icon: Globe },
+        { title: 'Custom Pages', url: '/pages', icon: FileText },
         { title: 'Media', url: '/media-library', icon: Image },
       ],
     });
 
-    // AI Tools Section
-    if (features.aiContent) {
-      structure.push({
-        title: 'AI Tools',
-        icon: Sparkles,
-        children: [
-          { title: 'Branding', url: '/ai-automation', icon: Sparkles },
-          { title: 'Writing', url: '/ai-automation', icon: Sparkles },
-          { title: 'Optimization', url: '/ai-automation', icon: Sparkles },
-        ],
-      });
-    }
-
-    // Finances Section
-    const finances: MenuItem = {
-      title: 'Finances',
-      icon: DollarSign,
-      children: [
-        { title: 'YoPay', url: '/payments', icon: CreditCard },
-      ],
-    };
-
-    if (features.invoicing) {
-      finances.children?.push({ title: 'Invoices', url: '/invoices', icon: FileText });
-    }
-
-    if (features.payroll) {
-      finances.children?.push({ title: 'Payroll', url: '/payroll', icon: DollarSign });
-    }
-
-    if (features.pos) {
-      finances.children?.push({ title: 'POS', url: '/pos', icon: CreditCard });
-    }
-
-    finances.children?.push({ title: 'Reports', url: '/analytics', icon: BarChart3 });
-
-    structure.push(finances);
-
-    // Customers Section
-    structure.push({
-      title: 'Customers',
-      icon: Users,
-      children: [
-        { title: 'CRM', url: '/customers', icon: Users },
-        { title: 'Segments', url: '/customers', icon: Users },
-        { title: 'Messages', url: '/chat-support', icon: MessageSquare },
-      ],
-    });
-
-    // Analytics
-    structure.push({ title: 'Analytics', url: '/analytics', icon: BarChart3 });
-
-    // Settings
+    // Settings Section
     structure.push({
       title: 'Settings',
       icon: Settings,
       children: [
-        { title: 'Business', url: '/settings', icon: Settings },
+        { title: 'Store Settings', url: '/settings', icon: Settings },
         { title: 'Staff', url: '/team', icon: UsersRound },
         { title: 'Billing', url: '/billing', icon: CreditCard },
+        { title: 'Branches', url: '/branches', icon: Store },
       ],
     });
 
@@ -264,22 +196,22 @@ export function NestedSidebar() {
         >
           <SidebarMenuItem>
             <CollapsibleTrigger asChild>
-              <SidebarMenuButton className="w-full">
+              <SidebarMenuButton className="w-full group">
                 <item.icon className="h-4 w-4" />
                 {!collapsed && (
                   <>
-                    <span className="flex-1">{item.title}</span>
+                    <span className="flex-1 font-medium">{item.title}</span>
                     {openGroups.includes(item.title) ? (
-                      <ChevronDown className="h-4 w-4" />
+                      <ChevronDown className="h-4 w-4 transition-transform" />
                     ) : (
-                      <ChevronRight className="h-4 w-4" />
+                      <ChevronRight className="h-4 w-4 transition-transform" />
                     )}
                   </>
                 )}
               </SidebarMenuButton>
             </CollapsibleTrigger>
             {!collapsed && (
-              <CollapsibleContent>
+              <CollapsibleContent className="transition-all">
                 <SidebarMenuSub>
                   {item.children.map(child => (
                     <SidebarMenuSubItem key={child.title}>
@@ -288,9 +220,11 @@ export function NestedSidebar() {
                           <NavLink
                             to={child.url}
                             className={({ isActive }) =>
-                              isActive
-                                ? 'bg-sidebar-accent text-sidebar-accent-foreground'
-                                : 'hover:bg-sidebar-accent/50'
+                              `flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
+                                isActive
+                                  ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium'
+                                  : 'hover:bg-sidebar-accent/50 text-sidebar-foreground'
+                              }`
                             }
                           >
                             <child.icon className="h-4 w-4" />
@@ -316,9 +250,11 @@ export function NestedSidebar() {
           <NavLink
             to={item.url || '#'}
             className={({ isActive }) =>
-              isActive
-                ? 'bg-sidebar-accent text-sidebar-accent-foreground'
-                : 'hover:bg-sidebar-accent/50'
+              `flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
+                isActive
+                  ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium'
+                  : 'hover:bg-sidebar-accent/50 text-sidebar-foreground'
+              }`
             }
           >
             <item.icon className="h-4 w-4" />
@@ -330,22 +266,28 @@ export function NestedSidebar() {
   };
 
   return (
-    <Sidebar collapsible="icon" className={collapsed ? 'w-16' : 'w-64'}>
-      <div className="p-4 border-b border-sidebar-border flex items-center gap-3 bg-gradient-to-r from-card to-muted">
+    <Sidebar 
+      collapsible="icon" 
+      className={`${collapsed ? 'w-16' : 'w-64'} border-r border-sidebar-border bg-sidebar transition-all`}
+    >
+      <div className="p-4 border-b border-sidebar-border flex items-center gap-3 bg-sidebar">
         {!collapsed && (
           <div className="flex-1">
             <h2 className="text-lg font-bold bg-gradient-premium bg-clip-text text-transparent">
               NexusCreate
             </h2>
+            <p className="text-xs text-muted-foreground">Business Platform</p>
           </div>
         )}
-        <SidebarTrigger />
+        <SidebarTrigger className="text-sidebar-foreground hover:bg-sidebar-accent" />
       </div>
 
-      <SidebarContent>
+      <SidebarContent className="bg-sidebar">
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu>{menuStructure.map(item => renderMenuItem(item))}</SidebarMenu>
+            <SidebarMenu className="space-y-1 p-2">
+              {menuStructure.map(item => renderMenuItem(item))}
+            </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
