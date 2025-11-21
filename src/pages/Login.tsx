@@ -58,7 +58,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-hero p-4 animate-fade-in">
+    <div className="light min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50 p-4 animate-fade-in">
       <div className="w-full max-w-md space-y-8 bg-card p-10 rounded-3xl shadow-premium border border-border/50 animate-scale-in">
         <div className="text-center space-y-3">
           <div className="flex justify-center mb-6">

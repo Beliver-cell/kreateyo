@@ -21,6 +21,7 @@ import {
   Star
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { LandingNavbar } from '@/components/LandingNavbar';
 import {
   Accordion,
   AccordionContent,
@@ -65,7 +66,9 @@ export default function LandingPage() {
   }, [typingText, isDeleting, phraseIndex]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="light min-h-screen bg-white">
+      <LandingNavbar />
+      
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/5" />
@@ -172,7 +175,7 @@ export default function LandingPage() {
       </section>
 
       {/* Features Grid */}
-      <section className="py-20 md:py-32">
+      <section id="features" className="py-20 md:py-32">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-3xl md:text-5xl font-bold mb-4">
@@ -455,7 +458,7 @@ export default function LandingPage() {
       </section>
 
       {/* Pricing */}
-      <section className="py-20">
+      <section id="pricing" className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto mb-12">
             <h2 className="text-3xl md:text-5xl font-bold mb-4">
@@ -590,7 +593,7 @@ export default function LandingPage() {
       </section>
 
       {/* FAQ */}
-      <section className="py-20 bg-muted/30">
+      <section id="faq" className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto mb-12">
             <h2 className="text-3xl md:text-5xl font-bold mb-4">
