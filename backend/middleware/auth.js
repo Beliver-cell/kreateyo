@@ -69,16 +69,36 @@ exports.optionalAuth = async (req, res, next) => {
   }
 };
 
-// Generate JWT token
+// Generate JWT access token (short-lived)
 exports.generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRE || '7d'
+  return jwt.sign({ id, type: 'access' }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRE || '15m'
   });
 };
 
-// Generate refresh token
+// Generate refresh token (long-lived)
 exports.generateRefreshToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_REFRESH_SECRET, {
-    expiresIn: process.env.JWT_REFRESH_EXPIRE || '30d'
+  return jwt.sign({ id, type: 'refresh' }, process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_REFRESH_EXPIRE || '7d'
   });
+};
+
+// Verify refresh token
+exports.verifyRefreshToken = (token) => {
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET);
+    if (decoded.type !== 'refresh') {
+      throw new Error('Invalid token type');
+    }
+    return decoded;
+  } catch (error) {
+    throw new Error('Invalid or expired refresh token');
+  }
+};
+
+// Generate token pair (access + refresh)
+exports.generateTokenPair = (userId) => {
+  const accessToken = exports.generateToken(userId);
+  const refreshToken = exports.generateRefreshToken(userId);
+  return { accessToken, refreshToken };
 };

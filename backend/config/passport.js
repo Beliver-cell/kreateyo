@@ -26,14 +26,16 @@ passport.use(
   })
 );
 
-// Google OAuth Strategy
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: process.env.GOOGLE_CALLBACK_URL
-    },
+// Google OAuth Strategy (only if credentials provided)
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  passport.use(
+    new GoogleStrategy(
+      {
+        clientID: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        callbackURL: `${process.env.BACKEND_URL || 'http://localhost:5000'}/api/v1/oauth/google/callback`,
+        proxy: true
+      },
     async (accessToken, refreshToken, profile, done) => {
       try {
         // Check if user already exists
@@ -54,7 +56,7 @@ passport.use(
           user.googleId = profile.id;
           user.authProvider = 'google';
           user.isEmailVerified = true;
-          user.avatar = profile.photos[0]?.value;
+          user.avatar = profile.photos && profile.photos.length > 0 ? profile.photos[0].value : null;
           user.lastLogin = Date.now();
           await user.save();
           return done(null, user);
@@ -65,19 +67,19 @@ passport.use(
           googleId: profile.id,
           email: profile.emails[0].value,
           fullName: profile.displayName,
-          avatar: profile.photos[0]?.value,
+          avatar: profile.photos && profile.photos.length > 0 ? profile.photos[0].value : null,
           authProvider: 'google',
           isEmailVerified: true,
           lastLogin: Date.now()
         });
 
-        return done(null, user);
+        done(null, user);
       } catch (error) {
-        return done(error, false);
+        done(error, false);
       }
-    }
-  )
-);
+    })
+  );
+}
 
 // Serialize user
 passport.serializeUser((user, done) => {
