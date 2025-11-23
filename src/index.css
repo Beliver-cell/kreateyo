@@ -56,14 +56,14 @@ All colors MUST be HSL.
 
     --radius: 0.75rem;
 
-    /* Sidebar */
-    --sidebar-background: 240 10% 3%;
-    --sidebar-foreground: 0 0% 98%;
+    /* Sidebar - White in Light Mode */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 240 10% 4%;
     --sidebar-primary: 221 83% 53%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 6% 10%;
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 240 6% 12%;
+    --sidebar-accent: 240 5% 96%;
+    --sidebar-accent-foreground: 240 10% 4%;
+    --sidebar-border: 240 6% 90%;
     --sidebar-ring: 221 83% 53%;
 
     /* Premium Gradients */
