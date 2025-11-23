@@ -1,11 +1,35 @@
-export type BusinessType = 'physical' | 'digital' | 'service' | 'dropship' | null;
+export type BusinessType = 'ecommerce' | 'services' | 'digital' | 'community' | null;
 export type AccountType = 'solo' | 'team' | null;
-export type PlanType = 'free' | 'pro' | 'enterprise';
+
+export type EcommerceSubType = 'physical' | 'digital' | 'dropshipping' | null;
+export type ServicesSubType = 
+  | 'coaching'
+  | 'consulting' 
+  | 'marketing'
+  | 'repairs'
+  | 'beauty'
+  | 'healthcare'
+  | null;
+
+export type DigitalSubType = 
+  | 'courses'
+  | 'ebooks'
+  | 'templates'
+  | 'music'
+  | 'software'
+  | null;
+
+export type CommunitySubType =
+  | 'ngo'
+  | 'church'
+  | 'club'
+  | 'association'
+  | null;
 
 export interface BusinessProfile {
   type: BusinessType;
   accountType: AccountType;
-  plan: PlanType;
+  subType?: EcommerceSubType | ServicesSubType | DigitalSubType | CommunitySubType;
   name?: string;
   onboarded: boolean;
 }
@@ -31,10 +55,9 @@ export interface BusinessFeatures {
   offlineMode?: boolean;
 }
 
-export const getBusinessFeatures = (type: BusinessType): BusinessFeatures => {
+export const getBusinessFeatures = (type: BusinessType, subType?: string): BusinessFeatures => {
   switch (type) {
-    case 'physical':
-    case 'dropship':
+    case 'ecommerce':
       return {
         pos: true,
         dispatch: true,
@@ -44,6 +67,7 @@ export const getBusinessFeatures = (type: BusinessType): BusinessFeatures => {
         aiSeo: true,
         aiContent: true,
         subscriptions: true,
+        digitalDelivery: subType === 'digital',
         multiStore: true,
         payroll: true,
         invoicing: true,
@@ -51,7 +75,7 @@ export const getBusinessFeatures = (type: BusinessType): BusinessFeatures => {
         offlineMode: true,
       };
     
-    case 'service':
+    case 'services':
       return {
         appointments: true,
         crm: true,
@@ -75,6 +99,16 @@ export const getBusinessFeatures = (type: BusinessType): BusinessFeatures => {
         aiSeo: true,
         aiContent: true,
         invoicing: true,
+        mediaLibrary: true,
+      };
+    
+    case 'community':
+      return {
+        membership: true,
+        donations: true,
+        crm: true,
+        aiMarketing: true,
+        aiSeo: true,
         mediaLibrary: true,
       };
     

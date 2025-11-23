@@ -1,166 +1,295 @@
-import { NavLink, useLocation } from 'react-router-dom';
-import { ChevronRight } from 'lucide-react';
+import { NavLink } from 'react-router-dom';
+import {
+  LayoutDashboard,
+  Package,
+  ShoppingCart,
+  Users,
+  BarChart3,
+  Settings,
+  CreditCard,
+  Palette,
+  Globe,
+  Truck,
+  CalendarIcon,
+  FileText,
+  Sparkles,
+  Mail,
+  MessageSquare,
+  Image,
+  DollarSign,
+  Download,
+  UsersRound,
+  Briefcase,
+  ShoppingBag,
+  Warehouse,
+  TrendingUp,
+  ChevronDown,
+  ChevronRight,
+  Store,
+  Zap,
+  Gift,
+  Link as LinkIcon,
+  Receipt,
+  Target,
+} from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
   SidebarTrigger,
   useSidebar,
 } from '@/components/ui/sidebar';
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/components/ui/collapsible';
-import { useState } from 'react';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useBusinessContext } from '@/contexts/BusinessContext';
-import { MenuItem, canAccessRoute } from '@/config/businessConfig';
-import { Badge } from '@/components/ui/badge';
+import { useState } from 'react';
+
+interface MenuItem {
+  title: string;
+  url?: string;
+  icon: any;
+  children?: MenuItem[];
+}
 
 export function NestedSidebar() {
-  const location = useLocation();
-  const { businessConfig } = useBusinessContext();
-  const { state: sidebarState } = useSidebar();
-  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
-
-  const collapsed = sidebarState === 'collapsed';
+  const { state } = useSidebar();
+  const { businessProfile } = useBusinessContext();
+  const collapsed = state === 'collapsed';
+  const [openGroups, setOpenGroups] = useState<string[]>(['dashboard']);
 
   const toggleGroup = (title: string) => {
-    setOpenGroups(prev => ({ ...prev, [title]: !prev[title] }));
+    setOpenGroups(prev =>
+      prev.includes(title) ? prev.filter(g => g !== title) : [...prev, title]
+    );
   };
 
-  const isGroupActive = (item: MenuItem): boolean => {
-    if (item.url && location.pathname === item.url) return true;
-    if (item.children) {
-      return item.children.some(child => isGroupActive(child));
+  const getMenuStructure = (): MenuItem[] => {
+    const structure: MenuItem[] = [];
+
+    // Dashboard Section
+    structure.push({
+      title: 'Dashboard',
+      icon: LayoutDashboard,
+      children: [
+        { title: 'Overview', url: '/dashboard', icon: LayoutDashboard },
+        { title: 'Analytics', url: '/analytics', icon: BarChart3 },
+      ],
+    });
+
+    // Products & Services Section
+    const productsServices: MenuItem = {
+      title: 'Products & Services',
+      icon: Package,
+      children: [],
+    };
+
+    if (businessProfile.type === 'digital' || businessProfile.subType === 'digital') {
+      productsServices.children?.push({ title: 'Digital Products', url: '/digital-products', icon: Download });
     }
-    return false;
+
+    if (businessProfile.type === 'ecommerce' && businessProfile.subType === 'physical') {
+      productsServices.children?.push({ title: 'Physical Products', url: '/products', icon: Package });
+      productsServices.children?.push({ title: 'Inventory', url: '/inventory', icon: Warehouse });
+    }
+
+    if (businessProfile.subType === 'dropshipping') {
+      productsServices.children?.push({ title: 'Dropshipping', url: '/supplier-manager', icon: Truck });
+    }
+
+    if (businessProfile.type === 'services') {
+      productsServices.children?.push({ title: 'Online Services', url: '/services', icon: Briefcase });
+    }
+
+    if (productsServices.children && productsServices.children.length > 0) {
+      structure.push(productsServices);
+    }
+
+    // Orders & Bookings Section
+    const ordersBookings: MenuItem = {
+      title: 'Orders & Bookings',
+      icon: ShoppingCart,
+      children: [],
+    };
+
+    if (businessProfile.type === 'ecommerce' || businessProfile.type === 'digital') {
+      ordersBookings.children?.push({ title: 'Orders', url: '/orders', icon: ShoppingCart });
+    }
+
+    if (businessProfile.type === 'services') {
+      ordersBookings.children?.push({ title: 'Bookings', url: '/appointments', icon: CalendarIcon });
+      ordersBookings.children?.push({ title: 'Calendar', url: '/calendar', icon: CalendarIcon });
+    }
+
+    ordersBookings.children?.push({ title: 'Clients', url: '/customers', icon: Users });
+
+    if (ordersBookings.children && ordersBookings.children.length > 0) {
+      structure.push(ordersBookings);
+    }
+
+    // Payments (YoPay) Section
+    structure.push({
+      title: 'Payments (YoPay)',
+      icon: CreditCard,
+      children: [
+        { title: 'Transactions', url: '/payments', icon: CreditCard },
+        { title: 'Payout Wallet', url: '/payments', icon: DollarSign },
+        { title: 'Payment Links', url: '/payments', icon: LinkIcon },
+        { title: 'Subscriptions', url: '/subscriptions', icon: Receipt },
+      ],
+    });
+
+    // Marketing & Automation Section
+    structure.push({
+      title: 'Marketing & Automation',
+      icon: Target,
+      children: [
+        { title: 'AI Tools', url: '/marketing-ai', icon: Sparkles },
+        { title: 'Email Automation', url: '/email-campaigns', icon: Mail },
+        { title: 'WhatsApp Automation', url: '/messaging', icon: MessageSquare },
+        { title: 'SEO Tools', url: '/marketing-ai', icon: TrendingUp },
+        { title: 'Campaigns', url: '/marketing-campaigns', icon: Target },
+      ],
+    });
+
+    // Store Design Section
+    structure.push({
+      title: 'Store Design',
+      icon: Palette,
+      children: [
+        { title: 'Themes', url: '/theme', icon: Palette },
+        { title: 'Sections', url: '/build', icon: Globe },
+        { title: 'Custom Pages', url: '/pages', icon: FileText },
+        { title: 'Media', url: '/media-library', icon: Image },
+      ],
+    });
+
+    // Settings Section
+    structure.push({
+      title: 'Settings',
+      icon: Settings,
+      children: [
+        { title: 'Store Settings', url: '/settings', icon: Settings },
+        { title: 'Staff', url: '/team', icon: UsersRound },
+        { title: 'Billing', url: '/billing', icon: CreditCard },
+        { title: 'Branches', url: '/branches', icon: Store },
+      ],
+    });
+
+    return structure;
   };
 
-  const shouldShowItem = (item: MenuItem): boolean => {
-    // Check if item requires specific plan
-    if (item.requiresPlan && !item.requiresPlan.includes(businessConfig.plan)) {
-      return false;
-    }
+  const menuStructure = getMenuStructure();
 
-    // Check if item requires specific business type
-    if (item.requiresBusinessTypes && !item.requiresBusinessTypes.includes(businessConfig.type)) {
-      return false;
-    }
-
-    // Check route access
-    if (item.url && !canAccessRoute(item.url, businessConfig)) {
-      return false;
-    }
-
-    return true;
-  };
-
-  const renderMenuItem = (item: MenuItem, depth: number = 0) => {
-    if (!shouldShowItem(item)) return null;
-
-    const isActive = isGroupActive(item);
-    const isOpen = openGroups[item.title] ?? isActive;
-    const Icon = item.icon;
-    const hasChildren = item.children && item.children.length > 0;
-    const isLocked = item.requiresPlan && !item.requiresPlan.includes(businessConfig.plan);
-
-    if (hasChildren) {
+  const renderMenuItem = (item: MenuItem, depth = 0) => {
+    if (item.children && item.children.length > 0) {
       return (
         <Collapsible
           key={item.title}
-          open={isOpen}
+          open={openGroups.includes(item.title)}
           onOpenChange={() => toggleGroup(item.title)}
         >
-          <SidebarGroup>
-            <SidebarGroupLabel asChild>
-              <CollapsibleTrigger className="w-full group/label hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-md transition-colors">
-                <div className="flex items-center justify-between w-full px-2 py-1.5">
-                  <div className="flex items-center gap-2">
-                    {Icon && <Icon className="h-4 w-4" />}
-                    {!collapsed && (
-                      <span className="text-sm font-medium">{item.title}</span>
+          <SidebarMenuItem>
+            <CollapsibleTrigger asChild>
+              <SidebarMenuButton className="w-full group">
+                <item.icon className="h-4 w-4" />
+                {!collapsed && (
+                  <>
+                    <span className="flex-1 font-medium">{item.title}</span>
+                    {openGroups.includes(item.title) ? (
+                      <ChevronDown className="h-4 w-4 transition-transform" />
+                    ) : (
+                      <ChevronRight className="h-4 w-4 transition-transform" />
                     )}
-                  </div>
-                  {!collapsed && (
-                    <ChevronRight
-                      className={`h-4 w-4 transition-transform ${
-                        isOpen ? 'rotate-90' : ''
-                      }`}
-                    />
-                  )}
-                </div>
-              </CollapsibleTrigger>
-            </SidebarGroupLabel>
-            <CollapsibleContent>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  {item.children?.map(child => renderMenuItem(child, depth + 1))}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </CollapsibleContent>
-          </SidebarGroup>
+                  </>
+                )}
+              </SidebarMenuButton>
+            </CollapsibleTrigger>
+            {!collapsed && (
+              <CollapsibleContent className="transition-all">
+                <SidebarMenuSub>
+                  {item.children.map(child => (
+                    <SidebarMenuSubItem key={child.title}>
+                      {child.url ? (
+                        <SidebarMenuSubButton asChild>
+                          <NavLink
+                            to={child.url}
+                            className={({ isActive }) =>
+                              `flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
+                                isActive
+                                  ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium'
+                                  : 'hover:bg-sidebar-accent/50 text-sidebar-foreground'
+                              }`
+                            }
+                          >
+                            <child.icon className="h-4 w-4" />
+                            <span>{child.title}</span>
+                          </NavLink>
+                        </SidebarMenuSubButton>
+                      ) : (
+                        renderMenuItem(child, depth + 1)
+                      )}
+                    </SidebarMenuSubItem>
+                  ))}
+                </SidebarMenuSub>
+              </CollapsibleContent>
+            )}
+          </SidebarMenuItem>
         </Collapsible>
       );
     }
 
-    if (item.url) {
-      return (
-        <SidebarMenuItem key={item.title}>
-          <SidebarMenuButton asChild>
-            <NavLink
-              to={item.url}
-              className={({ isActive }) =>
-                `flex items-center gap-2 px-2 py-1.5 rounded-md transition-colors ${
-                  isActive
-                    ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium'
-                    : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
-                } ${isLocked ? 'opacity-50 cursor-not-allowed' : ''}`
-              }
-              onClick={(e) => {
-                if (isLocked) {
-                  e.preventDefault();
-                }
-              }}
-            >
-              {Icon && <Icon className="h-4 w-4" />}
-              {!collapsed && (
-                <div className="flex items-center justify-between flex-1">
-                  <span className="text-sm">{item.title}</span>
-                  {isLocked && (
-                    <Badge variant="secondary" className="text-xs ml-2">
-                      {item.requiresPlan?.[0]}
-                    </Badge>
-                  )}
-                </div>
-              )}
-            </NavLink>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
-      );
-    }
-
-    return null;
+    return (
+      <SidebarMenuItem key={item.title}>
+        <SidebarMenuButton asChild>
+          <NavLink
+            to={item.url || '#'}
+            className={({ isActive }) =>
+              `flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
+                isActive
+                  ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium'
+                  : 'hover:bg-sidebar-accent/50 text-sidebar-foreground'
+              }`
+            }
+          >
+            <item.icon className="h-4 w-4" />
+            {!collapsed && <span>{item.title}</span>}
+          </NavLink>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    );
   };
 
   return (
-    <Sidebar className={collapsed ? 'w-14' : 'w-60'}>
-      <div className="flex items-center justify-between p-4 border-b">
+    <Sidebar 
+      collapsible="icon" 
+      className={`${collapsed ? 'w-16' : 'w-64'} border-r border-sidebar-border bg-sidebar transition-all`}
+    >
+      <div className="p-4 border-b border-sidebar-border flex items-center gap-3 bg-sidebar">
         {!collapsed && (
-          <h2 className="text-lg font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-            NexusCommerce
-          </h2>
+          <div className="flex-1">
+            <h2 className="text-lg font-bold bg-gradient-premium bg-clip-text text-transparent">
+              NexusCreate
+            </h2>
+            <p className="text-xs text-muted-foreground">Business Platform</p>
+          </div>
         )}
-        <SidebarTrigger />
+        <SidebarTrigger className="text-sidebar-foreground hover:bg-sidebar-accent" />
       </div>
 
-      <SidebarContent>
-        {businessConfig.sidebar.map(item => renderMenuItem(item))}
+      <SidebarContent className="bg-sidebar">
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu className="space-y-1 p-2">
+              {menuStructure.map(item => renderMenuItem(item))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
     </Sidebar>
   );
