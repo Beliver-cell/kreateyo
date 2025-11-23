@@ -1,189 +1,126 @@
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Store, Package, Zap, Users, Sparkles } from 'lucide-react';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useBusinessContext } from '@/contexts/BusinessContext';
-import { BusinessType } from '@/types/business';
+import { Store, Briefcase, BookOpen, Package, Download, Truck, Megaphone, Palette, Briefcase as Operations, FileText, Users, ArrowLeft } from 'lucide-react';
+import { BusinessType, EcommerceSubType, ServicesSubType } from '@/types/business';
 
 export function OnboardingModalEnhanced({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
-  const { setBusinessType, setPlan, completeOnboarding } = useBusinessContext();
-  const [step, setStep] = useState<'businessType' | 'plan'>('businessType');
-  const [selectedBusiness, setSelectedBusiness] = useState<BusinessType>(null);
+  const [step, setStep] = useState<'main' | 'ecommerce' | 'services'>('main');
+  const { setBusinessType, setBusinessSubType, completeOnboarding } = useBusinessContext();
+  const navigate = useNavigate();
 
-  const businessTypes = [
-    {
-      id: 'physical' as BusinessType,
-      title: 'Physical Products',
-      description: 'Sell tangible goods with inventory management',
-      icon: Package,
-      features: ['Inventory tracking', 'Shipping management', 'POS system'],
-    },
-    {
-      id: 'digital' as BusinessType,
-      title: 'Digital Products',
-      description: 'Sell digital downloads, courses, or licenses',
-      icon: Zap,
-      features: ['Instant delivery', 'License management', 'Download tracking'],
-    },
-    {
-      id: 'service' as BusinessType,
-      title: 'Services',
-      description: 'Offer bookings, consultations, or appointments',
-      icon: Users,
-      features: ['Booking calendar', 'Client CRM', 'Automated reminders'],
-    },
-    {
-      id: 'dropship' as BusinessType,
-      title: 'Dropshipping',
-      description: 'Sell products without holding inventory',
-      icon: Store,
-      features: ['Supplier management', 'Auto-fulfillment', 'Product sync'],
-    },
+  const mainBusinessTypes = [
+    { id: 'ecommerce', icon: Store, title: 'E-commerce Store', description: 'Sell products online' },
+    { id: 'services', icon: Briefcase, title: 'Services Business', description: 'Offer professional services' },
+    { id: 'blog', icon: BookOpen, title: 'Blog/Content Site', description: 'Share content and stories' }
   ];
 
-  const plans = [
-    {
-      id: 'free',
-      title: 'Free',
-      price: '$0/mo',
-      description: 'Perfect for getting started',
-      features: ['100 products', '1 team member', '1GB storage', 'Basic analytics'],
-    },
-    {
-      id: 'pro',
-      title: 'Pro',
-      price: '$49/mo',
-      description: 'For growing businesses',
-      features: ['1,000 products', '5 team members', '10GB storage', 'Advanced automation'],
-      popular: true,
-    },
-    {
-      id: 'enterprise',
-      title: 'Enterprise',
-      price: '$299/mo',
-      description: 'For established businesses',
-      features: ['Unlimited products', 'Unlimited team', '100GB storage', 'POS + API access'],
-    },
+  const ecommerceSubTypes = [
+    { id: 'physical', icon: Package, title: 'Physical Products', description: 'Tangible goods with shipping' },
+    { id: 'digital', icon: Download, title: 'Digital Products', description: 'Downloadable content & files' },
+    { id: 'dropshipping', icon: Truck, title: 'Dropshipping', description: 'Sell without holding inventory' }
   ];
 
-  const handleBusinessSelect = (type: BusinessType) => {
-    setSelectedBusiness(type);
-    setBusinessType(type);
-    setStep('plan');
+  const servicesSubTypes = [
+    { id: 'marketing', icon: Megaphone, title: 'Marketing & Sales', description: 'Campaigns, ads, lead generation' },
+    { id: 'design', icon: Palette, title: 'Design & Development', description: 'Creative & technical projects' },
+    { id: 'operations', icon: Operations, title: 'Business Operations', description: 'Process & workflow management' },
+    { id: 'writing', icon: FileText, title: 'Writing & Content', description: 'Articles, copy, documentation' },
+    { id: 'coaching', icon: Users, title: 'Coaching & Consulting', description: 'Guidance & expert advice' }
+  ];
+
+  const handleMainSelection = (type: BusinessType) => {
+    if (type === 'community') {
+      setBusinessType(type);
+      completeOnboarding();
+      navigate('/dashboard');
+      onOpenChange(false);
+    } else if (type === 'ecommerce') {
+      setBusinessType(type);
+      setStep('ecommerce');
+    } else if (type === 'services') {
+      setBusinessType(type);
+      setStep('services');
+    }
   };
 
-  const handlePlanSelect = (plan: 'free' | 'pro' | 'enterprise') => {
-    setPlan(plan);
+  const handleSubTypeSelection = (subType: EcommerceSubType | ServicesSubType) => {
+    setBusinessSubType(subType);
     completeOnboarding();
+    navigate('/dashboard');
     onOpenChange(false);
+  };
+
+  const handleBack = () => {
+    setStep('main');
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-        {step === 'businessType' && (
-          <>
-            <DialogHeader>
-              <DialogTitle className="text-2xl flex items-center gap-2">
-                <Sparkles className="h-6 w-6 text-primary" />
-                Welcome! What will you be selling?
-              </DialogTitle>
-              <DialogDescription className="text-base">
-                Choose your business model to customize your dashboard
-              </DialogDescription>
-            </DialogHeader>
+        <DialogHeader>
+          <DialogTitle className="text-3xl font-bold text-center mb-2">
+            {step === 'main' && 'Welcome! What type of business are you building?'}
+            {step === 'ecommerce' && 'What will you be selling?'}
+            {step === 'services' && "What's your service specialty?"}
+          </DialogTitle>
+        </DialogHeader>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
-              {businessTypes.map((type) => {
-                const Icon = type.icon;
-                return (
-                  <Card
-                    key={type.id}
-                    className="cursor-pointer hover:border-primary hover:shadow-lg transition-all"
-                    onClick={() => handleBusinessSelect(type.id)}
-                  >
-                    <CardHeader>
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 rounded-lg bg-primary/10">
-                            <Icon className="h-6 w-6 text-primary" />
-                          </div>
-                          <div>
-                            <CardTitle className="text-lg">{type.title}</CardTitle>
-                            <CardDescription className="text-sm mt-1">
-                              {type.description}
-                            </CardDescription>
-                          </div>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <ul className="space-y-2">
-                        {type.features.map((feature, idx) => (
-                          <li key={idx} className="flex items-center gap-2 text-sm">
-                            <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                            <span>{feature}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
-          </>
+        {step !== 'main' && (
+          <Button variant="ghost" onClick={handleBack} className="w-fit mb-4">
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back
+          </Button>
         )}
 
-        {step === 'plan' && (
-          <>
-            <DialogHeader>
-              <DialogTitle className="text-2xl">Choose Your Plan</DialogTitle>
-              <DialogDescription className="text-base">
-                Start free, upgrade anytime as you grow
-              </DialogDescription>
-            </DialogHeader>
+        {step === 'main' && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+            {mainBusinessTypes.map((type) => (
+              <button
+                key={type.id}
+                onClick={() => handleMainSelection(type.id as BusinessType)}
+                className="p-8 border-2 border-border rounded-xl hover:border-primary hover:bg-accent/50 transition-all group text-left"
+              >
+                <type.icon className="h-12 w-12 mb-4 text-primary group-hover:scale-110 transition-transform" />
+                <h3 className="text-xl font-semibold mb-2">{type.title}</h3>
+                <p className="text-sm text-muted-foreground">{type.description}</p>
+              </button>
+            ))}
+          </div>
+        )}
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 py-4">
-              {plans.map((plan) => (
-                <Card
-                  key={plan.id}
-                  className={`cursor-pointer hover:border-primary hover:shadow-lg transition-all ${
-                    plan.popular ? 'border-primary border-2 relative' : ''
-                  }`}
-                  onClick={() => handlePlanSelect(plan.id as any)}
-                >
-                  {plan.popular && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-primary text-primary-foreground text-xs font-medium rounded-full">
-                      Popular
-                    </div>
-                  )}
-                  <CardHeader>
-                    <CardTitle className="text-xl">{plan.title}</CardTitle>
-                    <div className="text-3xl font-bold text-primary">{plan.price}</div>
-                    <CardDescription>{plan.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-2">
-                      {plan.features.map((feature, idx) => (
-                        <li key={idx} className="flex items-center gap-2 text-sm">
-                          <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                          <span>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <Button className="w-full mt-4" variant={plan.popular ? 'default' : 'outline'}>
-                      Choose {plan.title}
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+        {step === 'ecommerce' && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+            {ecommerceSubTypes.map((subType) => (
+              <button
+                key={subType.id}
+                onClick={() => handleSubTypeSelection(subType.id as EcommerceSubType)}
+                className="p-8 border-2 border-border rounded-xl hover:border-primary hover:bg-accent/50 transition-all group text-left"
+              >
+                <subType.icon className="h-12 w-12 mb-4 text-primary group-hover:scale-110 transition-transform" />
+                <h3 className="text-xl font-semibold mb-2">{subType.title}</h3>
+                <p className="text-sm text-muted-foreground">{subType.description}</p>
+              </button>
+            ))}
+          </div>
+        )}
 
-            <Button variant="outline" onClick={() => setStep('businessType')} className="w-full">
-              Back to Business Type
-            </Button>
-          </>
+        {step === 'services' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+            {servicesSubTypes.map((subType) => (
+              <button
+                key={subType.id}
+                onClick={() => handleSubTypeSelection(subType.id as ServicesSubType)}
+                className="p-6 border-2 border-border rounded-xl hover:border-primary hover:bg-accent/50 transition-all group text-left"
+              >
+                <subType.icon className="h-10 w-10 mb-3 text-primary group-hover:scale-110 transition-transform" />
+                <h3 className="text-lg font-semibold mb-2">{subType.title}</h3>
+                <p className="text-sm text-muted-foreground">{subType.description}</p>
+              </button>
+            ))}
+          </div>
         )}
       </DialogContent>
     </Dialog>

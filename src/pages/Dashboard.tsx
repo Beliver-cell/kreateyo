@@ -9,19 +9,15 @@ export default function Dashboard() {
   const { businessProfile } = useBusinessContext();
   const navigate = useNavigate();
 
-  const isProductStore = businessProfile.type === 'physical' || businessProfile.type === 'dropship';
-  const isServiceStore = businessProfile.type === 'service';
-  const isDigitalStore = businessProfile.type === 'digital';
-
   const getMetrics = () => {
-    if (isProductStore) {
+    if (businessProfile.type === 'ecommerce') {
       return [
         { title: 'Revenue', value: '$12,345', change: '+12.5%', icon: DollarSign, trending: 'up' },
         { title: 'Orders', value: '156', change: '+8.2%', icon: ShoppingCart, trending: 'up' },
         { title: 'Products', value: '89', change: '+3', icon: Package, trending: 'up' },
         { title: 'Customers', value: '1,234', change: '+15.3%', icon: Users, trending: 'up' },
       ];
-    } else if (isServiceStore) {
+    } else if (businessProfile.type === 'services') {
       return [
         { title: 'Revenue', value: '$8,750', change: '+10.2%', icon: DollarSign, trending: 'up' },
         { title: 'Bookings', value: '42', change: '+5', icon: Calendar, trending: 'up' },
@@ -39,14 +35,14 @@ export default function Dashboard() {
   };
 
   const getActivityData = () => {
-    if (isProductStore) {
+    if (businessProfile.type === 'ecommerce') {
       return [
         { text: 'New order #1842 - $234.99', time: '5 minutes ago', type: 'order' },
         { text: 'Low stock alert: Running Shoes', time: '1 hour ago', type: 'alert' },
         { text: '3 new customer signups', time: '2 hours ago', type: 'customer' },
         { text: 'Product "Yoga Mat" went live', time: '3 hours ago', type: 'product' },
       ];
-    } else if (isServiceStore) {
+    } else if (businessProfile.type === 'services') {
       return [
         { text: 'New booking: Personal Training - 3:00 PM', time: '10 minutes ago', type: 'booking' },
         { text: 'Reminder: Client meeting in 30 mins', time: '30 minutes ago', type: 'reminder' },
@@ -106,82 +102,94 @@ export default function Dashboard() {
           <CardHeader className="space-y-1 pb-3 md:pb-4">
             <CardTitle className="text-lg md:text-xl font-semibold">Recent Activity</CardTitle>
             <CardDescription>
-              {isProductStore && 'Latest orders, inventory, and customer updates'}
-              {isServiceStore && 'Today\'s appointments and client interactions'}
-              {isDigitalStore && 'Subscriber growth and post performance'}
+              {businessProfile.type === 'ecommerce' && 'Latest orders, inventory, and customer updates'}
+              {businessProfile.type === 'services' && 'Today\'s appointments and client interactions'}
+              {(businessProfile.type === 'digital' || businessProfile.type === 'community') && 'Subscriber growth and post performance'}
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-2 md:space-y-3">
-            {activityData.map((activity, index) => (
-              <div key={index} className="flex items-start gap-2 md:gap-3 p-2 md:p-3 rounded-lg hover:bg-muted/50 transition-colors">
-                <div className="w-1.5 md:w-2 h-1.5 md:h-2 rounded-full bg-primary mt-1.5 md:mt-2 flex-shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs md:text-sm font-medium text-foreground">{activity.text}</p>
-                  <p className="text-[10px] md:text-xs text-muted-foreground mt-0.5 md:mt-1">{activity.time}</p>
+          <CardContent className="px-4 md:px-6">
+            <div className="space-y-3 md:space-y-4">
+              {activityData.map((activity, i) => (
+                <div key={i} className="flex items-start gap-3 md:gap-4 p-3 md:p-4 rounded-lg md:rounded-xl bg-muted/50 hover:bg-muted/80 transition-all duration-200 border border-transparent hover:border-border">
+                  <div className="w-2 h-2 rounded-full bg-primary mt-1.5 md:mt-2 flex-shrink-0"></div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs md:text-sm font-medium leading-relaxed">{activity.text}</p>
+                    <p className="text-[10px] md:text-xs text-muted-foreground mt-1 md:mt-1.5">{activity.time}</p>
+                  </div>
+                  {activity.type === 'alert' && (
+                    <AlertCircle className="w-5 h-5 text-warning flex-shrink-0 mt-1" />
+                  )}
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </CardContent>
         </Card>
 
         <Card className="border-border">
           <CardHeader className="space-y-1 pb-3 md:pb-4">
-            <CardTitle className="text-lg md:text-xl font-semibold">Quick Actions</CardTitle>
-            <CardDescription>Shortcuts to common tasks</CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-lg md:text-xl font-semibold">Quick Actions</CardTitle>
+                <CardDescription className="text-xs md:text-sm">Common tasks and shortcuts</CardDescription>
+              </div>
+              <Badge variant="outline" className="text-[10px] md:text-xs font-medium border-primary text-primary">
+                {businessProfile.type}
+              </Badge>
+            </div>
           </CardHeader>
-          <CardContent className="space-y-3 md:space-y-4">
+          <CardContent className="px-4 md:px-6">
             <div className="space-y-2 md:space-y-3">
               <button 
                 onClick={() => {
-                  if (isProductStore) navigate('/products');
-                  else if (isServiceStore) navigate('/calendar');
+                  if (businessProfile.type === 'ecommerce') navigate('/products');
+                  else if (businessProfile.type === 'services') navigate('/calendar');
                   else navigate('/posts');
                 }}
-                className="w-full text-left p-2 md:p-3 lg:p-4 border border-border rounded-lg md:rounded-xl hover:border-primary hover:bg-primary/5 transition-all group"
+                className="w-full p-4 md:p-5 rounded-lg md:rounded-xl border-2 border-border hover:border-primary hover:bg-primary/5 transition-all duration-200 text-left group"
               >
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs md:text-sm font-semibold group-hover:text-primary transition-colors">
-                      {isProductStore && 'Add New Product'}
-                      {isServiceStore && 'Create New Booking'}
-                      {isDigitalStore && 'Write New Post'}
+                      {businessProfile.type === 'ecommerce' && 'Add New Product'}
+                      {businessProfile.type === 'services' && 'Create New Booking'}
+                      {(businessProfile.type === 'digital' || businessProfile.type === 'community') && 'Write New Post'}
                     </p>
                     <p className="text-[10px] md:text-xs text-muted-foreground mt-1 md:mt-1.5">Start creating content</p>
                   </div>
                   <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                    {isProductStore && <Package className="w-4 h-4 md:w-5 md:h-5 text-primary" />}
-                    {isServiceStore && <Calendar className="w-4 h-4 md:w-5 md:h-5 text-primary" />}
-                    {isDigitalStore && <FileText className="w-4 h-4 md:w-5 md:h-5 text-primary" />}
+                    {businessProfile.type === 'ecommerce' && <Package className="w-4 h-4 md:w-5 md:h-5 text-primary" />}
+                    {businessProfile.type === 'services' && <Calendar className="w-4 h-4 md:w-5 md:h-5 text-primary" />}
+                    {(businessProfile.type === 'digital' || businessProfile.type === 'community') && <FileText className="w-4 h-4 md:w-5 md:h-5 text-primary" />}
                   </div>
                 </div>
               </button>
-
+              
               <button 
-                onClick={() => navigate('/analytics')}
-                className="w-full text-left p-2 md:p-3 lg:p-4 border border-border rounded-lg md:rounded-xl hover:border-primary hover:bg-primary/5 transition-all group"
+                onClick={() => navigate('/build')}
+                className="w-full p-4 md:p-5 rounded-lg md:rounded-xl border-2 border-border hover:border-primary hover:bg-primary/5 transition-all duration-200 text-left group"
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-xs md:text-sm font-semibold group-hover:text-primary transition-colors">View Analytics</p>
-                    <p className="text-[10px] md:text-xs text-muted-foreground mt-1 md:mt-1.5">Check performance metrics</p>
+                    <p className="text-xs md:text-sm font-semibold group-hover:text-primary transition-colors">Customize Your Site</p>
+                    <p className="text-[10px] md:text-xs text-muted-foreground mt-1 md:mt-1.5">Edit design and layout</p>
                   </div>
                   <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                     <TrendingUp className="w-4 h-4 md:w-5 md:h-5 text-primary" />
                   </div>
                 </div>
               </button>
-
+              
               <button 
-                onClick={() => navigate('/settings')}
-                className="w-full text-left p-2 md:p-3 lg:p-4 border border-border rounded-lg md:rounded-xl hover:border-primary hover:bg-primary/5 transition-all group"
+                onClick={() => navigate('/analytics')}
+                className="w-full p-4 md:p-5 rounded-lg md:rounded-xl border-2 border-border hover:border-primary hover:bg-primary/5 transition-all duration-200 text-left group"
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-xs md:text-sm font-semibold group-hover:text-primary transition-colors">Store Settings</p>
-                    <p className="text-[10px] md:text-xs text-muted-foreground mt-1 md:mt-1.5">Configure your store</p>
+                    <p className="text-xs md:text-sm font-semibold group-hover:text-primary transition-colors">View Full Analytics</p>
+                    <p className="text-[10px] md:text-xs text-muted-foreground mt-1 md:mt-1.5">Track your performance</p>
                   </div>
                   <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                    <AlertCircle className="w-4 h-4 md:w-5 md:h-5 text-primary" />
+                    <TrendingUp className="w-4 h-4 md:w-5 md:h-5 text-primary" />
                   </div>
                 </div>
               </button>

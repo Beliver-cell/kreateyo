@@ -37,7 +37,7 @@ export default function Analytics() {
 
   // Blog metrics
   const blogMetrics = [
-    { title: 'Total Views', value: '$48,567', change: '+32.5%', icon: Eye, trend: 'up' },
+    { title: 'Total Views', value: '48,567', change: '+32.5%', icon: Eye, trend: 'up' },
     { title: 'Published Posts', value: '127', change: '+12', icon: FileText, trend: 'up' },
     { title: 'Subscribers', value: '2,345', change: '+18.7%', icon: Users, trend: 'up' },
     { title: 'Engagement Rate', value: '4.8%', change: '+0.9%', icon: Target, trend: 'up' },
@@ -49,14 +49,10 @@ export default function Analytics() {
     { title: 'The Future of AI Technology', views: 4521, engagement: '4.9%' },
   ];
 
-  const isProductStore = businessProfile.type === 'physical' || businessProfile.type === 'dropship';
-  const isServiceStore = businessProfile.type === 'service';
-  const isDigitalStore = businessProfile.type === 'digital';
-
   const renderMetrics = () => {
     let metrics = ecommerceMetrics;
-    if (isServiceStore) metrics = servicesMetrics;
-    if (isDigitalStore) metrics = blogMetrics;
+    if (businessProfile.type === 'services') metrics = servicesMetrics;
+    if (businessProfile.type === 'digital' || businessProfile.type === 'community') metrics = blogMetrics;
 
     return metrics.map((metric, index) => (
       <Card key={index}>
@@ -81,7 +77,7 @@ export default function Analytics() {
   };
 
   const renderTopPerformers = () => {
-    if (isProductStore) {
+    if (businessProfile.type === 'ecommerce') {
       return (
         <Card>
           <CardHeader>
@@ -105,7 +101,7 @@ export default function Analytics() {
       );
     }
 
-    if (isServiceStore) {
+    if (businessProfile.type === 'services') {
       return (
         <Card>
           <CardHeader>
@@ -133,17 +129,17 @@ export default function Analytics() {
       <Card>
         <CardHeader>
           <CardTitle>Top Posts</CardTitle>
-          <CardDescription>Most viewed content this month</CardDescription>
+          <CardDescription>Most viewed articles this month</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {topPosts.map((post, index) => (
-              <div key={index} className="flex items-center justify-between">
-                <div className="flex-1">
-                  <p className="font-medium text-sm">{post.title}</p>
-                  <p className="text-sm text-muted-foreground">{post.views.toLocaleString()} views</p>
+              <div key={index} className="space-y-1">
+                <p className="font-medium">{post.title}</p>
+                <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                  <span>{post.views.toLocaleString()} views</span>
+                  <span>Engagement: {post.engagement}</span>
                 </div>
-                <p className="font-bold text-primary ml-2">{post.engagement}</p>
               </div>
             ))}
           </div>
@@ -153,105 +149,114 @@ export default function Analytics() {
   };
 
   return (
-    <div className="space-y-6 md:space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Analytics Dashboard</h1>
-        <p className="text-muted-foreground">
-          {isProductStore && 'Track your store performance and sales metrics'}
-          {isServiceStore && 'Monitor your service bookings and client engagement'}
-          {isDigitalStore && 'Analyze your content performance and audience growth'}
-        </p>
+    <div className="space-y-6 max-w-7xl">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Analytics Dashboard</h1>
+          <p className="text-muted-foreground">
+            {businessProfile.type === 'ecommerce' && 'Track your store performance and sales metrics'}
+            {businessProfile.type === 'services' && 'Monitor your service bookings and client engagement'}
+            {(businessProfile.type === 'digital' || businessProfile.type === 'community') && 'Analyze your content performance and audience growth'}
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline">Last 7 Days</Button>
+          <Button variant="outline">Last 30 Days</Button>
+          <Button>Export Report</Button>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+      {/* Key Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {renderMetrics()}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+      {/* Detailed Analytics */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {renderTopPerformers()}
-        
+
         <Card>
           <CardHeader>
             <CardTitle>
-              {isProductStore && 'Customer Behavior'}
-              {isServiceStore && 'Client Insights'}
-              {isDigitalStore && 'Audience Insights'}
+              {businessProfile.type === 'ecommerce' && 'Customer Behavior'}
+              {businessProfile.type === 'services' && 'Client Insights'}
+              {(businessProfile.type === 'digital' || businessProfile.type === 'community') && 'Audience Insights'}
             </CardTitle>
             <CardDescription>Key behavioral metrics</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {isProductStore && (
+            {businessProfile.type === 'ecommerce' && (
               <>
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm">Cart Abandonment Rate</span>
-                    <span className="text-sm font-bold">32%</span>
+                    <span className="text-sm font-medium">Average Order Value</span>
+                    <span className="text-sm font-bold">$124.50</span>
                   </div>
-                  <Progress value={32} className="h-2" />
+                  <Progress value={68} />
                 </div>
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm">Avg. Order Value</span>
-                    <span className="text-sm font-bold">$87.50</span>
+                    <span className="text-sm font-medium">Repeat Purchase Rate</span>
+                    <span className="text-sm font-bold">34%</span>
                   </div>
-                  <Progress value={65} className="h-2" />
+                  <Progress value={34} />
                 </div>
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm">Return Customer Rate</span>
+                    <span className="text-sm font-medium">Cart Abandonment</span>
+                    <span className="text-sm font-bold">28%</span>
+                  </div>
+                  <Progress value={28} className="bg-red-100" />
+                </div>
+              </>
+            )}
+            {businessProfile.type === 'services' && (
+              <>
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium">Average Session Value</span>
+                    <span className="text-sm font-bold">$285.00</span>
+                  </div>
+                  <Progress value={72} />
+                </div>
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium">Repeat Client Rate</span>
+                    <span className="text-sm font-bold">58%</span>
+                  </div>
+                  <Progress value={58} />
+                </div>
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium">Cancellation Rate</span>
+                    <span className="text-sm font-bold">8%</span>
+                  </div>
+                  <Progress value={8} className="bg-red-100" />
+                </div>
+              </>
+            )}
+            {(businessProfile.type === 'digital' || businessProfile.type === 'community') && (
+              <>
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium">Avg. Time on Page</span>
+                    <span className="text-sm font-bold">4m 32s</span>
+                  </div>
+                  <Progress value={68} />
+                </div>
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium">Return Visitor Rate</span>
                     <span className="text-sm font-bold">42%</span>
                   </div>
-                  <Progress value={42} className="h-2" />
-                </div>
-              </>
-            )}
-            {isServiceStore && (
-              <>
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm">Booking Completion Rate</span>
-                    <span className="text-sm font-bold">89%</span>
-                  </div>
-                  <Progress value={89} className="h-2" />
+                  <Progress value={42} />
                 </div>
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm">Avg. Session Duration</span>
-                    <span className="text-sm font-bold">45 min</span>
+                    <span className="text-sm font-medium">Bounce Rate</span>
+                    <span className="text-sm font-bold">35%</span>
                   </div>
-                  <Progress value={75} className="h-2" />
-                </div>
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm">Client Retention Rate</span>
-                    <span className="text-sm font-bold">68%</span>
-                  </div>
-                  <Progress value={68} className="h-2" />
-                </div>
-              </>
-            )}
-            {isDigitalStore && (
-              <>
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm">Bounce Rate</span>
-                    <span className="text-sm font-bold">45%</span>
-                  </div>
-                  <Progress value={45} className="h-2" />
-                </div>
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm">Avg. Time on Page</span>
-                    <span className="text-sm font-bold">3:24</span>
-                  </div>
-                  <Progress value={68} className="h-2" />
-                </div>
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm">Email Open Rate</span>
-                    <span className="text-sm font-bold">24%</span>
-                  </div>
-                  <Progress value={24} className="h-2" />
+                  <Progress value={35} className="bg-red-100" />
                 </div>
               </>
             )}
@@ -259,35 +264,41 @@ export default function Analytics() {
         </Card>
       </div>
 
+      {/* Traffic Sources */}
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle>Performance Insights</CardTitle>
-              <CardDescription>AI-powered recommendations</CardDescription>
-            </div>
-            <Button size="sm" variant="outline">View All</Button>
-          </div>
+          <CardTitle>Traffic Sources</CardTitle>
+          <CardDescription>Where your visitors are coming from</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="flex items-start gap-3 p-3 bg-muted/50 rounded-lg">
-              <TrendingUp className="w-5 h-5 text-primary mt-0.5" />
-              <div className="flex-1">
-                <p className="text-sm font-medium">Trending Up</p>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Your {isProductStore ? 'sales' : isServiceStore ? 'bookings' : 'engagement'} have increased by 24% compared to last month
-                </p>
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium">Organic Search</span>
+                <span className="text-sm font-bold">45%</span>
               </div>
+              <Progress value={45} />
             </div>
-            <div className="flex items-start gap-3 p-3 bg-muted/50 rounded-lg">
-              <Target className="w-5 h-5 text-primary mt-0.5" />
-              <div className="flex-1">
-                <p className="text-sm font-medium">Optimization Tip</p>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Consider running a promotion during peak hours to maximize {isProductStore || isDigitalStore ? 'sales' : 'bookings'}
-                </p>
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium">Direct</span>
+                <span className="text-sm font-bold">28%</span>
               </div>
+              <Progress value={28} />
+            </div>
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium">Social Media</span>
+                <span className="text-sm font-bold">18%</span>
+              </div>
+              <Progress value={18} />
+            </div>
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium">Referrals</span>
+                <span className="text-sm font-bold">9%</span>
+              </div>
+              <Progress value={9} />
             </div>
           </div>
         </CardContent>
