@@ -32,10 +32,10 @@ export default function Discounts() {
   ];
 
   return (
-    <div className="space-y-6 max-w-6xl">
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6 space-y-4 md:space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Discounts & Promotions</h1>
-        <p className="text-muted-foreground">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Discounts & Promotions</h1>
+        <p className="text-muted-foreground text-sm md:text-base">
           Create and manage discount codes, coupons, and gift cards
         </p>
       </div>
