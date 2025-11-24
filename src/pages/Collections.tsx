@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { CollectionDialog } from '@/components/CollectionDialog';
+import { EmptyState } from '@/components/ui/empty-state';
 
 const mockCollections = [
   { 
@@ -97,6 +98,20 @@ export default function Collections() {
             </Button>
           </div>
 
+          {filteredCollections.length === 0 ? (
+            <EmptyState
+              icon={Sun}
+              title="No collections found"
+              description={searchQuery ? "Try adjusting your search terms" : "Create collections to organize your products"}
+              action={!searchQuery ? {
+                label: "Create Collection",
+                onClick: () => {
+                  setSelectedCollection(null);
+                  setDialogOpen(true);
+                }
+              } : undefined}
+            />
+          ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredCollections.map((collection) => {
               const CollectionIcon = collection.icon;
@@ -140,6 +155,7 @@ export default function Collections() {
             );
             })}
           </div>
+          )}
         </CardContent>
       </Card>
 
