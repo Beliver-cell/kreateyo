@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard,
   Package,
@@ -31,9 +31,6 @@ import {
   Link as LinkIcon,
   Receipt,
   Target,
-  UserCircle,
-  LogOut,
-  Bell,
   Menu,
 } from 'lucide-react';
 import {
@@ -48,17 +45,11 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarTrigger,
-  SidebarFooter,
   useSidebar,
 } from '@/components/ui/sidebar';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useBusinessContext } from '@/contexts/BusinessContext';
 import { useState } from 'react';
-import { NotificationCenter } from '@/components/NotificationCenter';
-import { ThemeToggle } from '@/components/ThemeToggle';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
-import { supabase } from '@/integrations/supabase/client';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 interface MenuItem {
@@ -73,13 +64,7 @@ export function NestedSidebar() {
   const { businessProfile } = useBusinessContext();
   const collapsed = state === 'collapsed';
   const [openGroups, setOpenGroups] = useState<string[]>(['dashboard']);
-  const navigate = useNavigate();
   const isMobile = useIsMobile();
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    navigate('/login');
-  };
 
   const toggleGroup = (title: string) => {
     setOpenGroups(prev =>
@@ -318,34 +303,6 @@ export function NestedSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-sidebar-border bg-sidebar p-2">
-        <div className={`flex ${collapsed ? 'flex-col' : 'flex-row'} items-center gap-2 justify-center`}>
-          <NotificationCenter />
-          <ThemeToggle />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="relative">
-                <UserCircle className="h-5 w-5" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56 bg-popover">
-              <DropdownMenuItem onClick={() => navigate('/settings')}>
-                <Settings className="mr-2 h-4 w-4" />
-                Settings
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => navigate('/billing')}>
-                <CreditCard className="mr-2 h-4 w-4" />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleLogout} className="text-destructive">
-                <LogOut className="mr-2 h-4 w-4" />
-                Logout
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </SidebarFooter>
     </Sidebar>
   );
 }
