@@ -298,6 +298,7 @@ const App = () => (
             <Route path="/discounts" element={<DashboardLayout><Discounts /></DashboardLayout>} />
             <Route path="/appointments" element={<DashboardLayout><AppointmentManager /></DashboardLayout>} />
             <Route path="/affiliates" element={<DashboardLayout><AffiliateProgram /></DashboardLayout>} />
+            <Route path="/affiliate-program" element={<DashboardLayout><AffiliateProgram /></DashboardLayout>} />
             <Route path="/ads-sponsors" element={<DashboardLayout><AdsSponsors /></DashboardLayout>} />
             <Route path="/suppliers" element={<DashboardLayout><SupplierManager /></DashboardLayout>} />
             <Route path="/digital-products" element={<DashboardLayout><DigitalProducts /></DashboardLayout>} />

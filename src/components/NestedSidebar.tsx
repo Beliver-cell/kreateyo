@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
   Package,
@@ -31,6 +31,10 @@ import {
   Link as LinkIcon,
   Receipt,
   Target,
+  UserCircle,
+  LogOut,
+  Bell,
+  Menu,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -44,11 +48,18 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarTrigger,
+  SidebarFooter,
   useSidebar,
 } from '@/components/ui/sidebar';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useBusinessContext } from '@/contexts/BusinessContext';
 import { useState } from 'react';
+import { NotificationCenter } from '@/components/NotificationCenter';
+import { ThemeToggle } from '@/components/ThemeToggle';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
+import { supabase } from '@/integrations/supabase/client';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface MenuItem {
   title: string;
@@ -62,6 +73,13 @@ export function NestedSidebar() {
   const { businessProfile } = useBusinessContext();
   const collapsed = state === 'collapsed';
   const [openGroups, setOpenGroups] = useState<string[]>(['dashboard']);
+  const navigate = useNavigate();
+  const isMobile = useIsMobile();
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate('/login');
+  };
 
   const toggleGroup = (title: string) => {
     setOpenGroups(prev =>
@@ -154,6 +172,7 @@ export function NestedSidebar() {
         { title: 'WhatsApp Automation', url: '/messaging', icon: MessageSquare },
         { title: 'SEO Tools', url: '/marketing-ai', icon: TrendingUp },
         { title: 'Campaigns', url: '/marketing-campaigns', icon: Target },
+        { title: 'Affiliate Program', url: '/affiliate-program', icon: UsersRound },
       ],
     });
 
@@ -271,6 +290,11 @@ export function NestedSidebar() {
       className={`${collapsed ? 'w-16' : 'w-64'} border-r border-sidebar-border bg-sidebar transition-all`}
     >
       <div className="p-4 border-b border-sidebar-border flex items-center gap-3 bg-sidebar">
+        {isMobile && (
+          <SidebarTrigger className="text-sidebar-foreground hover:bg-sidebar-accent">
+            <Menu className="h-5 w-5" />
+          </SidebarTrigger>
+        )}
         {!collapsed && (
           <div className="flex-1">
             <h2 className="text-lg font-bold bg-gradient-premium bg-clip-text text-transparent">
@@ -279,7 +303,9 @@ export function NestedSidebar() {
             <p className="text-xs text-muted-foreground">Business Platform</p>
           </div>
         )}
-        <SidebarTrigger className="text-sidebar-foreground hover:bg-sidebar-accent" />
+        {!isMobile && (
+          <SidebarTrigger className="text-sidebar-foreground hover:bg-sidebar-accent" />
+        )}
       </div>
 
       <SidebarContent className="bg-sidebar">
@@ -291,6 +317,35 @@ export function NestedSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+
+      <SidebarFooter className="border-t border-sidebar-border bg-sidebar p-2">
+        <div className={`flex ${collapsed ? 'flex-col' : 'flex-row'} items-center gap-2 justify-center`}>
+          <NotificationCenter />
+          <ThemeToggle />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="relative">
+                <UserCircle className="h-5 w-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56 bg-popover">
+              <DropdownMenuItem onClick={() => navigate('/settings')}>
+                <Settings className="mr-2 h-4 w-4" />
+                Settings
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate('/billing')}>
+                <CreditCard className="mr-2 h-4 w-4" />
+                Billing
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleLogout} className="text-destructive">
+                <LogOut className="mr-2 h-4 w-4" />
+                Logout
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </SidebarFooter>
     </Sidebar>
   );
 }
