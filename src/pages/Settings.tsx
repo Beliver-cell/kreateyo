@@ -41,10 +41,10 @@ export default function SettingsEnhanced() {
   };
 
   return (
-    <div className="space-y-6 max-w-6xl">
+    <div className="w-full max-w-7xl mx-auto space-y-6">
       <div>
-        <h1 className="text-4xl font-bold">Settings</h1>
-        <p className="text-muted-foreground mt-2">Manage your business settings and preferences</p>
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">Settings</h1>
+        <p className="text-muted-foreground mt-2 text-sm md:text-base">Manage your business settings and preferences</p>
       </div>
 
       <Tabs defaultValue="general" className="space-y-6">

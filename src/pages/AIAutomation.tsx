@@ -54,10 +54,10 @@ export default function AIAutomation() {
   };
 
   return (
-    <div className="space-y-6 p-4 md:p-6">
+    <div className="w-full max-w-7xl mx-auto space-y-6 p-4 md:p-6">
       <div>
-        <h1 className="text-3xl font-bold bg-gradient-premium bg-clip-text text-transparent">AI Automation</h1>
-        <p className="text-muted-foreground mt-1">Let AI handle the heavy lifting</p>
+        <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-premium bg-clip-text text-transparent">AI Automation</h1>
+        <p className="text-muted-foreground mt-1 text-sm md:text-base">Let AI handle the heavy lifting</p>
       </div>
 
       <Tabs defaultValue="products" className="space-y-6">

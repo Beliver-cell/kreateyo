@@ -27,8 +27,7 @@ const ThemeCustomizer = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-8 animate-fade-in">
-      <div className="max-w-7xl mx-auto space-y-6">
+    <div className="w-full max-w-7xl mx-auto space-y-6 p-4 md:p-6 lg:p-8 animate-fade-in">
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
@@ -320,7 +319,6 @@ const ThemeCustomizer = () => {
             </Card>
           </div>
         </div>
-      </div>
     </div>
   );
 };
