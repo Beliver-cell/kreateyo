@@ -354,7 +354,7 @@ export default function SettingsEnhanced() {
                 ))}
               </div>
               <Button variant="outline" className="w-full">
-                <Button>+ Add Menu Item</Button>
+                + Add Menu Item
               </Button>
             </CardContent>
           </Card>

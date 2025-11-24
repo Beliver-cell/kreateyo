@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Plus, Search, MoreVertical, Headphones, Mouse, Keyboard, Usb, Laptop, Video, Filter, Copy, Trash2 } from 'lucide-react';
+import { useState } from 'react';
+import { Plus, Search, MoreVertical, Headphones, Mouse, Keyboard, Usb, Laptop, Video, Filter, Copy, Trash2, Package } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { productsApi } from '@/services/api';
 import { Button } from '@/components/ui/button';
@@ -17,6 +17,9 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
+import { Loading } from '@/components/ui/loading';
+import { EmptyState } from '@/components/ui/empty-state';
+import { ErrorMessage } from '@/components/ui/error-message';
 
 const mockProducts = [
   { id: 1, name: 'Premium Headphones', price: 299.99, stock: 45, status: 'active', icon: Headphones },
@@ -34,7 +37,7 @@ export default function Products() {
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const queryClient = useQueryClient();
 
-  const { data: products = [], isLoading } = useQuery({
+  const { data: products = [], isLoading, error } = useQuery({
     queryKey: ['products'],
     queryFn: productsApi.getAll,
   });
@@ -70,6 +73,19 @@ export default function Products() {
     });
     setSelectedIds([]);
   };
+
+  if (isLoading) {
+    return <Loading text="Loading products..." />;
+  }
+
+  if (error) {
+    return (
+      <ErrorMessage 
+        message="Failed to load products. Please try again later." 
+        className="m-6"
+      />
+    );
+  }
 
   return (
     <div className="space-y-4 md:space-y-6">
@@ -127,6 +143,20 @@ export default function Products() {
             </div>
           )}
 
+          {filteredProducts.length === 0 ? (
+            <EmptyState
+              icon={Package}
+              title="No products found"
+              description={searchQuery ? "Try adjusting your search terms" : "Get started by adding your first product"}
+              action={!searchQuery ? {
+                label: "Add Product",
+                onClick: () => {
+                  setSelectedProduct(null);
+                  setDialogOpen(true);
+                }
+              } : undefined}
+            />
+          ) : (
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
@@ -208,6 +238,7 @@ export default function Products() {
               </TableBody>
             </Table>
           </div>
+          )}
         </CardContent>
       </Card>
 

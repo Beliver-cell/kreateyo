@@ -8,6 +8,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ServiceDialog } from '@/components/ServiceDialog';
 import { toast } from '@/hooks/use-toast';
+import { Loading } from '@/components/ui/loading';
+import { EmptyState } from '@/components/ui/empty-state';
+import { ErrorMessage } from '@/components/ui/error-message';
 
 const mockServices = [
   {
@@ -68,7 +71,7 @@ export default function Services() {
   const [selectedService, setSelectedService] = useState<any>(null);
   const queryClient = useQueryClient();
 
-  const { data: services = [], isLoading } = useQuery({
+  const { data: services = [], isLoading, error } = useQuery({
     queryKey: ['services'],
     queryFn: servicesApi.getAll,
   });
@@ -101,6 +104,19 @@ export default function Services() {
       description: `${service.name} is now ${service.status === 'active' ? 'paused' : 'active'}.` 
     });
   };
+
+  if (isLoading) {
+    return <Loading text="Loading services..." />;
+  }
+
+  if (error) {
+    return (
+      <ErrorMessage 
+        message="Failed to load services. Please try again later." 
+        className="m-6"
+      />
+    );
+  }
 
   return (
     <div className="space-y-4 md:space-y-6">
@@ -138,6 +154,20 @@ export default function Services() {
             <Button variant="outline" className="w-full sm:w-auto">Filters</Button>
           </div>
 
+          {filteredServices.length === 0 ? (
+            <EmptyState
+              icon={Dumbbell}
+              title="No services found"
+              description={searchQuery ? "Try adjusting your search terms" : "Get started by adding your first service"}
+              action={!searchQuery ? {
+                label: "Add Service",
+                onClick: () => {
+                  setSelectedService(null);
+                  setDialogOpen(true);
+                }
+              } : undefined}
+            />
+          ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredServices.map((service) => {
               const ServiceIcon = service.icon;
@@ -207,6 +237,7 @@ export default function Services() {
             );
             })}
           </div>
+          )}
         </CardContent>
       </Card>
 

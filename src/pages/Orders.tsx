@@ -7,9 +7,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Search, Filter, Download, Printer, MoreVertical, CheckSquare, Package, Mail, Eye } from 'lucide-react';
+import { Search, Filter, Download, Printer, MoreVertical, CheckSquare, Package, Mail, Eye, ShoppingCart } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { OrderDetailsDialog } from '@/components/OrderDetailsDialog';
+import { Loading } from '@/components/ui/loading';
+import { EmptyState } from '@/components/ui/empty-state';
+import { ErrorMessage } from '@/components/ui/error-message';
 import {
   Table,
   TableBody,
@@ -33,7 +36,7 @@ export default function Orders() {
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
 
-  const { data: orders = [], isLoading } = useQuery({
+  const { data: orders = [], isLoading, error } = useQuery({
     queryKey: ['orders'],
     queryFn: ordersApi.getAll,
   });
@@ -62,6 +65,19 @@ export default function Orders() {
     });
     setSelectedOrders([]);
   };
+
+  if (isLoading) {
+    return <Loading text="Loading orders..." />;
+  }
+
+  if (error) {
+    return (
+      <ErrorMessage 
+        message="Failed to load orders. Please try again later." 
+        className="m-6"
+      />
+    );
+  }
 
   return (
     <div className="space-y-4 md:space-y-6">
@@ -110,6 +126,13 @@ export default function Orders() {
             </Button>
           </div>
 
+          {filteredOrders.length === 0 ? (
+            <EmptyState
+              icon={ShoppingCart}
+              title="No orders found"
+              description={searchQuery ? "Try adjusting your search terms" : "Orders will appear here once customers make purchases"}
+            />
+          ) : (
           <div className="overflow-x-auto">
             <Table>
             <TableHeader>
@@ -197,6 +220,7 @@ export default function Orders() {
               </TableBody>
             </Table>
           </div>
+          )}
         </CardContent>
       </Card>
 
