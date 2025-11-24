@@ -14,23 +14,23 @@ import {
 
 export default function AdsSponsors() {
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="w-full max-w-7xl mx-auto space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold">Ads & Sponsors</h1>
-          <p className="text-muted-foreground">Monetize your blog with ads and sponsorships</p>
+          <h1 className="text-2xl sm:text-3xl font-bold">Ads & Sponsors</h1>
+          <p className="text-muted-foreground text-sm md:text-base">Monetize your blog with ads and sponsorships</p>
         </div>
-        <div className="flex gap-2">
-          <Button>
+        <div className="flex flex-col sm:flex-row gap-2">
+          <Button className="w-full sm:w-auto">
             <Sparkles className="mr-2 h-4 w-4" />
             Connect Ad Network
           </Button>
-          <Button variant="outline">Find Sponsors</Button>
+          <Button variant="outline" className="w-full sm:w-auto">Find Sponsors</Button>
         </div>
       </div>
 
       {/* Monetization Overview */}
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
         <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Monthly Earnings</CardTitle>
@@ -68,7 +68,7 @@ export default function AdsSponsors() {
         </Card>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
         {/* Ad Networks */}
         <Card>
           <CardHeader>

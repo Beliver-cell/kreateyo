@@ -262,12 +262,12 @@ export const YopayOnboarding = ({ businessId, onComplete }: YopayOnboardingProps
   const currentStepData = steps.find(s => s.id === currentStep);
 
   return (
-    <div className="min-h-screen bg-background py-8">
-      <div className="max-w-2xl mx-auto px-4">
+    <div className="min-h-screen bg-background py-4 md:py-8 px-4">
+      <div className="max-w-2xl mx-auto">
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl">Set Up Yopay</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-xl sm:text-2xl">Set Up Yopay</CardTitle>
+            <CardDescription className="text-sm md:text-base">
               Complete your onboarding to start accepting payments
             </CardDescription>
           </CardHeader>
@@ -325,8 +325,8 @@ export const YopayOnboarding = ({ businessId, onComplete }: YopayOnboardingProps
             )}
 
             {/* Actions */}
-            <div className="flex justify-end gap-3">
-              <Button onClick={handleNext} disabled={loading} size="lg">
+            <div className="flex flex-col sm:flex-row justify-end gap-3">
+              <Button onClick={handleNext} disabled={loading} size="lg" className="w-full sm:w-auto">
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />

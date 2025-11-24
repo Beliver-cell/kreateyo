@@ -78,11 +78,11 @@ export default function MarketingCampaigns() {
 
   return (
     <DashboardLayout>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      <div className="w-full max-w-7xl mx-auto space-y-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h1 className="text-3xl font-bold">Campaign Performance Tracker</h1>
-            <p className="text-muted-foreground">Track and optimize your marketing campaigns</p>
+            <h1 className="text-2xl sm:text-3xl font-bold">Campaign Performance Tracker</h1>
+            <p className="text-muted-foreground text-sm md:text-base">Track and optimize your marketing campaigns</p>
           </div>
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>

@@ -61,14 +61,14 @@ export const YopayDashboard = ({ businessId, userTier }: YopayDashboardProps) =>
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full max-w-7xl mx-auto">
       <div className="space-y-6">
         {/* Header with Tier Info */}
         <div className="mb-6 md:mb-8">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-foreground">Yopay</h1>
-              <p className="text-muted-foreground">
+              <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Yopay</h1>
+              <p className="text-muted-foreground text-sm md:text-base">
                 {userTier === 'solo' && 'Solo Plan - 3.5% platform fee'}
                 {userTier === 'team' && 'Team Plan - 2.0% platform fee'}  
                 {userTier === 'enterprise' && 'Enterprise Plan - 0.5% platform fee'}
