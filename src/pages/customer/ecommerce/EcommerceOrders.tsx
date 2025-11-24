@@ -42,13 +42,10 @@ export default function EcommerceOrders() {
 
   return (
     <div className="min-h-screen bg-background pb-20">
-      <header className="bg-card shadow-sm p-4 sticky top-0 z-10 border-b border-border">
-        <h1 className="text-xl font-semibold text-foreground">My Orders</h1>
-      </header>
-
-      <div className="p-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <h1 className="text-2xl sm:text-3xl font-bold mb-6">My Orders</h1>
         {/* Status Filter Tabs */}
-        <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
+        <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">
           {['all', 'pending', 'processing', 'shipped', 'delivered'].map((status) => (
             <Button
               key={status}
