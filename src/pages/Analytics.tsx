@@ -149,20 +149,20 @@ export default function Analytics() {
   };
 
   return (
-    <div className="space-y-6 max-w-7xl">
-      <div className="flex items-center justify-between">
+    <div className="w-full max-w-7xl mx-auto space-y-6">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Analytics Dashboard</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Analytics Dashboard</h1>
           <p className="text-muted-foreground">
             {businessProfile.type === 'ecommerce' && 'Track your store performance and sales metrics'}
             {businessProfile.type === 'services' && 'Monitor your service bookings and client engagement'}
             {(businessProfile.type === 'digital' || businessProfile.type === 'community') && 'Analyze your content performance and audience growth'}
           </p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline">Last 7 Days</Button>
-          <Button variant="outline">Last 30 Days</Button>
-          <Button>Export Report</Button>
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" size="sm" className="flex-1 sm:flex-none">Last 7 Days</Button>
+          <Button variant="outline" size="sm" className="flex-1 sm:flex-none">Last 30 Days</Button>
+          <Button size="sm" className="flex-1 sm:flex-none">Export Report</Button>
         </div>
       </div>
 

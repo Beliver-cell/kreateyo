@@ -161,9 +161,9 @@ export default function BuildSite() {
   };
 
   return (
-    <div className="h-full flex flex-col overflow-hidden">
+    <div className="w-full h-full flex flex-col overflow-hidden">
       {/* Header */}
-      <div className="flex-shrink-0 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+      <div className="flex-shrink-0 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 px-4 sm:px-0">
         <div>
           <h1 className="text-xl md:text-2xl font-bold">Build My Site</h1>
           <p className="text-muted-foreground text-xs md:text-sm">
@@ -183,7 +183,7 @@ export default function BuildSite() {
       </div>
 
       {/* Templates Grid */}
-      <div className="flex-1 overflow-y-auto pb-4">
+      <div className="flex-1 overflow-y-auto pb-4 px-4 sm:px-0">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {currentTemplates.map((template) => (
             <Card
