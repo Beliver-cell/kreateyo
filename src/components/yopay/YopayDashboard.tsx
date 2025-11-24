@@ -61,10 +61,10 @@ export const YopayDashboard = ({ businessId, userTier }: YopayDashboardProps) =>
   }
 
   return (
-    <div className="min-h-screen bg-background py-6">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="w-full">
+      <div className="space-y-6">
         {/* Header with Tier Info */}
-        <div className="mb-8">
+        <div className="mb-6 md:mb-8">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-foreground">Yopay</h1>
@@ -79,7 +79,7 @@ export const YopayDashboard = ({ businessId, userTier }: YopayDashboardProps) =>
         </div>
 
         {/* Revenue Summary with Fee Breakdown */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6 mb-6 md:mb-8">
           <StatCard
             title="Total Revenue"
             value={`₦${dashboardData?.revenue?.total || '0'}`}
@@ -113,15 +113,15 @@ export const YopayDashboard = ({ businessId, userTier }: YopayDashboardProps) =>
         </div>
 
         {/* Recent Transactions with Fee Breakdown */}
-        <Card className="p-6">
-          <div className="border-b border-border pb-4 mb-4">
+        <Card className="p-4 md:p-6">
+          <div className="border-b border-border pb-3 md:pb-4 mb-3 md:mb-4">
             <h3 className="text-lg font-semibold text-foreground">Recent Transactions</h3>
           </div>
           <div className="space-y-4">
             {dashboardData?.recentTransactions?.length > 0 ? (
               dashboardData.recentTransactions.map((transaction: any) => (
-                <div key={transaction._id} className="border border-border rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-2">
+                <div key={transaction._id} className="border border-border rounded-lg p-3 md:p-4">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-2">
                     <div>
                       <p className="font-medium text-foreground">{transaction.description}</p>
                       <p className="text-sm text-muted-foreground">{transaction.customerEmail}</p>
@@ -140,7 +140,7 @@ export const YopayDashboard = ({ businessId, userTier }: YopayDashboardProps) =>
                   
                   {transaction.status === 'successful' && (
                     <div className="mt-3 pt-3 border-t border-border">
-                      <div className="grid grid-cols-3 gap-4 text-sm">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 text-sm">
                         <div>
                           <span className="text-muted-foreground">Platform Fee:</span>
                           <span className="ml-2 font-medium text-destructive">

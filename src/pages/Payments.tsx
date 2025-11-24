@@ -47,11 +47,13 @@ export default function Payments() {
 
   return (
     <DashboardLayout>
-      {hasYopayAccount ? (
-        <YopayDashboard businessId={businessId} userTier="solo" />
-      ) : (
-        <YopayOnboarding businessId={businessId} onComplete={handleOnboardingComplete} />
-      )}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {hasYopayAccount ? (
+          <YopayDashboard businessId={businessId} userTier="solo" />
+        ) : (
+          <YopayOnboarding businessId={businessId} onComplete={handleOnboardingComplete} />
+        )}
+      </div>
     </DashboardLayout>
   );
 }

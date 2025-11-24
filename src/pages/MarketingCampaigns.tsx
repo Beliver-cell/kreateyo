@@ -78,8 +78,8 @@ export default function MarketingCampaigns() {
 
   return (
     <DashboardLayout>
-      <div className="space-y-6">
-        <div className="flex justify-between items-center">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
             <h1 className="text-3xl font-bold">Campaign Performance Tracker</h1>
             <p className="text-muted-foreground">Track and optimize your marketing campaigns</p>
@@ -165,39 +165,39 @@ export default function MarketingCampaigns() {
               <CardTitle className="text-sm font-medium">Total Impressions</CardTitle>
               <Eye className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats?.totalImpressions.toLocaleString()}</div>
-            </CardContent>
+              <CardContent>
+                <div className="text-xl md:text-2xl font-bold">{stats?.totalImpressions.toLocaleString()}</div>
+              </CardContent>
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Clicks</CardTitle>
               <MousePointer className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats?.totalClicks.toLocaleString()}</div>
-              <p className="text-xs text-muted-foreground">CTR: {avgCTR}%</p>
-            </CardContent>
+              <CardContent>
+                <div className="text-xl md:text-2xl font-bold">{stats?.totalClicks.toLocaleString()}</div>
+                <p className="text-xs text-muted-foreground">CTR: {avgCTR}%</p>
+              </CardContent>
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Spent</CardTitle>
               <DollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">${stats?.totalSpent.toFixed(2)}</div>
-              <p className="text-xs text-muted-foreground">Budget: ${stats?.totalBudget.toFixed(2)}</p>
-            </CardContent>
+              <CardContent>
+                <div className="text-xl md:text-2xl font-bold">${stats?.totalSpent.toFixed(2)}</div>
+                <p className="text-xs text-muted-foreground">Budget: ${stats?.totalBudget.toFixed(2)}</p>
+              </CardContent>
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">ROI</CardTitle>
               <TrendingUp className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{avgROI}%</div>
-              <p className="text-xs text-muted-foreground">Revenue: ${stats?.totalRevenue.toFixed(2)}</p>
-            </CardContent>
+              <CardContent>
+                <div className="text-xl md:text-2xl font-bold">{avgROI}%</div>
+                <p className="text-xs text-muted-foreground">Revenue: ${stats?.totalRevenue.toFixed(2)}</p>
+              </CardContent>
           </Card>
         </div>
 
@@ -210,9 +210,9 @@ export default function MarketingCampaigns() {
               <p>Loading...</p>
             ) : campaigns && campaigns.length > 0 ? (
               <div className="space-y-4">
-                {campaigns.map((campaign) => (
-                  <div key={campaign.id} className="border rounded-lg p-4">
-                    <div className="flex justify-between items-start mb-2">
+                 {campaigns.map((campaign) => (
+                  <div key={campaign.id} className="border rounded-lg p-3 md:p-4">
+                    <div className="flex flex-col sm:flex-row justify-between items-start gap-2 mb-3">
                       <div>
                         <h3 className="font-semibold">{campaign.name}</h3>
                         <p className="text-sm text-muted-foreground capitalize">{campaign.platform.replace('_', ' ')}</p>
@@ -225,7 +225,7 @@ export default function MarketingCampaigns() {
                         {campaign.status}
                       </span>
                     </div>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 text-sm">
                       <div>
                         <p className="text-muted-foreground">Impressions</p>
                         <p className="font-semibold">{campaign.impressions?.toLocaleString()}</p>
