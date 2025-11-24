@@ -12,17 +12,17 @@ export default function Messaging() {
 
   return (
     <DashboardLayout>
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold">WhatsApp & SMS</h1>
-            <p className="text-muted-foreground mt-1">
+            <h1 className="text-2xl sm:text-3xl font-bold">WhatsApp & SMS</h1>
+            <p className="text-muted-foreground mt-1 text-sm sm:text-base">
               Send automated messages to your customers
             </p>
           </div>
         </div>
 
-        <Tabs defaultValue="whatsapp">
+        <Tabs defaultValue="whatsapp" className="w-full">
           <TabsList className="grid w-full max-w-md grid-cols-2">
             <TabsTrigger value="whatsapp">WhatsApp</TabsTrigger>
             <TabsTrigger value="sms">SMS</TabsTrigger>
