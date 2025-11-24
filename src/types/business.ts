@@ -66,7 +66,6 @@ export const getBusinessFeatures = (type: BusinessType, subType?: string): Busin
         aiMarketing: true,
         aiSeo: true,
         aiContent: true,
-        subscriptions: true,
         digitalDelivery: subType === 'digital',
         multiStore: true,
         payroll: true,

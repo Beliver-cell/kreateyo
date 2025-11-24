@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { toast } from '@/hooks/use-toast';
+import { DashboardLayout } from '@/components/DashboardLayout';
 import { 
   BarChart3, 
   Mail, 
@@ -257,16 +258,16 @@ export default function Tools() {
     const recommendedTools = getRecommendedTools(selectedTool);
 
     return (
-      <div className="h-full flex flex-col">
-        <div className="flex items-center gap-3 mb-4">
-          <Button variant="ghost" size="icon" onClick={() => setSelectedTool(null)}>
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
-          <h1 className="text-xl font-bold">Tool Details</h1>
-        </div>
+      <DashboardLayout>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex items-center gap-3 mb-6">
+            <Button variant="ghost" size="icon" onClick={() => setSelectedTool(null)}>
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+            <h1 className="text-2xl font-bold">Tool Details</h1>
+          </div>
 
-        <ScrollArea className="flex-1">
-          <div className="space-y-4 pb-4">
+          <div className="space-y-6">
             <Card>
               <CardContent className="p-4">
                 <div className="flex gap-4">
@@ -350,28 +351,28 @@ export default function Tools() {
               </div>
             )}
           </div>
-        </ScrollArea>
-      </div>
+        </div>
+      </DashboardLayout>
     );
   }
 
   return (
-    <div className="h-full flex flex-col">
-      <div className="mb-4">
-        <h1 className="text-xl font-bold mb-3">App Marketplace</h1>
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input
-            placeholder="Search tools..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9 h-9"
-          />
+    <DashboardLayout>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold mb-4">App Marketplace</h1>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              placeholder="Search tools..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9 h-9"
+            />
+          </div>
         </div>
-      </div>
 
-      <ScrollArea className="flex-1">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 pb-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-4">
           {filteredTools.map((tool) => {
             const Icon = tool.icon;
             return (
@@ -380,11 +381,11 @@ export default function Tools() {
                 className="cursor-pointer hover:shadow-lg transition-all hover:scale-[1.02]"
                 onClick={() => setSelectedTool(tool)}
               >
-                <CardContent className="p-3">
-                  <div className={`w-12 h-12 rounded-xl ${tool.gradient} flex items-center justify-center mb-2 mx-auto`}>
-                    <Icon className="w-6 h-6 text-white" />
+                <CardContent className="p-3 md:p-4">
+                  <div className={`w-12 h-12 md:w-14 md:h-14 rounded-xl ${tool.gradient} flex items-center justify-center mb-2 mx-auto`}>
+                    <Icon className="w-6 h-6 md:w-7 md:h-7 text-white" />
                   </div>
-                  <h3 className="text-xs font-semibold text-center mb-1 line-clamp-2 min-h-[32px]">
+                  <h3 className="text-xs md:text-sm font-semibold text-center mb-1 line-clamp-2 min-h-[32px]">
                     {tool.title}
                   </h3>
                   <div className="flex flex-col items-center gap-1">
@@ -401,7 +402,7 @@ export default function Tools() {
             );
           })}
         </div>
-      </ScrollArea>
-    </div>
+      </div>
+    </DashboardLayout>
   );
 }
