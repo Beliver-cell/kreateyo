@@ -31,7 +31,6 @@ import {
   Link as LinkIcon,
   Receipt,
   Target,
-  Menu,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -275,11 +274,6 @@ export function NestedSidebar() {
       className={`${collapsed ? 'w-16' : 'w-64'} border-r border-sidebar-border bg-sidebar transition-all`}
     >
       <div className="p-4 border-b border-sidebar-border flex items-center gap-3 bg-sidebar">
-        {isMobile && (
-          <SidebarTrigger className="text-sidebar-foreground hover:bg-sidebar-accent">
-            <Menu className="h-5 w-5" />
-          </SidebarTrigger>
-        )}
         {!collapsed && (
           <div className="flex-1">
             <h2 className="text-lg font-bold bg-gradient-premium bg-clip-text text-transparent">
