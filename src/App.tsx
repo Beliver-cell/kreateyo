@@ -13,11 +13,13 @@ import Upsells from "@/pages/Upsells";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { BusinessProvider } from "@/contexts/BusinessContext";
+import { AuthProvider } from "@/contexts/AuthContext";
 import { OnboardingModalWrapper } from "@/components/OnboardingModalWrapper";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { AuthGuard } from "@/components/AuthGuard";
 import Index from "./pages/Index";
 import LandingPage from "./pages/LandingPage";
 import DashboardEnhanced from "./pages/DashboardEnhanced";
@@ -30,6 +32,7 @@ import Customers from "./pages/Customers";
 import Services from "./pages/Services";
 import Calendar from "./pages/Calendar";
 import Clients from "./pages/Clients";
+import ClientChat from "./pages/ClientChat";
 import Posts from "./pages/Posts";
 import MarketingAI from "./pages/MarketingAI";
 import ThemeCustomizer from "./pages/ThemeCustomizer";
@@ -83,25 +86,28 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BusinessProvider>
-        <BrowserRouter>
-          <CustomerAuthProvider>
-            <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/old-home" element={<Index />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/verify" element={<VerifyEmail />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route
-              path="/dashboard"
-              element={
-                <DashboardLayout>
-                  <DashboardEnhanced />
-                </DashboardLayout>
-              }
-            />
+      <BrowserRouter>
+        <AuthProvider>
+          <BusinessProvider>
+            <CustomerAuthProvider>
+              <Routes>
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/old-home" element={<Index />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/verify" element={<VerifyEmail />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
+                <Route
+                  path="/dashboard"
+                  element={
+                    <AuthGuard>
+                      <DashboardLayout>
+                        <DashboardEnhanced />
+                      </DashboardLayout>
+                    </AuthGuard>
+                  }
+                />
             <Route
               path="/products"
               element={
@@ -298,7 +304,8 @@ const App = () => (
                 </DashboardLayout>
               }
             />
-            <Route path="/email-campaigns" element={<DashboardLayout><EmailCampaigns /></DashboardLayout>} />
+            <Route path="/client-chat" element={<AuthGuard><DashboardLayout><ClientChat /></DashboardLayout></AuthGuard>} />
+            <Route path="/email-campaigns" element={<AuthGuard><DashboardLayout><EmailCampaigns /></DashboardLayout></AuthGuard>} />
             <Route path="/analytics" element={<DashboardLayout><Analytics /></DashboardLayout>} />
             <Route path="/inventory" element={<DashboardLayout><InventoryManager /></DashboardLayout>} />
             <Route path="/discounts" element={<DashboardLayout><Discounts /></DashboardLayout>} />
@@ -342,14 +349,15 @@ const App = () => (
             <Route path="/customer/blog/:slug" element={<BloggingReading />} />
             <Route path="/customer/services/:businessId" element={<CustomerServicePortal />} />
             
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <OnboardingModalWrapper />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            <OnboardingModalWrapper />
           </CustomerAuthProvider>
-        </BrowserRouter>
-      </BusinessProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
+        </BusinessProvider>
+      </AuthProvider>
+    </BrowserRouter>
+  </TooltipProvider>
+</QueryClientProvider>
 );
 
 export default App;
