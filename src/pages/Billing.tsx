@@ -17,11 +17,11 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-const planOrder: PlanType[] = ['free', 'pro', 'enterprise'];
+const planOrder: PlanType[] = ['starter', 'growth', 'business'];
 
 export default function Billing() {
   const { profile, updatePlan } = useAuth();
-  const currentPlan = profile?.plan || 'free';
+  const currentPlan = profile?.plan || 'starter';
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
   const [showDowngradeDialog, setShowDowngradeDialog] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<PlanType | null>(null);
@@ -121,10 +121,10 @@ export default function Billing() {
                 <span className="text-lg md:text-xl text-muted-foreground">{currentPlanDetails.period}</span>
               </p>
               <p className="text-xs md:text-sm text-muted-foreground mt-2">
-                {currentPlan === 'free' ? 'No payment required' : 'Next billing date: January 1, 2025'}
+                {currentPlan === 'starter' ? 'No payment required' : 'Next billing date: January 1, 2025'}
               </p>
             </div>
-            {currentPlan !== 'enterprise' && (
+            {currentPlan !== 'business' && (
               <div className="flex flex-col sm:flex-row gap-2">
                 {currentPlanIndex < planOrder.length - 1 && (
                   <Button 

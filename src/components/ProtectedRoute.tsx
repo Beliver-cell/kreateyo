@@ -1,20 +1,20 @@
 import { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useBusinessContext } from '@/contexts/BusinessContext';
-import { canAccessRoute } from '@/types/plans';
+import { canAccessRoute, PlanType } from '@/types/plans';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Lock } from 'lucide-react';
 
 interface ProtectedRouteProps {
   children: ReactNode;
-  requiredPlan?: 'pro' | 'enterprise';
+  requiredPlan?: 'growth' | 'business';
   route?: string;
 }
 
 export function ProtectedRoute({ children, requiredPlan, route }: ProtectedRouteProps) {
   const { businessProfile } = useBusinessContext();
-  const currentPlan = businessProfile.plan || 'free';
+  const currentPlan = businessProfile.plan || 'starter';
 
   // Check route-specific access
   if (route && !canAccessRoute(currentPlan, route)) {
@@ -33,7 +33,7 @@ export function ProtectedRoute({ children, requiredPlan, route }: ProtectedRoute
           <CardContent>
             <Button asChild className="w-full">
               <a href="/billing">
-                Upgrade to {requiredPlan === 'enterprise' ? 'Enterprise' : 'Pro'}
+                Upgrade to {requiredPlan === 'business' ? 'Business' : 'Growth'}
               </a>
             </Button>
           </CardContent>
@@ -44,7 +44,7 @@ export function ProtectedRoute({ children, requiredPlan, route }: ProtectedRoute
 
   // Check plan hierarchy
   if (requiredPlan) {
-    const planHierarchy = { free: 0, pro: 1, enterprise: 2 };
+    const planHierarchy: Record<PlanType, number> = { starter: 0, growth: 1, business: 2 };
     if (planHierarchy[currentPlan] < planHierarchy[requiredPlan]) {
       return (
         <div className="flex items-center justify-center min-h-[calc(100vh-4rem)] p-4">
@@ -61,7 +61,7 @@ export function ProtectedRoute({ children, requiredPlan, route }: ProtectedRoute
             <CardContent>
               <Button asChild className="w-full">
                 <a href="/billing">
-                  Upgrade to {requiredPlan === 'enterprise' ? 'Enterprise' : 'Pro'}
+                  Upgrade to {requiredPlan === 'business' ? 'Business' : 'Growth'}
                 </a>
               </Button>
             </CardContent>

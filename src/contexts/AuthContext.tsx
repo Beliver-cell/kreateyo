@@ -3,12 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { User, Session } from '@supabase/supabase-js';
 
+import { PlanType } from '@/types/plans';
+
 interface Profile {
   id: string;
   full_name: string;
   avatar_url: string | null;
   business_id: string | null;
-  plan: 'free' | 'pro' | 'enterprise';
+  plan: PlanType;
   created_at: string;
   updated_at: string;
 }
@@ -22,7 +24,7 @@ interface AuthContextType {
   signup: (email: string, password: string, fullName: string) => Promise<{ error: any }>;
   logout: () => Promise<void>;
   updateProfile: (data: Partial<Profile>) => Promise<{ error: any }>;
-  updatePlan: (plan: 'free' | 'pro' | 'enterprise') => Promise<{ error: any }>;
+  updatePlan: (plan: PlanType) => Promise<{ error: any }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -141,7 +143,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return { error };
   };
 
-  const updatePlan = async (plan: 'free' | 'pro' | 'enterprise') => {
+  const updatePlan = async (plan: PlanType) => {
     return updateProfile({ plan });
   };
 

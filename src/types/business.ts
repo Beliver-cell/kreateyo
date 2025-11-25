@@ -1,3 +1,5 @@
+import { PlanType } from './plans';
+
 export type BusinessType = 'ecommerce' | 'services' | 'digital' | 'community' | null;
 export type AccountType = 'solo' | 'team' | null;
 
@@ -32,7 +34,7 @@ export interface BusinessProfile {
   subType?: EcommerceSubType | ServicesSubType | DigitalSubType | CommunitySubType;
   name?: string;
   onboarded: boolean;
-  plan?: 'free' | 'pro' | 'enterprise';
+  plan?: PlanType;
 }
 
 // Feature flags for each business type
