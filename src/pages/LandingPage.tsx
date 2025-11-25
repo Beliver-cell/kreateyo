@@ -664,7 +664,7 @@ export default function LandingPage() {
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             {/* Brand */}
             <div className="space-y-4">
-              <h3 className="text-xl font-bold">NexusCreate</h3>
+              <h3 className="text-xl font-bold">KreateYo</h3>
               <p className="text-sm text-muted-foreground">
                 All-in-one platform for African businesses
               </p>
@@ -724,7 +724,7 @@ export default function LandingPage() {
             <div className="flex gap-6">
               <a href="#" className="hover:text-foreground">Terms</a>
               <a href="#" className="hover:text-foreground">Privacy</a>
-              <span>© 2024 NexusCreate. Built for Africa 🌍</span>
+              <span>© 2024 KreateYo. Built for Africa 🌍</span>
             </div>
             <div className="flex gap-4">
               <span>🇳🇬 Nigeria</span>

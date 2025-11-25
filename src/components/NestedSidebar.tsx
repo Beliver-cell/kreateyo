@@ -132,6 +132,7 @@ export function NestedSidebar() {
     if (businessProfile.type === 'services') {
       ordersBookings.children?.push({ title: 'Bookings', url: '/appointments', icon: CalendarIcon });
       ordersBookings.children?.push({ title: 'Calendar', url: '/calendar', icon: CalendarIcon });
+      ordersBookings.children?.push({ title: 'Client Chat', url: '/client-chat', icon: MessageSquare });
     }
 
     ordersBookings.children?.push({ title: 'Clients', url: '/customers', icon: Users });
@@ -330,7 +331,7 @@ export function NestedSidebar() {
         {!collapsed && (
           <div className="flex-1">
             <h2 className="text-lg font-bold bg-gradient-premium bg-clip-text text-transparent">
-              NexusCreate
+              KreateYo
             </h2>
             <p className="text-xs text-muted-foreground">Business Platform</p>
           </div>
