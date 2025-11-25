@@ -31,6 +31,8 @@ import {
   Link as LinkIcon,
   Receipt,
   Target,
+  Code,
+  Building2,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -50,17 +52,21 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { useBusinessContext } from '@/contexts/BusinessContext';
 import { useState } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { PLAN_FEATURES } from '@/types/plans';
 
 interface MenuItem {
   title: string;
   url?: string;
   icon: any;
   children?: MenuItem[];
+  requiresPlan?: 'pro' | 'enterprise';
 }
 
 export function NestedSidebar() {
   const { state } = useSidebar();
   const { businessProfile } = useBusinessContext();
+  const currentPlan = businessProfile.plan || 'free';
+  const planFeatures = PLAN_FEATURES[currentPlan];
   const collapsed = state === 'collapsed';
   const [openGroups, setOpenGroups] = useState<string[]>(['dashboard']);
   const isMobile = useIsMobile();
@@ -134,6 +140,16 @@ export function NestedSidebar() {
       structure.push(ordersBookings);
     }
 
+    // POS System (Enterprise Only)
+    if (planFeatures.pos) {
+      structure.push({
+        title: 'POS System',
+        icon: Store,
+        url: '/pos',
+        requiresPlan: 'enterprise',
+      });
+    }
+
     // Payments (YoPay) Section
     structure.push({
       title: 'Payments (YoPay)',
@@ -146,18 +162,29 @@ export function NestedSidebar() {
       ],
     });
 
-    // Marketing & Automation Section
+    // Marketing & Automation Section (Pro+ features)
+    const marketingChildren: MenuItem[] = [
+      { title: 'Campaigns', url: '/marketing-campaigns', icon: Target },
+      { title: 'Affiliate Program', url: '/affiliate-program', icon: UsersRound },
+    ];
+
+    if (planFeatures.aiMarketer) {
+      marketingChildren.unshift({ title: 'AI Tools', url: '/marketing-ai', icon: Sparkles, requiresPlan: 'pro' });
+    }
+
+    if (planFeatures.automation) {
+      marketingChildren.push(
+        { title: 'Email Automation', url: '/email-campaigns', icon: Mail, requiresPlan: 'pro' },
+        { title: 'WhatsApp Automation', url: '/messaging', icon: MessageSquare, requiresPlan: 'pro' }
+      );
+    }
+
+    marketingChildren.push({ title: 'SEO Tools', url: '/marketing-ai', icon: TrendingUp });
+
     structure.push({
       title: 'Marketing & Automation',
       icon: Target,
-      children: [
-        { title: 'AI Tools', url: '/marketing-ai', icon: Sparkles },
-        { title: 'Email Automation', url: '/email-campaigns', icon: Mail },
-        { title: 'WhatsApp Automation', url: '/messaging', icon: MessageSquare },
-        { title: 'SEO Tools', url: '/marketing-ai', icon: TrendingUp },
-        { title: 'Campaigns', url: '/marketing-campaigns', icon: Target },
-        { title: 'Affiliate Program', url: '/affiliate-program', icon: UsersRound },
-      ],
+      children: marketingChildren,
     });
 
     // Store Design Section
@@ -172,16 +199,42 @@ export function NestedSidebar() {
       ],
     });
 
+    // Developer Console (Pro+ Only)
+    if (planFeatures.developerConsole) {
+      structure.push({
+        title: 'Developer',
+        icon: Code,
+        url: '/developer',
+        requiresPlan: 'pro',
+      });
+    }
+
+    // Multi-Business Manager (Enterprise Only)
+    if (planFeatures.multiBusinessDashboard) {
+      structure.push({
+        title: 'Multi-Business',
+        icon: Building2,
+        url: '/multi-business',
+        requiresPlan: 'enterprise',
+      });
+    }
+
     // Settings Section
+    const settingsChildren: MenuItem[] = [
+      { title: 'Store Settings', url: '/settings', icon: Settings },
+      { title: 'Billing', url: '/billing', icon: CreditCard },
+      { title: 'Branches', url: '/branches', icon: Store },
+    ];
+
+    // Team management (Pro+ Only)
+    if (planFeatures.teamManagement) {
+      settingsChildren.splice(1, 0, { title: 'Team', url: '/team', icon: UsersRound, requiresPlan: 'pro' });
+    }
+
     structure.push({
       title: 'Settings',
       icon: Settings,
-      children: [
-        { title: 'Store Settings', url: '/settings', icon: Settings },
-        { title: 'Staff', url: '/team', icon: UsersRound },
-        { title: 'Billing', url: '/billing', icon: CreditCard },
-        { title: 'Branches', url: '/branches', icon: Store },
-      ],
+      children: settingsChildren,
     });
 
     return structure;

@@ -102,10 +102,10 @@ export default function Developer() {
   };
 
   return (
-    <div className="space-y-6 max-w-7xl">
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6 space-y-4 md:space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Developer Tools</h1>
-        <p className="text-muted-foreground">Advanced customization and API access</p>
+        <h1 className="text-2xl md:text-3xl font-bold">Developer Tools</h1>
+        <p className="text-sm md:text-base text-muted-foreground">Advanced customization and API access</p>
       </div>
 
       <Tabs defaultValue="custom-code" className="space-y-4">

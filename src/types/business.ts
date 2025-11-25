@@ -32,6 +32,7 @@ export interface BusinessProfile {
   subType?: EcommerceSubType | ServicesSubType | DigitalSubType | CommunitySubType;
   name?: string;
   onboarded: boolean;
+  plan?: 'free' | 'pro' | 'enterprise';
 }
 
 // Feature flags for each business type

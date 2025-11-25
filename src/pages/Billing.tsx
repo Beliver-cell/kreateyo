@@ -2,8 +2,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Check, CreditCard, TrendingUp, ArrowUpRight, ArrowDownRight } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { useBusinessContext } from '@/contexts/BusinessContext';
+import { PLAN_DETAILS, PlanType } from '@/types/plans';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,81 +17,11 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-type PlanType = 'free' | 'starter' | 'professional' | 'enterprise';
-
-interface Plan {
-  id: PlanType;
-  name: string;
-  price: string;
-  period: string;
-  features: string[];
-  popular?: boolean;
-}
-
-const plans: Plan[] = [
-  {
-    id: 'free',
-    name: 'Free',
-    price: '$0',
-    period: '/month',
-    features: [
-      'Up to 100 products',
-      'Basic analytics',
-      '1 team member',
-      'Community support',
-      'Basic templates'
-    ]
-  },
-  {
-    id: 'starter',
-    name: 'Starter',
-    price: '$29',
-    period: '/month',
-    features: [
-      'Up to 1,000 products',
-      'Advanced analytics',
-      '5 team members',
-      'Email support',
-      'Premium templates',
-      'Custom domain'
-    ],
-    popular: true
-  },
-  {
-    id: 'professional',
-    name: 'Professional',
-    price: '$99',
-    period: '/month',
-    features: [
-      'Unlimited products',
-      'Advanced analytics + AI insights',
-      '20 team members',
-      'Priority support',
-      'All templates',
-      'Custom domain',
-      'API access',
-      'White-label options'
-    ]
-  },
-  {
-    id: 'enterprise',
-    name: 'Enterprise',
-    price: 'Custom',
-    period: '',
-    features: [
-      'Everything in Professional',
-      'Unlimited team members',
-      'Dedicated support',
-      'Custom integrations',
-      'SLA guarantee',
-      'Advanced security',
-      'Custom development'
-    ]
-  }
-];
+const planOrder: PlanType[] = ['free', 'pro', 'enterprise'];
 
 export default function Billing() {
-  const [currentPlan, setCurrentPlan] = useState<PlanType>('free');
+  const { businessProfile, setPlan } = useBusinessContext();
+  const currentPlan = businessProfile.plan || 'free';
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
   const [showDowngradeDialog, setShowDowngradeDialog] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<PlanType | null>(null);
@@ -107,10 +39,10 @@ export default function Billing() {
 
   const confirmUpgrade = () => {
     if (selectedPlan) {
-      setCurrentPlan(selectedPlan);
+      setPlan(selectedPlan);
       toast({
         title: "Plan upgraded!",
-        description: `You've successfully upgraded to the ${plans.find(p => p.id === selectedPlan)?.name} plan.`,
+        description: `You've successfully upgraded to the ${PLAN_DETAILS[selectedPlan].name} plan.`,
       });
       setShowUpgradeDialog(false);
       setSelectedPlan(null);
@@ -119,20 +51,22 @@ export default function Billing() {
 
   const confirmDowngrade = () => {
     if (selectedPlan) {
-      setCurrentPlan(selectedPlan);
+      setPlan(selectedPlan);
       toast({
         title: "Plan downgraded",
-        description: `You've downgraded to the ${plans.find(p => p.id === selectedPlan)?.name} plan.`,
+        description: `You've downgraded to the ${PLAN_DETAILS[selectedPlan].name} plan.`,
+        variant: "destructive",
       });
       setShowDowngradeDialog(false);
       setSelectedPlan(null);
     }
   };
 
-  const currentPlanIndex = plans.findIndex(p => p.id === currentPlan);
+  const currentPlanIndex = planOrder.indexOf(currentPlan);
+  const currentPlanDetails = PLAN_DETAILS[currentPlan];
 
   return (
-    <div className="space-y-6 md:space-y-8">
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6 space-y-4 md:space-y-6">
       <div>
         <h1 className="text-2xl md:text-3xl font-bold mb-2">Billing & Subscription</h1>
         <p className="text-sm md:text-base text-muted-foreground">Manage your subscription and billing details</p>
@@ -144,7 +78,9 @@ export default function Billing() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <CardTitle className="text-xl md:text-2xl">Current Plan</CardTitle>
-              <CardDescription className="text-sm md:text-base">You're currently on the {plans[currentPlanIndex].name} plan</CardDescription>
+              <CardDescription className="text-sm md:text-base">
+                You're currently on the {currentPlanDetails.name} plan
+              </CardDescription>
             </div>
             <Badge className="w-fit bg-primary text-primary-foreground">
               <CreditCard className="w-3 h-3 mr-1" />
@@ -155,17 +91,20 @@ export default function Billing() {
         <CardContent>
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
             <div>
-              <p className="text-3xl md:text-4xl font-bold">{plans[currentPlanIndex].price}<span className="text-lg md:text-xl text-muted-foreground">{plans[currentPlanIndex].period}</span></p>
+              <p className="text-3xl md:text-4xl font-bold">
+                {currentPlanDetails.price}
+                <span className="text-lg md:text-xl text-muted-foreground">{currentPlanDetails.period}</span>
+              </p>
               <p className="text-xs md:text-sm text-muted-foreground mt-2">
                 {currentPlan === 'free' ? 'No payment required' : 'Next billing date: January 1, 2025'}
               </p>
             </div>
             {currentPlan !== 'enterprise' && (
               <div className="flex flex-col sm:flex-row gap-2">
-                {currentPlanIndex < plans.length - 1 && (
+                {currentPlanIndex < planOrder.length - 1 && (
                   <Button 
                     className="w-full sm:w-auto"
-                    onClick={() => handleUpgrade(plans[currentPlanIndex + 1].id)}
+                    onClick={() => handleUpgrade(planOrder[currentPlanIndex + 1])}
                   >
                     <ArrowUpRight className="w-4 h-4 mr-2" />
                     Upgrade
@@ -175,7 +114,7 @@ export default function Billing() {
                   <Button 
                     variant="outline" 
                     className="w-full sm:w-auto"
-                    onClick={() => handleDowngrade(plans[currentPlanIndex - 1].id)}
+                    onClick={() => handleDowngrade(planOrder[currentPlanIndex - 1])}
                   >
                     <ArrowDownRight className="w-4 h-4 mr-2" />
                     Downgrade
@@ -190,59 +129,65 @@ export default function Billing() {
       {/* All Plans */}
       <div>
         <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">All Plans</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-          {plans.map((plan) => (
-            <Card 
-              key={plan.id} 
-              className={`relative ${plan.popular ? 'border-primary shadow-lg' : ''} ${plan.id === currentPlan ? 'border-2 border-primary' : ''}`}
-            >
-              {plan.popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <Badge className="bg-primary text-primary-foreground shadow-md">
-                    <TrendingUp className="w-3 h-3 mr-1" />
-                    Popular
-                  </Badge>
-                </div>
-              )}
-              {plan.id === currentPlan && (
-                <div className="absolute -top-3 right-4">
-                  <Badge className="bg-green-500 text-white shadow-md">
-                    Current
-                  </Badge>
-                </div>
-              )}
-              <CardHeader>
-                <CardTitle className="text-lg md:text-xl">{plan.name}</CardTitle>
-                <CardDescription className="text-2xl md:text-3xl font-bold text-foreground">
-                  {plan.price}<span className="text-sm md:text-base text-muted-foreground">{plan.period}</span>
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <ul className="space-y-2">
-                  {plan.features.map((feature, index) => (
-                    <li key={index} className="flex items-start gap-2 text-xs md:text-sm">
-                      <Check className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                {plan.id !== currentPlan && (
-                  <Button 
-                    className="w-full"
-                    variant={plan.id > currentPlan ? 'default' : 'outline'}
-                    onClick={() => plan.id > currentPlan ? handleUpgrade(plan.id) : handleDowngrade(plan.id)}
-                  >
-                    {plan.id > currentPlan ? 'Upgrade' : 'Downgrade'} to {plan.name}
-                  </Button>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+          {planOrder.map((planId) => {
+            const plan = PLAN_DETAILS[planId];
+            const isCurrentPlan = planId === currentPlan;
+            const isPlanHigher = planOrder.indexOf(planId) > currentPlanIndex;
+
+            return (
+              <Card 
+                key={planId} 
+                className={`relative ${plan.popular ? 'border-primary shadow-lg' : ''} ${isCurrentPlan ? 'border-2 border-primary' : ''}`}
+              >
+                {plan.popular && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                    <Badge className="bg-primary text-primary-foreground shadow-md">
+                      <TrendingUp className="w-3 h-3 mr-1" />
+                      Popular
+                    </Badge>
+                  </div>
                 )}
-                {plan.id === currentPlan && (
-                  <Button className="w-full" variant="secondary" disabled>
-                    Current Plan
-                  </Button>
+                {isCurrentPlan && (
+                  <div className="absolute -top-3 right-4">
+                    <Badge className="bg-green-500 text-white shadow-md">
+                      Current
+                    </Badge>
+                  </div>
                 )}
-              </CardContent>
-            </Card>
-          ))}
+                <CardHeader>
+                  <CardTitle className="text-lg md:text-xl">{plan.name}</CardTitle>
+                  <CardDescription className="text-2xl md:text-3xl font-bold text-foreground">
+                    {plan.price}<span className="text-sm md:text-base text-muted-foreground">{plan.period}</span>
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <ul className="space-y-2">
+                    {plan.features.map((feature, index) => (
+                      <li key={index} className="flex items-start gap-2 text-xs md:text-sm">
+                        <Check className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  {!isCurrentPlan && (
+                    <Button 
+                      className="w-full"
+                      variant={isPlanHigher ? 'default' : 'outline'}
+                      onClick={() => isPlanHigher ? handleUpgrade(planId) : handleDowngrade(planId)}
+                    >
+                      {isPlanHigher ? 'Upgrade' : 'Downgrade'} to {plan.name}
+                    </Button>
+                  )}
+                  {isCurrentPlan && (
+                    <Button className="w-full" variant="secondary" disabled>
+                      Current Plan
+                    </Button>
+                  )}
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       </div>
 
@@ -252,9 +197,9 @@ export default function Billing() {
           <AlertDialogHeader>
             <AlertDialogTitle>Confirm Upgrade</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to upgrade to the {selectedPlan && plans.find(p => p.id === selectedPlan)?.name} plan? 
-              {selectedPlan && plans.find(p => p.id === selectedPlan)?.price !== 'Custom' && (
-                <> Your new billing amount will be {plans.find(p => p.id === selectedPlan)?.price}{plans.find(p => p.id === selectedPlan)?.period}.</>
+              Are you sure you want to upgrade to the {selectedPlan && PLAN_DETAILS[selectedPlan].name} plan? 
+              {selectedPlan && PLAN_DETAILS[selectedPlan].price !== 'Custom' && (
+                <> Your new billing amount will be {PLAN_DETAILS[selectedPlan].price}{PLAN_DETAILS[selectedPlan].period}.</>
               )}
             </AlertDialogDescription>
           </AlertDialogHeader>
@@ -271,8 +216,8 @@ export default function Billing() {
           <AlertDialogHeader>
             <AlertDialogTitle>Confirm Downgrade</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to downgrade to the {selectedPlan && plans.find(p => p.id === selectedPlan)?.name} plan? 
-              You may lose access to some features.
+              Are you sure you want to downgrade to the {selectedPlan && PLAN_DETAILS[selectedPlan].name} plan? 
+              You may lose access to some features including team management, AI tools, and developer console.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

@@ -17,6 +17,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { BusinessProvider } from "@/contexts/BusinessContext";
 import { OnboardingModalWrapper } from "@/components/OnboardingModalWrapper";
 import { DashboardLayout } from "@/components/DashboardLayout";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import LandingPage from "./pages/LandingPage";
 import DashboardEnhanced from "./pages/DashboardEnhanced";
@@ -66,6 +67,7 @@ import MarketingCampaigns from "./pages/MarketingCampaigns";
 import DesignProjects from "./pages/DesignProjects";
 import ContentCalendar from "./pages/ContentCalendar";
 import Billing from "./pages/Billing";
+import MultiBusiness from "./pages/MultiBusiness";
 import { CustomerAuthProvider } from "@/contexts/CustomerAuthContext";
 import CustomerLogin from "./pages/customer/auth/CustomerLogin";
 import CustomerSignup from "./pages/customer/auth/CustomerSignup";
@@ -248,7 +250,9 @@ const App = () => (
               path="/team"
               element={
                 <DashboardLayout>
-                  <Team />
+                  <ProtectedRoute requiredPlan="pro" route="/team">
+                    <Team />
+                  </ProtectedRoute>
                 </DashboardLayout>
               }
             />
@@ -256,7 +260,9 @@ const App = () => (
               path="/developer"
               element={
                 <DashboardLayout>
-                  <Developer />
+                  <ProtectedRoute requiredPlan="pro" route="/developer">
+                    <Developer />
+                  </ProtectedRoute>
                 </DashboardLayout>
               }
             />
@@ -307,24 +313,26 @@ const App = () => (
             <Route path="/content-calendar" element={<DashboardLayout><ContentCalendar /></DashboardLayout>} />
             <Route path="/billing" element={<DashboardLayout><Billing /></DashboardLayout>} />
             <Route path="/calendar" element={<DashboardLayout><Calendar /></DashboardLayout>} />
-            <Route path="/marketing-ai" element={<DashboardLayout><MarketingAI /></DashboardLayout>} />
+            <Route path="/marketing-ai" element={<DashboardLayout><ProtectedRoute requiredPlan="pro" route="/marketing-ai"><MarketingAI /></ProtectedRoute></DashboardLayout>} />
             <Route path="/theme" element={<DashboardLayout><ThemeCustomizer /></DashboardLayout>} />
             <Route path="/chat-support" element={<DashboardLayout><ChatSupport /></DashboardLayout>} />
             <Route path="/checkout" element={<DashboardLayout><Checkout /></DashboardLayout>} />
             <Route path="/logistics" element={<DashboardLayout><Logistics /></DashboardLayout>} />
-            <Route path="/pos" element={<DashboardLayout><POS /></DashboardLayout>} />
+            <Route path="/pos" element={<DashboardLayout><ProtectedRoute requiredPlan="enterprise" route="/pos"><POS /></ProtectedRoute></DashboardLayout>} />
             <Route path="/payroll" element={<DashboardLayout><Payroll /></DashboardLayout>} />
             <Route path="/branches" element={<DashboardLayout><Branches /></DashboardLayout>} />
             <Route path="/subscriptions" element={<DashboardLayout><Subscriptions /></DashboardLayout>} />
             <Route path="/memberships" element={<DashboardLayout><Memberships /></DashboardLayout>} />
             <Route path="/invoices" element={<DashboardLayout><Invoices /></DashboardLayout>} />
-            <Route path="/messaging" element={<DashboardLayout><Messaging /></DashboardLayout>} />
+            <Route path="/messaging" element={<DashboardLayout><ProtectedRoute requiredPlan="pro" route="/messaging"><Messaging /></ProtectedRoute></DashboardLayout>} />
             <Route path="/ai-automation" element={<DashboardLayout><AIAutomation /></DashboardLayout>} />
             <Route path="/media-library" element={<DashboardLayout><MediaLibrary /></DashboardLayout>} />
             <Route path="/service-builder" element={<DashboardLayout><ServiceBuilder /></DashboardLayout>} />
             <Route path="/booking-calendar" element={<DashboardLayout><BookingCalendar /></DashboardLayout>} />
             <Route path="/upsells" element={<DashboardLayout><Upsells /></DashboardLayout>} />
             <Route path="/supplier-manager" element={<DashboardLayout><SupplierManager /></DashboardLayout>} />
+            <Route path="/email-campaigns" element={<DashboardLayout><ProtectedRoute requiredPlan="pro" route="/email-campaigns"><EmailCampaigns /></ProtectedRoute></DashboardLayout>} />
+            <Route path="/multi-business" element={<DashboardLayout><ProtectedRoute requiredPlan="enterprise" route="/multi-business"><MultiBusiness /></ProtectedRoute></DashboardLayout>} />
             
             {/* Customer Portal Routes */}
             <Route path="/customer/login" element={<CustomerLogin />} />
