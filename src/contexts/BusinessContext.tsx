@@ -9,12 +9,14 @@ import {
   CommunitySubType,
   getBusinessFeatures 
 } from '@/types/business';
+import { PlanType } from '@/types/plans';
 
 interface BusinessContextType {
   businessProfile: BusinessProfile;
   setBusinessType: (type: BusinessType) => void;
   setAccountType: (type: AccountType) => void;
   setBusinessSubType: (subType: EcommerceSubType | ServicesSubType | DigitalSubType | CommunitySubType) => void;
+  setPlan: (plan: PlanType) => void;
   completeOnboarding: () => void;
   features: ReturnType<typeof getBusinessFeatures>;
 }
@@ -24,7 +26,7 @@ const BusinessContext = createContext<BusinessContextType | undefined>(undefined
 export function BusinessProvider({ children }: { children: React.ReactNode }) {
   const [businessProfile, setBusinessProfile] = useState<BusinessProfile>(() => {
     const stored = localStorage.getItem('nexus-business-profile');
-    return stored ? JSON.parse(stored) : { type: null, accountType: null, onboarded: false };
+    return stored ? JSON.parse(stored) : { type: null, accountType: null, onboarded: false, plan: 'free' };
   });
 
   const features = getBusinessFeatures(businessProfile.type, businessProfile.subType || undefined);
@@ -45,6 +47,10 @@ export function BusinessProvider({ children }: { children: React.ReactNode }) {
     setBusinessProfile(prev => ({ ...prev, subType }));
   };
 
+  const setPlan = (plan: PlanType) => {
+    setBusinessProfile(prev => ({ ...prev, plan }));
+  };
+
   const completeOnboarding = () => {
     setBusinessProfile(prev => ({ ...prev, onboarded: true }));
   };
@@ -55,6 +61,7 @@ export function BusinessProvider({ children }: { children: React.ReactNode }) {
       setBusinessType, 
       setAccountType, 
       setBusinessSubType, 
+      setPlan,
       completeOnboarding,
       features 
     }}>
