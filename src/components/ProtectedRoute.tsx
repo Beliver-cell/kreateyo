@@ -8,13 +8,13 @@ import { Lock } from 'lucide-react';
 
 interface ProtectedRouteProps {
   children: ReactNode;
-  requiredPlan?: 'growth' | 'business';
+  requiredPlan?: 'pro' | 'enterprise';
   route?: string;
 }
 
 export function ProtectedRoute({ children, requiredPlan, route }: ProtectedRouteProps) {
   const { businessProfile } = useBusinessContext();
-  const currentPlan = businessProfile.plan || 'starter';
+  const currentPlan = businessProfile.plan || 'free';
 
   // Check route-specific access
   if (route && !canAccessRoute(currentPlan, route)) {
@@ -33,7 +33,7 @@ export function ProtectedRoute({ children, requiredPlan, route }: ProtectedRoute
           <CardContent>
             <Button asChild className="w-full">
               <a href="/billing">
-                Upgrade to {requiredPlan === 'business' ? 'Business' : 'Growth'}
+                Upgrade to {requiredPlan === 'enterprise' ? 'Enterprise' : 'Pro'}
               </a>
             </Button>
           </CardContent>
@@ -44,7 +44,7 @@ export function ProtectedRoute({ children, requiredPlan, route }: ProtectedRoute
 
   // Check plan hierarchy
   if (requiredPlan) {
-    const planHierarchy: Record<PlanType, number> = { starter: 0, growth: 1, business: 2 };
+    const planHierarchy: Record<PlanType, number> = { free: 0, pro: 1, enterprise: 2 };
     if (planHierarchy[currentPlan] < planHierarchy[requiredPlan]) {
       return (
         <div className="flex items-center justify-center min-h-[calc(100vh-4rem)] p-4">
@@ -61,7 +61,7 @@ export function ProtectedRoute({ children, requiredPlan, route }: ProtectedRoute
             <CardContent>
               <Button asChild className="w-full">
                 <a href="/billing">
-                  Upgrade to {requiredPlan === 'business' ? 'Business' : 'Growth'}
+                  Upgrade to {requiredPlan === 'enterprise' ? 'Enterprise' : 'Pro'}
                 </a>
               </Button>
             </CardContent>

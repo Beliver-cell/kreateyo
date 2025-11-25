@@ -256,7 +256,7 @@ const App = () => (
               path="/team"
               element={
                 <DashboardLayout>
-                  <ProtectedRoute requiredPlan="growth" route="/team">
+                  <ProtectedRoute requiredPlan="pro" route="/team">
                     <Team />
                   </ProtectedRoute>
                 </DashboardLayout>
@@ -266,7 +266,7 @@ const App = () => (
               path="/developer"
               element={
                 <DashboardLayout>
-                  <ProtectedRoute requiredPlan="growth" route="/developer">
+                  <ProtectedRoute requiredPlan="pro" route="/developer">
                     <Developer />
                   </ProtectedRoute>
                 </DashboardLayout>
@@ -320,26 +320,26 @@ const App = () => (
             <Route path="/content-calendar" element={<DashboardLayout><ContentCalendar /></DashboardLayout>} />
             <Route path="/billing" element={<DashboardLayout><Billing /></DashboardLayout>} />
             <Route path="/calendar" element={<DashboardLayout><Calendar /></DashboardLayout>} />
-            <Route path="/marketing-ai" element={<DashboardLayout><ProtectedRoute requiredPlan="growth" route="/marketing-ai"><MarketingAI /></ProtectedRoute></DashboardLayout>} />
+            <Route path="/marketing-ai" element={<DashboardLayout><ProtectedRoute requiredPlan="pro" route="/marketing-ai"><MarketingAI /></ProtectedRoute></DashboardLayout>} />
             <Route path="/theme" element={<DashboardLayout><ThemeCustomizer /></DashboardLayout>} />
             <Route path="/chat-support" element={<DashboardLayout><ChatSupport /></DashboardLayout>} />
             <Route path="/checkout" element={<DashboardLayout><Checkout /></DashboardLayout>} />
             <Route path="/logistics" element={<DashboardLayout><Logistics /></DashboardLayout>} />
-            <Route path="/pos" element={<DashboardLayout><ProtectedRoute requiredPlan="business" route="/pos"><POS /></ProtectedRoute></DashboardLayout>} />
+            <Route path="/pos" element={<DashboardLayout><ProtectedRoute requiredPlan="enterprise" route="/pos"><POS /></ProtectedRoute></DashboardLayout>} />
             <Route path="/payroll" element={<DashboardLayout><Payroll /></DashboardLayout>} />
             <Route path="/branches" element={<DashboardLayout><Branches /></DashboardLayout>} />
             <Route path="/subscriptions" element={<DashboardLayout><Subscriptions /></DashboardLayout>} />
             <Route path="/memberships" element={<DashboardLayout><Memberships /></DashboardLayout>} />
             <Route path="/invoices" element={<DashboardLayout><Invoices /></DashboardLayout>} />
-            <Route path="/messaging" element={<DashboardLayout><ProtectedRoute requiredPlan="growth" route="/messaging"><Messaging /></ProtectedRoute></DashboardLayout>} />
+            <Route path="/messaging" element={<DashboardLayout><ProtectedRoute requiredPlan="pro" route="/messaging"><Messaging /></ProtectedRoute></DashboardLayout>} />
             <Route path="/ai-automation" element={<DashboardLayout><AIAutomation /></DashboardLayout>} />
             <Route path="/media-library" element={<DashboardLayout><MediaLibrary /></DashboardLayout>} />
             <Route path="/service-builder" element={<DashboardLayout><ServiceBuilder /></DashboardLayout>} />
             <Route path="/booking-calendar" element={<DashboardLayout><BookingCalendar /></DashboardLayout>} />
             <Route path="/upsells" element={<DashboardLayout><Upsells /></DashboardLayout>} />
             <Route path="/supplier-manager" element={<DashboardLayout><SupplierManager /></DashboardLayout>} />
-            <Route path="/email-campaigns" element={<DashboardLayout><ProtectedRoute requiredPlan="growth" route="/email-campaigns"><EmailCampaigns /></ProtectedRoute></DashboardLayout>} />
-            <Route path="/multi-business" element={<DashboardLayout><ProtectedRoute requiredPlan="business" route="/multi-business"><MultiBusiness /></ProtectedRoute></DashboardLayout>} />
+            <Route path="/email-campaigns" element={<DashboardLayout><ProtectedRoute requiredPlan="pro" route="/email-campaigns"><EmailCampaigns /></ProtectedRoute></DashboardLayout>} />
+            <Route path="/multi-business" element={<DashboardLayout><ProtectedRoute requiredPlan="enterprise" route="/multi-business"><MultiBusiness /></ProtectedRoute></DashboardLayout>} />
             
             {/* Customer Portal Routes */}
             <Route path="/customer/login" element={<CustomerLogin />} />
