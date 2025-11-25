@@ -7,14 +7,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Palette, Globe, Menu, Building, Image as ImageIcon, Users, User, ArrowUpCircle } from 'lucide-react';
 import { useState } from 'react';
 import { useBusinessContext } from '@/contexts/BusinessContext';
-import { WorkspaceUpgradeDialog } from '@/components/WorkspaceUpgradeDialog';
 import { useToast } from '@/hooks/use-toast';
 
 export default function SettingsEnhanced() {
-  const { businessProfile, setAccountType } = useBusinessContext();
+  const { businessProfile } = useBusinessContext();
   const { toast } = useToast();
   const [scaleMode, setScaleMode] = useState(false);
-  const [upgradeDialogOpen, setUpgradeDialogOpen] = useState(false);
 
   const colorThemes = [
     { name: 'Blue & White', primary: 'hsl(217 91% 60%)', secondary: 'hsl(220 14% 96%)' },
@@ -27,19 +25,6 @@ export default function SettingsEnhanced() {
     'Inter', 'Poppins', 'DM Sans', 'Space Grotesk', 'IBM Plex Sans'
   ];
 
-  const handleWorkspaceSwitch = () => {
-    const newType = businessProfile.accountType === 'solo' ? 'team' : 'solo';
-    setAccountType(newType);
-    setUpgradeDialogOpen(false);
-    
-    toast({
-      title: newType === 'team' ? 'Upgraded to Team Workspace!' : 'Switched to Solo Workspace',
-      description: newType === 'team' 
-        ? 'You can now invite team members and access enterprise features.'
-        : 'Team features have been hidden from your dashboard.',
-    });
-  };
-
   return (
     <div className="w-full max-w-7xl mx-auto space-y-6">
       <div>
@@ -48,14 +33,10 @@ export default function SettingsEnhanced() {
       </div>
 
       <Tabs defaultValue="general" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid">
+        <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid">
           <TabsTrigger value="general">
             <Globe className="w-4 h-4 mr-2" />
             General
-          </TabsTrigger>
-          <TabsTrigger value="account">
-            <User className="w-4 h-4 mr-2" />
-            Account
           </TabsTrigger>
           <TabsTrigger value="style">
             <Palette className="w-4 h-4 mr-2" />
@@ -135,105 +116,6 @@ export default function SettingsEnhanced() {
                     </Button>
                   </label>
                   <p className="text-xs text-muted-foreground mt-1">PNG, ICO or SVG (max 1MB)</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Account Tab */}
-        <TabsContent value="account" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Workspace Type</CardTitle>
-              <CardDescription>Manage your workspace configuration</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-start gap-6 p-6 rounded-lg border-2 bg-gradient-subtle">
-                <div className={`w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0 ${
-                  businessProfile.accountType === 'team' ? 'bg-gradient-primary' : 'bg-muted'
-                }`}>
-                  {businessProfile.accountType === 'team' ? (
-                    <Users className="w-8 h-8 text-white" />
-                  ) : (
-                    <User className="w-8 h-8 text-foreground" />
-                  )}
-                </div>
-                <div className="flex-1 space-y-4">
-                  <div>
-                    <h3 className="text-lg font-bold mb-1">
-                      Current Plan: {businessProfile.accountType === 'team' ? 'Team Workspace' : 'Solo Workspace'}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      {businessProfile.accountType === 'team' 
-                        ? 'You have access to all enterprise and collaboration features.'
-                        : 'You have access to all core business features.'}
-                    </p>
-                  </div>
-
-                  {businessProfile.accountType === 'solo' ? (
-                    <div className="space-y-3">
-                      <p className="text-sm font-medium">Benefits you'll get by upgrading:</p>
-                      <ul className="space-y-2">
-                        <li className="flex items-start gap-2 text-sm">
-                          <ArrowUpCircle className="w-4 h-4 text-success mt-0.5 flex-shrink-0" />
-                          <span>Team member invitations and management</span>
-                        </li>
-                        <li className="flex items-start gap-2 text-sm">
-                          <ArrowUpCircle className="w-4 h-4 text-success mt-0.5 flex-shrink-0" />
-                          <span>Role-based permissions and access control</span>
-                        </li>
-                        <li className="flex items-start gap-2 text-sm">
-                          <ArrowUpCircle className="w-4 h-4 text-success mt-0.5 flex-shrink-0" />
-                          <span>Team activity tracking and audit logs</span>
-                        </li>
-                        <li className="flex items-start gap-2 text-sm">
-                          <ArrowUpCircle className="w-4 h-4 text-success mt-0.5 flex-shrink-0" />
-                          <span>Advanced collaboration tools</span>
-                        </li>
-                        <li className="flex items-start gap-2 text-sm">
-                          <ArrowUpCircle className="w-4 h-4 text-success mt-0.5 flex-shrink-0" />
-                          <span>Developer tools and API access</span>
-                        </li>
-                      </ul>
-                      <Button 
-                        onClick={() => setUpgradeDialogOpen(true)}
-                        className="bg-gradient-primary hover:opacity-90"
-                      >
-                        <Users className="w-4 h-4 mr-2" />
-                        Upgrade to Team Workspace
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="space-y-3">
-                      <p className="text-sm font-medium">What will change if you switch to Solo:</p>
-                      <ul className="space-y-2">
-                        <li className="flex items-start gap-2 text-sm text-muted-foreground">
-                          <span className="text-destructive">✗</span>
-                          <span>Team features will be hidden from dashboard</span>
-                        </li>
-                        <li className="flex items-start gap-2 text-sm text-muted-foreground">
-                          <span className="text-destructive">✗</span>
-                          <span>Team member access will be removed</span>
-                        </li>
-                        <li className="flex items-start gap-2 text-sm text-muted-foreground">
-                          <span className="text-destructive">✗</span>
-                          <span>Developer tools will be hidden</span>
-                        </li>
-                        <li className="flex items-start gap-2 text-sm">
-                          <span className="text-success">✓</span>
-                          <span>All your business data will be preserved</span>
-                        </li>
-                      </ul>
-                      <Button 
-                        onClick={() => setUpgradeDialogOpen(true)}
-                        variant="outline"
-                      >
-                        <User className="w-4 h-4 mr-2" />
-                        Switch to Solo Workspace
-                      </Button>
-                    </div>
-                  )}
                 </div>
               </div>
             </CardContent>
@@ -453,13 +335,6 @@ export default function SettingsEnhanced() {
           </Card>
         </TabsContent>
       </Tabs>
-
-      <WorkspaceUpgradeDialog
-        open={upgradeDialogOpen}
-        onOpenChange={setUpgradeDialogOpen}
-        currentType={businessProfile.accountType || 'solo'}
-        onConfirm={handleWorkspaceSwitch}
-      />
     </div>
   );
 }

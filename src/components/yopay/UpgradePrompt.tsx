@@ -2,15 +2,15 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
 interface UpgradePromptProps {
-  userTier: 'solo' | 'team' | 'enterprise';
+  userTier: 'free' | 'pro' | 'enterprise';
 }
 
 export const UpgradePrompt = ({ userTier }: UpgradePromptProps) => {
   if (userTier === 'enterprise') return null;
 
-  const nextTier = userTier === 'solo' ? 'team' : 'enterprise';
-  const savings = userTier === 'solo' ? '1.5%' : '1.5%';
-  const newRate = userTier === 'solo' ? '2%' : '0.5%';
+  const nextTier = userTier === 'free' ? 'pro' : 'enterprise';
+  const savings = userTier === 'free' ? '1.5%' : '1.5%';
+  const newRate = userTier === 'free' ? '2%' : '0.5%';
 
   return (
     <Card className="p-4 bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20">

@@ -8,6 +8,7 @@ import { Switch } from "@/components/ui/switch";
 import { useBusinessContext } from "@/contexts/BusinessContext";
 import { Bot, MessageSquare, TrendingUp, Settings, Plus, Trash2, TestTube } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { getTeamLimit } from "@/types/plans";
 
 const ChatbotManager = () => {
   const { businessProfile } = useBusinessContext();
@@ -20,7 +21,7 @@ const ChatbotManager = () => {
   const [newQuestion, setNewQuestion] = useState("");
   const [newAnswer, setNewAnswer] = useState("");
 
-  const isTeamAccount = businessProfile.accountType === 'team';
+  const hasTeamFeatures = getTeamLimit(businessProfile.plan || 'free') > 0;
 
   const handleActivateChatbot = () => {
     setChatbotEnabled(!chatbotEnabled);
@@ -67,7 +68,7 @@ const ChatbotManager = () => {
       <div>
         <h1 className="text-3xl font-bold tracking-tight">AI Chatbot Manager</h1>
         <p className="text-muted-foreground">
-          {isTeamAccount 
+          {hasTeamFeatures 
             ? "Manage your AI-powered customer support chatbot"
             : "Create custom responses for your customer support chatbot"}
         </p>
@@ -124,7 +125,7 @@ const ChatbotManager = () => {
       </Card>
 
       {/* Team Users - AI Powered System */}
-      {isTeamAccount && (
+      {hasTeamFeatures && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -174,7 +175,7 @@ const ChatbotManager = () => {
       )}
 
       {/* Solo Users - Custom Response Builder */}
-      {!isTeamAccount && (
+      {!hasTeamFeatures && (
         <>
           <Card>
             <CardHeader>

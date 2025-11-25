@@ -48,7 +48,7 @@ export default function Support() {
     <div className="space-y-6 max-w-7xl">
       <div>
         <h1 className="text-3xl font-bold">Help & Support</h1>
-        <p className="text-muted-foreground">Get help and learn how to use NexusCreate</p>
+        <p className="text-muted-foreground">Get help and learn how to use KreateYo</p>
       </div>
 
       <Tabs defaultValue="help" className="space-y-4">
@@ -73,7 +73,7 @@ export default function Support() {
               <CardHeader>
                 <BookOpen className="w-8 h-8 mb-2 text-primary" />
                 <CardTitle>Getting Started</CardTitle>
-                <CardDescription>Learn the basics of NexusCreate</CardDescription>
+                <CardDescription>Learn the basics of KreateYo</CardDescription>
               </CardHeader>
             </Card>
 
@@ -146,7 +146,7 @@ export default function Support() {
                 <div className="aspect-video bg-muted rounded-lg mb-4 flex items-center justify-center">
                   <Video className="w-12 h-12 text-muted-foreground" />
                 </div>
-                <CardTitle>NexusCreate Overview</CardTitle>
+                <CardTitle>KreateYo Overview</CardTitle>
                 <CardDescription>Complete walkthrough of all features</CardDescription>
               </CardHeader>
             </Card>
@@ -244,7 +244,7 @@ export default function Support() {
               <div className="p-4 rounded-lg border">
                 <h4 className="font-semibold mb-1">Community Forum</h4>
                 <p className="text-sm text-muted-foreground mb-2">
-                  Connect with other NexusCreate users
+                  Connect with other KreateYo users
                 </p>
                 <Button variant="outline" size="sm">Visit Forum</Button>
               </div>

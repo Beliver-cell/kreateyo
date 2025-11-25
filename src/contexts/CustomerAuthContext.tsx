@@ -6,7 +6,7 @@ interface Customer {
   email: string;
   firstName: string;
   lastName: string;
-  businessType: 'services' | 'ecommerce' | 'blogging';
+  businessType: 'services' | 'ecommerce' | 'digital' | 'community';
   emailVerified: boolean;
 }
 
@@ -50,6 +50,8 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
       navigate('/customer/services/dashboard');
     } else if (customerData.businessType === 'ecommerce') {
       navigate('/customer/ecommerce/orders');
+    } else if (customerData.businessType === 'digital') {
+      navigate('/customer/blogging/reading');
     } else {
       navigate('/customer/blogging/reading');
     }

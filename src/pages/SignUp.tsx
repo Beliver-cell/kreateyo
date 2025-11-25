@@ -109,7 +109,7 @@ export default function SignUp() {
             </div>
           </div>
           <h1 className="text-4xl font-bold bg-gradient-premium bg-clip-text text-transparent">
-            Join NexusCreate
+            Join KreateYo
           </h1>
           <p className="text-muted-foreground text-lg">Start building your business today</p>
         </div>

@@ -8,13 +8,13 @@ import { ErrorMessage } from "@/components/ui/error-message";
 
 interface YopayDashboardProps {
   businessId: string;
-  userTier: 'solo' | 'team' | 'enterprise';
+  userTier: 'free' | 'pro' | 'enterprise';
 }
 
 const YopayConfig = {
   tieredFees: {
-    solo: 3.5,
-    team: 2.0,
+    free: 3.5,
+    pro: 2.0,
     enterprise: 0.5
   }
 };
@@ -69,8 +69,8 @@ export const YopayDashboard = ({ businessId, userTier }: YopayDashboardProps) =>
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Yopay</h1>
               <p className="text-muted-foreground text-sm md:text-base">
-                {userTier === 'solo' && 'Solo Plan - 3.5% platform fee'}
-                {userTier === 'team' && 'Team Plan - 2.0% platform fee'}  
+                {userTier === 'free' && 'Free Plan - 3.5% platform fee'}
+                {userTier === 'pro' && 'Pro Plan - 2.0% platform fee'}  
                 {userTier === 'enterprise' && 'Enterprise Plan - 0.5% platform fee'}
               </p>
             </div>

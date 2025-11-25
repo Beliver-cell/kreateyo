@@ -5,12 +5,15 @@ import { useState, useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
 import { api } from '@/services/api';
 import { useToast } from '@/hooks/use-toast';
+import { useBusinessContext } from '@/contexts/BusinessContext';
 
 export default function Payments() {
   const [loading, setLoading] = useState(true);
   const [hasYopayAccount, setHasYopayAccount] = useState(false);
   const [businessId] = useState('demo-business-id'); // Replace with actual business ID from context
   const { toast } = useToast();
+  const { businessProfile } = useBusinessContext();
+  const userTier = businessProfile.plan || 'free';
 
   useEffect(() => {
     checkYopayAccount();
@@ -49,7 +52,7 @@ export default function Payments() {
     <DashboardLayout>
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6">
         {hasYopayAccount ? (
-          <YopayDashboard businessId={businessId} userTier="solo" />
+          <YopayDashboard businessId={businessId} userTier={userTier as 'free' | 'pro' | 'enterprise'} />
         ) : (
           <YopayOnboarding businessId={businessId} onComplete={handleOnboardingComplete} />
         )}
