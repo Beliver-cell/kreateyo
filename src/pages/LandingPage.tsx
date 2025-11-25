@@ -480,25 +480,25 @@ export default function LandingPage() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {/* Starter */}
+            {/* Free */}
             <Card className="hover-lift">
               <CardHeader>
-                <CardTitle className="text-2xl">Starter</CardTitle>
-                <CardDescription>For side-hustles</CardDescription>
+                <CardTitle className="text-2xl">Free</CardTitle>
+                <CardDescription>Perfect for getting started</CardDescription>
                 <div className="mt-4">
-                  <span className="text-4xl font-bold">${isPriceAnnual ? '3' : '4'}</span>
+                  <span className="text-4xl font-bold">$0</span>
                   <span className="text-muted-foreground">/mo</span>
-                  <p className="text-sm text-muted-foreground mt-2">~₦{isPriceAnnual ? '3,400' : '4,500'}/mo</p>
+                  <p className="text-sm text-muted-foreground mt-2">Free forever</p>
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
                 <ul className="space-y-3">
                   {[
-                    '1 store',
-                    '10 products',
-                    'YoPay basic',
-                    'Website builder',
-                    'WhatsApp support',
+                    'Basic dashboard',
+                    'Storefront/service management',
+                    'Orders & bookings',
+                    'Simple analytics',
+                    'Messages & inbox',
                     'Community support'
                   ].map((feature, i) => (
                     <li key={i} className="flex items-center gap-2">
@@ -508,35 +508,34 @@ export default function LandingPage() {
                   ))}
                 </ul>
                 <Button className="w-full" size="lg" asChild>
-                  <Link to="/signup">Start Free</Link>
+                  <Link to="/signup">Get Started Free</Link>
                 </Button>
-                <p className="text-xs text-center text-muted-foreground">14-day trial</p>
               </CardContent>
             </Card>
 
-            {/* Growth */}
+            {/* Pro */}
             <Card className="hover-lift border-primary border-2 relative">
               <div className="absolute -top-4 left-1/2 -translate-x-1/2">
                 <Badge className="bg-primary text-primary-foreground">Most Popular</Badge>
               </div>
               <CardHeader>
-                <CardTitle className="text-2xl">Growth</CardTitle>
+                <CardTitle className="text-2xl">Pro</CardTitle>
                 <CardDescription>For growing businesses</CardDescription>
                 <div className="mt-4">
-                  <span className="text-4xl font-bold">${isPriceAnnual ? '21' : '25'}</span>
+                  <span className="text-4xl font-bold">${isPriceAnnual ? '41' : '49'}</span>
                   <span className="text-muted-foreground">/mo</span>
-                  <p className="text-sm text-muted-foreground mt-2">~₦{isPriceAnnual ? '23,800' : '28,000'}/mo</p>
+                  <p className="text-sm text-muted-foreground mt-2">~₦{isPriceAnnual ? '46,500' : '55,500'}/mo</p>
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
                 <ul className="space-y-3">
                   {[
-                    '5 stores',
-                    '1,000 products',
-                    'POS & offline mode',
-                    'Automated marketing',
-                    'WhatsApp Commerce',
-                    'Dispatch toolbox',
+                    'Everything in Free',
+                    'Team management (10 members)',
+                    'AI Marketer',
+                    'Developer console & API',
+                    'Webhooks',
+                    'Automation tools',
                     'Priority support'
                   ].map((feature, i) => (
                     <li key={i} className="flex items-center gap-2">
@@ -551,27 +550,26 @@ export default function LandingPage() {
               </CardContent>
             </Card>
 
-            {/* Business */}
+            {/* Enterprise */}
             <Card className="hover-lift">
               <CardHeader>
-                <CardTitle className="text-2xl">Business</CardTitle>
-                <CardDescription>For merchants & agencies</CardDescription>
+                <CardTitle className="text-2xl">Enterprise</CardTitle>
+                <CardDescription>For large organizations</CardDescription>
                 <div className="mt-4">
-                  <span className="text-4xl font-bold">${isPriceAnnual ? '66' : '79'}</span>
-                  <span className="text-muted-foreground">/mo</span>
-                  <p className="text-sm text-muted-foreground mt-2">~₦{isPriceAnnual ? '74,800' : '89,000'}/mo</p>
+                  <span className="text-4xl font-bold">Custom</span>
+                  <p className="text-sm text-muted-foreground mt-2">Contact for pricing</p>
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
                 <ul className="space-y-3">
                   {[
-                    'Unlimited products',
-                    'Multi-branch',
-                    'Staff payroll',
-                    'Priority support',
-                    'YoPay advanced payouts',
-                    'API access',
-                    'White-label options'
+                    'Everything in Pro',
+                    'Unlimited team members',
+                    'POS system',
+                    'Multi-business dashboard',
+                    'Dedicated support',
+                    'Custom integrations',
+                    'SLA guarantees'
                   ].map((feature, i) => (
                     <li key={i} className="flex items-center gap-2">
                       <Check className="h-5 w-5 text-primary" />
@@ -580,7 +578,7 @@ export default function LandingPage() {
                   ))}
                 </ul>
                 <Button className="w-full" size="lg" variant="outline" asChild>
-                  <Link to="/signup">Talk to Sales</Link>
+                  <Link to="/signup">Contact Sales</Link>
                 </Button>
               </CardContent>
             </Card>
