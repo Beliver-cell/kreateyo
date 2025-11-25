@@ -2,9 +2,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Check, CreditCard, TrendingUp, ArrowUpRight, ArrowDownRight } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { useBusinessContext } from '@/contexts/BusinessContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { PLAN_DETAILS, PlanType } from '@/types/plans';
 import {
   AlertDialog,
@@ -20,11 +20,12 @@ import {
 const planOrder: PlanType[] = ['free', 'pro', 'enterprise'];
 
 export default function Billing() {
-  const { businessProfile, setPlan } = useBusinessContext();
-  const currentPlan = businessProfile.plan || 'free';
+  const { profile, updatePlan } = useAuth();
+  const currentPlan = profile?.plan || 'free';
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
   const [showDowngradeDialog, setShowDowngradeDialog] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<PlanType | null>(null);
+  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
   const handleUpgrade = (planId: PlanType) => {
@@ -37,28 +38,52 @@ export default function Billing() {
     setShowDowngradeDialog(true);
   };
 
-  const confirmUpgrade = () => {
+  const confirmUpgrade = async () => {
     if (selectedPlan) {
-      setPlan(selectedPlan);
-      toast({
-        title: "Plan upgraded!",
-        description: `You've successfully upgraded to the ${PLAN_DETAILS[selectedPlan].name} plan.`,
-      });
+      setLoading(true);
+      const { error } = await updatePlan(selectedPlan);
+      
+      if (error) {
+        toast({
+          title: "Error",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Plan upgraded!",
+          description: `You've successfully upgraded to the ${PLAN_DETAILS[selectedPlan].name} plan.`,
+        });
+      }
+      
       setShowUpgradeDialog(false);
       setSelectedPlan(null);
+      setLoading(false);
     }
   };
 
-  const confirmDowngrade = () => {
+  const confirmDowngrade = async () => {
     if (selectedPlan) {
-      setPlan(selectedPlan);
-      toast({
-        title: "Plan downgraded",
-        description: `You've downgraded to the ${PLAN_DETAILS[selectedPlan].name} plan.`,
-        variant: "destructive",
-      });
+      setLoading(true);
+      const { error } = await updatePlan(selectedPlan);
+      
+      if (error) {
+        toast({
+          title: "Error",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Plan downgraded",
+          description: `You've downgraded to the ${PLAN_DETAILS[selectedPlan].name} plan.`,
+          variant: "destructive",
+        });
+      }
+      
       setShowDowngradeDialog(false);
       setSelectedPlan(null);
+      setLoading(false);
     }
   };
 
@@ -205,7 +230,9 @@ export default function Billing() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmUpgrade}>Confirm Upgrade</AlertDialogAction>
+            <AlertDialogAction onClick={confirmUpgrade} disabled={loading}>
+              {loading ? 'Upgrading...' : 'Confirm Upgrade'}
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -222,7 +249,9 @@ export default function Billing() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDowngrade}>Confirm Downgrade</AlertDialogAction>
+            <AlertDialogAction onClick={confirmDowngrade} disabled={loading}>
+              {loading ? 'Downgrading...' : 'Confirm Downgrade'}
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

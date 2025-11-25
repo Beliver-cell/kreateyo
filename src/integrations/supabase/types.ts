@@ -74,6 +74,36 @@ export type Database = {
         }
         Relationships: []
       }
+      business_client_messages: {
+        Row: {
+          business_id: string
+          client_id: string
+          created_at: string
+          id: string
+          message: string
+          read: boolean
+          sender_type: string
+        }
+        Insert: {
+          business_id: string
+          client_id: string
+          created_at?: string
+          id?: string
+          message: string
+          read?: boolean
+          sender_type: string
+        }
+        Update: {
+          business_id?: string
+          client_id?: string
+          created_at?: string
+          id?: string
+          message?: string
+          read?: boolean
+          sender_type?: string
+        }
+        Relationships: []
+      }
       content_calendar: {
         Row: {
           author: string | null
@@ -785,6 +815,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          business_id: string | null
+          created_at: string
+          full_name: string
+          id: string
+          plan: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          business_id?: string | null
+          created_at?: string
+          full_name: string
+          id: string
+          plan?: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          business_id?: string | null
+          created_at?: string
+          full_name?: string
+          id?: string
+          plan?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       supplier_orders: {
         Row: {
