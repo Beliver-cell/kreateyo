@@ -1,7 +1,6 @@
 import { PlanType } from './plans';
 
 export type BusinessType = 'ecommerce' | 'services' | 'digital' | 'community' | null;
-export type AccountType = 'solo' | 'team' | null;
 
 export type EcommerceSubType = 'physical' | 'digital' | 'dropshipping' | null;
 export type ServicesSubType = 
@@ -30,7 +29,6 @@ export type CommunitySubType =
 
 export interface BusinessProfile {
   type: BusinessType;
-  accountType: AccountType;
   subType?: EcommerceSubType | ServicesSubType | DigitalSubType | CommunitySubType;
   name?: string;
   onboarded: boolean;

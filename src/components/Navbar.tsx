@@ -22,7 +22,7 @@ export function Navbar() {
 
   const handleLogout = () => {
     // Clear business profile on logout
-    localStorage.removeItem('nexus-business-profile');
+    localStorage.removeItem('kreateyo-business-profile');
     
     toast({
       title: "Logged out",

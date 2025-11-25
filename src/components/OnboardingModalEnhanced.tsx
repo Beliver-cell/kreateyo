@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useBusinessContext } from '@/contexts/BusinessContext';
-import { Store, Briefcase, BookOpen, Package, Download, Truck, Megaphone, Palette, Briefcase as Operations, FileText, Users, ArrowLeft } from 'lucide-react';
+import { Store, Briefcase, BookOpen, Package, Download, Truck, Megaphone, Palette, Briefcase as Operations, FileText, Users, ArrowLeft, Sparkles, Heart } from 'lucide-react';
 import { BusinessType, EcommerceSubType, ServicesSubType } from '@/types/business';
 
 export function OnboardingModalEnhanced({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
@@ -14,7 +14,8 @@ export function OnboardingModalEnhanced({ open, onOpenChange }: { open: boolean;
   const mainBusinessTypes = [
     { id: 'ecommerce', icon: Store, title: 'E-commerce Store', description: 'Sell products online' },
     { id: 'services', icon: Briefcase, title: 'Services Business', description: 'Offer professional services' },
-    { id: 'blog', icon: BookOpen, title: 'Blog/Content Site', description: 'Share content and stories' }
+    { id: 'digital', icon: Sparkles, title: 'Digital/Creators', description: 'Courses, ebooks, templates & more' },
+    { id: 'community', icon: Heart, title: 'Communities', description: 'NGOs, churches, clubs & associations' }
   ];
 
   const ecommerceSubTypes = [
