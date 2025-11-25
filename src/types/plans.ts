@@ -1,4 +1,4 @@
-export type PlanType = 'starter' | 'growth' | 'business';
+export type PlanType = 'free' | 'pro' | 'enterprise';
 
 export interface PlanFeatures {
   // Team limits
@@ -30,7 +30,7 @@ export interface PlanFeatures {
 }
 
 export const PLAN_FEATURES: Record<PlanType, PlanFeatures> = {
-  starter: {
+  free: {
     maxTeamMembers: 0,
     basicDashboard: true,
     basicStoreManagement: true,
@@ -51,7 +51,7 @@ export const PLAN_FEATURES: Record<PlanType, PlanFeatures> = {
     unlimitedTeam: false,
     dedicatedSupport: false,
   },
-  growth: {
+  pro: {
     maxTeamMembers: 10,
     basicDashboard: true,
     basicStoreManagement: true,
@@ -67,12 +67,12 @@ export const PLAN_FEATURES: Record<PlanType, PlanFeatures> = {
     automation: true,
     advancedAnalytics: true,
     prioritySupport: true,
-    pos: true,
+    pos: false,
     multiBusinessDashboard: false,
     unlimitedTeam: false,
     dedicatedSupport: false,
   },
-  business: {
+  enterprise: {
     maxTeamMembers: -1, // unlimited
     basicDashboard: true,
     basicStoreManagement: true,
@@ -104,46 +104,49 @@ interface PlanDetail {
 }
 
 export const PLAN_DETAILS: Record<PlanType, PlanDetail> = {
-  starter: {
-    name: 'Starter',
-    price: '$4',
+  free: {
+    name: 'Free',
+    price: '$0',
     period: '/month',
     features: [
-      '1 store',
-      '10 products',
-      'YoPay basic',
-      'Website builder',
-      'WhatsApp support',
-      'Community support',
+      'Basic dashboard',
+      'Basic storefront/service management',
+      'Basic product/service tools',
+      'Basic orders/bookings',
+      'Simple analytics',
+      'Messages/inbox',
+      'Basic settings',
+      'No team members',
     ],
   },
-  growth: {
-    name: 'Growth',
-    price: '$25',
+  pro: {
+    name: 'Pro',
+    price: '$49',
     period: '/month',
     features: [
-      '5 stores',
-      '1,000 products',
-      'POS & offline mode',
-      'Automated marketing',
-      'WhatsApp Commerce',
-      'Dispatch toolbox',
+      'Everything in Free',
+      'Team management (max 10 members)',
+      'AI Marketer',
+      'Developer console + API keys',
+      'Webhooks',
+      'Automation tools',
+      'Advanced analytics',
       'Priority support',
     ],
     popular: true,
   },
-  business: {
-    name: 'Business',
-    price: '$79',
-    period: '/month',
+  enterprise: {
+    name: 'Enterprise',
+    price: 'Custom',
+    period: '',
     features: [
-      'Unlimited products',
-      'Multi-branch',
-      'Staff payroll',
-      'Priority support',
-      'YoPay advanced payouts',
-      'API access',
-      'White-label options',
+      'Everything in Pro',
+      'Unlimited team members',
+      'POS system',
+      'Multi-business dashboard',
+      'Advanced analytics',
+      'Dedicated support',
+      'Custom integrations',
     ],
   },
 };
