@@ -85,20 +85,38 @@ const templates = {
       previewImage: generatePlaceholderImage('from-purple-900 via-pink-800 to-purple-900', 'Creative Studio')
     },
     {
+      id: 'serv-foste-consulting',
+      name: 'Foste Consulting',
+      description: 'Premium consulting template with strategic focus and pricing plans',
+      gradient: 'from-slate-900 via-blue-800 to-slate-900',
+      features: ['Strategy sessions', 'Pricing plans', 'Client portal'],
+      popular: true,
+      previewImage: generatePlaceholderImage('from-slate-900 via-blue-800 to-slate-900', 'Foste Consulting')
+    },
+    {
+      id: 'serv-consulting-pro',
+      name: 'Consulting Pro',
+      description: 'Professional business consulting with process showcase and testimonials',
+      gradient: 'from-teal-900 via-cyan-700 to-teal-900',
+      features: ['Process steps', 'Testimonials', 'Service packages'],
+      popular: true,
+      previewImage: generatePlaceholderImage('from-teal-900 via-cyan-700 to-teal-900', 'Consulting Pro')
+    },
+    {
       id: 'serv-customer-care',
       name: 'AI Customer Care',
-      description: 'Modern support platform with AI-powered chat and help center',
+      description: 'Modern support platform with AI-powered chat and pricing tiers',
       gradient: 'from-indigo-900 via-purple-700 to-indigo-900',
-      features: ['Live chat widget', 'Help center', 'Support tickets'],
+      features: ['Live chat widget', 'Help center', 'Support plans'],
       popular: true,
       previewImage: generatePlaceholderImage('from-indigo-900 via-purple-700 to-indigo-900', 'AI Customer Care')
     },
     {
       id: 'serv-marketing-sales',
       name: 'Prixima Marketing',
-      description: 'High-converting design for marketing agencies and sales teams',
+      description: 'High-converting design for marketing agencies with flexible packages',
       gradient: 'from-orange-900 via-red-700 to-orange-900',
-      features: ['Lead capture', 'Service showcase', 'ROI calculator'],
+      features: ['Lead capture', 'Pricing plans', 'ROI calculator'],
       popular: true,
       previewImage: generatePlaceholderImage('from-orange-900 via-red-700 to-orange-900', 'Prixima Marketing')
     }
