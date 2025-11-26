@@ -6,6 +6,8 @@ import CozaStoreTemplate from '@/components/templates/CozaStoreTemplate';
 import MaleFashionTemplate from '@/components/templates/MaleFashionTemplate';
 import BlogTemplate from '@/components/templates/BlogTemplate';
 import ServiceTemplate from '@/components/templates/ServiceTemplate';
+import AiCustomerCareTemplate from '@/components/templates/AiCustomerCareTemplate';
+import PriximaTemplate from '@/components/templates/PriximaTemplate';
 
 export default function TemplatePreview() {
   const [searchParams] = useSearchParams();
@@ -25,6 +27,10 @@ export default function TemplatePreview() {
       case 'serv-wellness':
       case 'serv-creative':
         return <ServiceTemplate />;
+      case 'serv-customer-care':
+        return <AiCustomerCareTemplate businessId={mockBusinessId} />;
+      case 'serv-marketing-sales':
+        return <PriximaTemplate businessId={mockBusinessId} />;
       case 'blog-magazine':
       case 'blog-minimal':
       case 'blog-lifestyle':
