@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { MessageCircle, Search, Phone, Mail, Clock, CheckCircle } from 'lucide-react';
+import { MessageCircle, Search, Phone, Mail, Clock, CheckCircle, Check } from 'lucide-react';
 
 interface AiCustomerCareTemplateProps {
   businessId?: string;
@@ -102,6 +102,99 @@ export default function AiCustomerCareTemplate({ businessId }: AiCustomerCareTem
                 </Button>
               </Card>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4">Support Plans</h2>
+            <p className="text-xl text-muted-foreground">
+              Choose the level of support that works for you
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {[
+              {
+                name: 'Basic',
+                price: 'Free',
+                period: 'forever',
+                features: [
+                  'Email support (48h response)',
+                  'Knowledge base access',
+                  'Community forums',
+                  'Basic chatbot assistance',
+                ],
+                popular: false,
+              },
+              {
+                name: 'Pro',
+                price: '$49',
+                period: 'per month',
+                features: [
+                  'Priority email support (24h)',
+                  'Live chat support',
+                  'Phone support (business hours)',
+                  'Advanced AI chatbot',
+                  'Video tutorials',
+                  'Monthly webinars',
+                ],
+                popular: true,
+              },
+              {
+                name: 'Enterprise',
+                price: 'Custom',
+                period: 'contact us',
+                features: [
+                  'Dedicated support manager',
+                  '24/7 phone & chat support',
+                  'Priority ticket handling',
+                  'Custom integrations',
+                  'On-site training',
+                  'SLA guarantee',
+                  'Custom onboarding',
+                ],
+                popular: false,
+              },
+            ].map((plan, idx) => (
+              <Card
+                key={idx}
+                className={`p-8 relative ${
+                  plan.popular ? 'border-2 border-primary shadow-xl' : ''
+                }`}
+              >
+                {plan.popular && (
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-semibold">
+                    Most Popular
+                  </div>
+                )}
+                <div className="text-center mb-6">
+                  <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
+                  <div className="flex items-baseline justify-center gap-2">
+                    <span className="text-4xl font-bold text-primary">{plan.price}</span>
+                    {plan.price !== 'Free' && plan.price !== 'Custom' && (
+                      <span className="text-muted-foreground">/ {plan.period}</span>
+                    )}
+                  </div>
+                </div>
+                <ul className="space-y-4 mb-8">
+                  {plan.features.map((feature, fIdx) => (
+                    <li key={fIdx} className="flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                      <span className="text-sm">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Button
+                  className="w-full"
+                  variant={plan.popular ? 'default' : 'outline'}
+                >
+                  {plan.price === 'Custom' ? 'Contact Sales' : plan.price === 'Free' ? 'Get Started' : 'Subscribe Now'}
+                </Button>
+              </Card>
+            ))}
           </div>
         </div>
       </section>

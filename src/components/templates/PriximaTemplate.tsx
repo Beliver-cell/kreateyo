@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { ArrowRight, TrendingUp, Users, Target, Award, BarChart3, Zap } from 'lucide-react';
+import { ArrowRight, TrendingUp, Users, Target, Award, BarChart3, Zap, Check } from 'lucide-react';
 
 interface PriximaTemplateProps {
   businessId?: string;
@@ -134,6 +134,102 @@ export default function PriximaTemplate({ businessId }: PriximaTemplateProps) {
                   <ArrowRight className="hidden md:block absolute top-8 -right-4 text-primary/30 w-8 h-8" />
                 )}
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4">Marketing & Sales Packages</h2>
+            <p className="text-xl text-muted-foreground">
+              Flexible plans to match your growth ambitions
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {[
+              {
+                name: 'Starter',
+                price: '$999',
+                period: 'per month',
+                features: [
+                  '2 campaign channels',
+                  'Monthly strategy review',
+                  'Performance reporting',
+                  'Email support',
+                  'Lead generation tools',
+                ],
+                popular: false,
+              },
+              {
+                name: 'Growth',
+                price: '$2,999',
+                period: 'per month',
+                features: [
+                  '5 campaign channels',
+                  'Bi-weekly strategy calls',
+                  'Advanced analytics',
+                  'Priority support',
+                  'A/B testing & optimization',
+                  'CRM integration',
+                  'Content creation (10/month)',
+                ],
+                popular: true,
+              },
+              {
+                name: 'Enterprise',
+                price: 'Custom',
+                period: 'tailored to you',
+                features: [
+                  'Unlimited campaigns',
+                  'Dedicated account team',
+                  'Custom reporting dashboard',
+                  '24/7 support',
+                  'Full marketing automation',
+                  'White-label solutions',
+                  'Unlimited content',
+                  'Strategic consulting',
+                ],
+                popular: false,
+              },
+            ].map((plan, idx) => (
+              <Card
+                key={idx}
+                className={`p-8 relative ${
+                  plan.popular ? 'border-2 border-primary shadow-xl' : ''
+                }`}
+              >
+                {plan.popular && (
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-semibold">
+                    Best Value
+                  </div>
+                )}
+                <div className="text-center mb-6">
+                  <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
+                  <div className="flex items-baseline justify-center gap-2">
+                    <span className="text-4xl font-bold text-primary">{plan.price}</span>
+                    {plan.price !== 'Custom' && (
+                      <span className="text-muted-foreground">/ {plan.period}</span>
+                    )}
+                  </div>
+                </div>
+                <ul className="space-y-4 mb-8">
+                  {plan.features.map((feature, fIdx) => (
+                    <li key={fIdx} className="flex items-start gap-2">
+                      <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                      <span className="text-sm">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Button
+                  className="w-full"
+                  variant={plan.popular ? 'default' : 'outline'}
+                >
+                  {plan.price === 'Custom' ? 'Contact Sales' : 'Start Growing'}
+                </Button>
+              </Card>
             ))}
           </div>
         </div>

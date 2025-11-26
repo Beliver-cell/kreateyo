@@ -8,6 +8,8 @@ import BlogTemplate from '@/components/templates/BlogTemplate';
 import ServiceTemplate from '@/components/templates/ServiceTemplate';
 import AiCustomerCareTemplate from '@/components/templates/AiCustomerCareTemplate';
 import PriximaTemplate from '@/components/templates/PriximaTemplate';
+import FosteConsultingTemplate from '@/components/templates/FosteConsultingTemplate';
+import ConsultingProTemplate from '@/components/templates/ConsultingProTemplate';
 
 export default function TemplatePreview() {
   const [searchParams] = useSearchParams();
@@ -27,6 +29,10 @@ export default function TemplatePreview() {
       case 'serv-wellness':
       case 'serv-creative':
         return <ServiceTemplate />;
+      case 'serv-foste-consulting':
+        return <FosteConsultingTemplate businessId={mockBusinessId} />;
+      case 'serv-consulting-pro':
+        return <ConsultingProTemplate businessId={mockBusinessId} />;
       case 'serv-customer-care':
         return <AiCustomerCareTemplate businessId={mockBusinessId} />;
       case 'serv-marketing-sales':
