@@ -83,6 +83,24 @@ const templates = {
       gradient: 'from-purple-900 via-pink-800 to-purple-900',
       features: ['Portfolio grid', 'Project showcase', 'Client logos'],
       previewImage: generatePlaceholderImage('from-purple-900 via-pink-800 to-purple-900', 'Creative Studio')
+    },
+    {
+      id: 'serv-customer-care',
+      name: 'AI Customer Care',
+      description: 'Modern support platform with AI-powered chat and help center',
+      gradient: 'from-indigo-900 via-purple-700 to-indigo-900',
+      features: ['Live chat widget', 'Help center', 'Support tickets'],
+      popular: true,
+      previewImage: generatePlaceholderImage('from-indigo-900 via-purple-700 to-indigo-900', 'AI Customer Care')
+    },
+    {
+      id: 'serv-marketing-sales',
+      name: 'Prixima Marketing',
+      description: 'High-converting design for marketing agencies and sales teams',
+      gradient: 'from-orange-900 via-red-700 to-orange-900',
+      features: ['Lead capture', 'Service showcase', 'ROI calculator'],
+      popular: true,
+      previewImage: generatePlaceholderImage('from-orange-900 via-red-700 to-orange-900', 'Prixima Marketing')
     }
   ],
   blog: [
