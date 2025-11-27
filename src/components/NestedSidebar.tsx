@@ -164,29 +164,25 @@ export function NestedSidebar() {
     });
 
     // Marketing & Automation Section (Pro+ features)
-    const marketingChildren: MenuItem[] = [
-      { title: 'Campaigns', url: '/marketing-campaigns', icon: Target },
-      { title: 'Affiliate Program', url: '/affiliate-program', icon: UsersRound },
-    ];
+    const marketingChildren: MenuItem[] = [];
 
     if (planFeatures.aiMarketer) {
-      marketingChildren.unshift({ title: 'AI Tools', url: '/marketing-ai', icon: Sparkles, requiresPlan: 'pro' });
-    }
-
-    if (planFeatures.automation) {
       marketingChildren.push(
-        { title: 'Email Automation', url: '/email-campaigns', icon: Mail, requiresPlan: 'pro' },
-        { title: 'WhatsApp Automation', url: '/messaging', icon: MessageSquare, requiresPlan: 'pro' }
+        { title: 'Lead Database', url: '/leads', icon: Users, requiresPlan: 'pro' },
+        { title: 'Auto Campaigns', url: '/auto-campaigns', icon: Zap, requiresPlan: 'pro' },
+        { title: 'AI Conversations', url: '/ai-conversations', icon: MessageSquare, requiresPlan: 'pro' },
+        { title: 'Logs & Tracking', url: '/automation-logs', icon: FileText, requiresPlan: 'pro' },
+        { title: 'Templates', url: '/outreach-templates', icon: Mail, requiresPlan: 'pro' }
       );
     }
 
-    marketingChildren.push({ title: 'SEO Tools', url: '/marketing-ai', icon: TrendingUp });
-
-    structure.push({
-      title: 'Marketing & Automation',
-      icon: Target,
-      children: marketingChildren,
-    });
+    if (marketingChildren.length > 0) {
+      structure.push({
+        title: 'Marketing & Automation',
+        icon: Target,
+        children: marketingChildren,
+      });
+    }
 
     // Store Design Section
     structure.push({

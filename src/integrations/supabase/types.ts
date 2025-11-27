@@ -44,6 +44,63 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_conversations: {
+        Row: {
+          campaign_id: string | null
+          channel: string
+          created_at: string
+          id: string
+          last_message_at: string | null
+          lead_id: string | null
+          messages: Json | null
+          sentiment: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          campaign_id?: string | null
+          channel?: string
+          created_at?: string
+          id?: string
+          last_message_at?: string | null
+          lead_id?: string | null
+          messages?: Json | null
+          sentiment?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          campaign_id?: string | null
+          channel?: string
+          created_at?: string
+          id?: string
+          last_message_at?: string | null
+          lead_id?: string | null
+          messages?: Json | null
+          sentiment?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_conversations_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "lead_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_conversations_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       api_keys: {
         Row: {
           created_at: string
@@ -73,6 +130,57 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      automation_logs: {
+        Row: {
+          action: string
+          campaign_id: string | null
+          channel: string | null
+          created_at: string
+          details: Json | null
+          id: string
+          lead_id: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          action: string
+          campaign_id?: string | null
+          channel?: string | null
+          created_at?: string
+          details?: Json | null
+          id?: string
+          lead_id?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          action?: string
+          campaign_id?: string | null
+          channel?: string | null
+          created_at?: string
+          details?: Json | null
+          id?: string
+          lead_id?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automation_logs_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "lead_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automation_logs_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       business_client_messages: {
         Row: {
@@ -556,6 +664,108 @@ export type Database = {
           },
         ]
       }
+      lead_campaigns: {
+        Row: {
+          campaign_type: string
+          channel: string
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          rules: Json | null
+          script_template: string | null
+          stats: Json | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          campaign_type?: string
+          channel?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          rules?: Json | null
+          script_template?: string | null
+          stats?: Json | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          campaign_type?: string
+          channel?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          rules?: Json | null
+          script_template?: string | null
+          stats?: Json | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      leads: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          last_contact: string | null
+          metadata: Json | null
+          name: string | null
+          notes: string | null
+          phone: string | null
+          platform: string | null
+          score: number | null
+          segment: string | null
+          source: string
+          status: string
+          tags: string[] | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          last_contact?: string | null
+          metadata?: Json | null
+          name?: string | null
+          notes?: string | null
+          phone?: string | null
+          platform?: string | null
+          score?: number | null
+          segment?: string | null
+          source?: string
+          status?: string
+          tags?: string[] | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          last_contact?: string | null
+          metadata?: Json | null
+          name?: string | null
+          notes?: string | null
+          phone?: string | null
+          platform?: string | null
+          score?: number | null
+          segment?: string | null
+          source?: string
+          status?: string
+          tags?: string[] | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       license_keys: {
         Row: {
           activation_count: number | null
@@ -759,6 +969,48 @@ export type Database = {
           status?: string
           tracking_number?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      outreach_templates: {
+        Row: {
+          category: string
+          channel: string
+          content: string
+          created_at: string
+          id: string
+          is_active: boolean | null
+          name: string
+          subject: string | null
+          updated_at: string
+          user_id: string
+          variables: Json | null
+        }
+        Insert: {
+          category?: string
+          channel?: string
+          content: string
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          name: string
+          subject?: string | null
+          updated_at?: string
+          user_id: string
+          variables?: Json | null
+        }
+        Update: {
+          category?: string
+          channel?: string
+          content?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          subject?: string | null
+          updated_at?: string
+          user_id?: string
+          variables?: Json | null
         }
         Relationships: []
       }
