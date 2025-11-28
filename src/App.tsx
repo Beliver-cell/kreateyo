@@ -71,6 +71,11 @@ import DesignProjects from "./pages/DesignProjects";
 import ContentCalendar from "./pages/ContentCalendar";
 import Billing from "./pages/Billing";
 import MultiBusiness from "./pages/MultiBusiness";
+import LeadEngine from "./pages/LeadEngine";
+import LeadHistory from "./pages/LeadHistory";
+import SocialHub from "./pages/SocialHub";
+import ContentStudio from "./pages/ContentStudio";
+import AIConversationsUnified from "./pages/AIConversationsUnified";
 import { CustomerAuthProvider } from "@/contexts/CustomerAuthContext";
 import CustomerLogin from "./pages/customer/auth/CustomerLogin";
 import CustomerSignup from "./pages/customer/auth/CustomerSignup";
@@ -340,6 +345,13 @@ const App = () => (
             <Route path="/supplier-manager" element={<DashboardLayout><SupplierManager /></DashboardLayout>} />
             <Route path="/email-campaigns" element={<DashboardLayout><ProtectedRoute requiredPlan="pro" route="/email-campaigns"><EmailCampaigns /></ProtectedRoute></DashboardLayout>} />
             <Route path="/multi-business" element={<DashboardLayout><ProtectedRoute requiredPlan="enterprise" route="/multi-business"><MultiBusiness /></ProtectedRoute></DashboardLayout>} />
+            
+            {/* Marketing & Automation Routes */}
+            <Route path="/lead-engine" element={<DashboardLayout><ProtectedRoute requiredPlan="pro" route="/lead-engine"><LeadEngine /></ProtectedRoute></DashboardLayout>} />
+            <Route path="/lead-history" element={<DashboardLayout><ProtectedRoute requiredPlan="pro" route="/lead-history"><LeadHistory /></ProtectedRoute></DashboardLayout>} />
+            <Route path="/social-hub" element={<DashboardLayout><ProtectedRoute requiredPlan="pro" route="/social-hub"><SocialHub /></ProtectedRoute></DashboardLayout>} />
+            <Route path="/content-studio" element={<DashboardLayout><ProtectedRoute requiredPlan="pro" route="/content-studio"><ContentStudio /></ProtectedRoute></DashboardLayout>} />
+            <Route path="/ai-conversations" element={<DashboardLayout><ProtectedRoute requiredPlan="pro" route="/ai-conversations"><AIConversationsUnified /></ProtectedRoute></DashboardLayout>} />
             
             {/* Customer Portal Routes */}
             <Route path="/customer/login" element={<CustomerLogin />} />
