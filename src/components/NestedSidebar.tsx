@@ -33,6 +33,8 @@ import {
   Target,
   Code,
   Building2,
+  Bot,
+  MessageCircle,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -168,11 +170,18 @@ export function NestedSidebar() {
 
     if (planFeatures.aiMarketer) {
       marketingChildren.push(
-        { title: 'Lead Database', url: '/leads', icon: Users, requiresPlan: 'pro' },
-        { title: 'Auto Campaigns', url: '/auto-campaigns', icon: Zap, requiresPlan: 'pro' },
-        { title: 'AI Conversations', url: '/ai-conversations', icon: MessageSquare, requiresPlan: 'pro' },
-        { title: 'Logs & Tracking', url: '/automation-logs', icon: FileText, requiresPlan: 'pro' },
-        { title: 'Templates', url: '/outreach-templates', icon: Mail, requiresPlan: 'pro' }
+        { title: 'Lead Engine', url: '/lead-engine', icon: Zap, requiresPlan: 'pro' },
+        { title: 'Lead History', url: '/lead-history', icon: Users, requiresPlan: 'pro' },
+        { title: 'Social Hub', url: '/social-hub', icon: MessageSquare, requiresPlan: 'pro' },
+        { title: 'Content Studio', url: '/content-studio', icon: Sparkles, requiresPlan: 'pro' },
+        { title: 'AI Conversations', url: '/ai-conversations', icon: Bot, requiresPlan: 'pro' }
+      );
+    }
+
+    // Client Chat for service businesses
+    if (businessProfile.type === 'services') {
+      marketingChildren.push(
+        { title: 'Client Chat', url: '/client-chat', icon: MessageCircle, requiresPlan: 'pro' }
       );
     }
 
