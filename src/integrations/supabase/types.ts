@@ -263,6 +263,159 @@ export type Database = {
         }
         Relationships: []
       }
+      customer_disputes: {
+        Row: {
+          admin_notes: string | null
+          amount: number
+          appointment_id: string | null
+          auto_refund_deadline: string | null
+          business_evidence_urls: string[] | null
+          business_id: string
+          business_response: string | null
+          created_at: string
+          customer_id: string
+          description: string
+          dispute_type: string
+          evidence_urls: string[] | null
+          id: string
+          order_id: string | null
+          refund_amount: number | null
+          resolved_at: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          amount: number
+          appointment_id?: string | null
+          auto_refund_deadline?: string | null
+          business_evidence_urls?: string[] | null
+          business_id: string
+          business_response?: string | null
+          created_at?: string
+          customer_id: string
+          description: string
+          dispute_type: string
+          evidence_urls?: string[] | null
+          id?: string
+          order_id?: string | null
+          refund_amount?: number | null
+          resolved_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          admin_notes?: string | null
+          amount?: number
+          appointment_id?: string | null
+          auto_refund_deadline?: string | null
+          business_evidence_urls?: string[] | null
+          business_id?: string
+          business_response?: string | null
+          created_at?: string
+          customer_id?: string
+          description?: string
+          dispute_type?: string
+          evidence_urls?: string[] | null
+          id?: string
+          order_id?: string | null
+          refund_amount?: number | null
+          resolved_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      customer_payout_accounts: {
+        Row: {
+          account_name: string
+          account_number: string
+          account_type: string
+          bank_name: string | null
+          created_at: string
+          customer_id: string
+          id: string
+          is_verified: boolean | null
+          routing_number: string | null
+          updated_at: string
+        }
+        Insert: {
+          account_name: string
+          account_number: string
+          account_type: string
+          bank_name?: string | null
+          created_at?: string
+          customer_id: string
+          id?: string
+          is_verified?: boolean | null
+          routing_number?: string | null
+          updated_at?: string
+        }
+        Update: {
+          account_name?: string
+          account_number?: string
+          account_type?: string
+          bank_name?: string | null
+          created_at?: string
+          customer_id?: string
+          id?: string
+          is_verified?: boolean | null
+          routing_number?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      customer_referrals: {
+        Row: {
+          business_id: string
+          commission_amount: number | null
+          commission_paid: boolean | null
+          converted_at: string | null
+          created_at: string
+          device_fingerprint: string | null
+          id: string
+          ip_address: string | null
+          paid_at: string | null
+          referral_code: string
+          referred_customer_id: string | null
+          referred_email: string
+          referrer_id: string
+          status: string
+        }
+        Insert: {
+          business_id: string
+          commission_amount?: number | null
+          commission_paid?: boolean | null
+          converted_at?: string | null
+          created_at?: string
+          device_fingerprint?: string | null
+          id?: string
+          ip_address?: string | null
+          paid_at?: string | null
+          referral_code: string
+          referred_customer_id?: string | null
+          referred_email: string
+          referrer_id: string
+          status?: string
+        }
+        Update: {
+          business_id?: string
+          commission_amount?: number | null
+          commission_paid?: boolean | null
+          converted_at?: string | null
+          created_at?: string
+          device_fingerprint?: string | null
+          id?: string
+          ip_address?: string | null
+          paid_at?: string | null
+          referral_code?: string
+          referred_customer_id?: string | null
+          referred_email?: string
+          referrer_id?: string
+          status?: string
+        }
+        Relationships: []
+      }
       design_milestones: {
         Row: {
           completed: boolean | null
@@ -420,6 +573,47 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      dispute_events: {
+        Row: {
+          actor_id: string | null
+          actor_type: string
+          created_at: string
+          description: string
+          dispute_id: string
+          event_type: string
+          id: string
+          metadata: Json | null
+        }
+        Insert: {
+          actor_id?: string | null
+          actor_type: string
+          created_at?: string
+          description: string
+          dispute_id: string
+          event_type: string
+          id?: string
+          metadata?: Json | null
+        }
+        Update: {
+          actor_id?: string | null
+          actor_type?: string
+          created_at?: string
+          description?: string
+          dispute_id?: string
+          event_type?: string
+          id?: string
+          metadata?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dispute_events_dispute_id_fkey"
+            columns: ["dispute_id"]
+            isOneToOne: false
+            referencedRelation: "customer_disputes"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       download_links: {
         Row: {
@@ -1095,6 +1289,45 @@ export type Database = {
           id?: string
           plan?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      referral_payouts: {
+        Row: {
+          amount: number
+          business_id: string
+          created_at: string
+          id: string
+          payout_account: string | null
+          payout_method: string | null
+          processed_at: string | null
+          reference_id: string | null
+          referrer_id: string
+          status: string
+        }
+        Insert: {
+          amount: number
+          business_id: string
+          created_at?: string
+          id?: string
+          payout_account?: string | null
+          payout_method?: string | null
+          processed_at?: string | null
+          reference_id?: string | null
+          referrer_id: string
+          status?: string
+        }
+        Update: {
+          amount?: number
+          business_id?: string
+          created_at?: string
+          id?: string
+          payout_account?: string | null
+          payout_method?: string | null
+          processed_at?: string | null
+          reference_id?: string | null
+          referrer_id?: string
+          status?: string
         }
         Relationships: []
       }
