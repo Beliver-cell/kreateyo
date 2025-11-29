@@ -79,10 +79,16 @@ import AIConversationsUnified from "./pages/AIConversationsUnified";
 import { CustomerAuthProvider } from "@/contexts/CustomerAuthContext";
 import CustomerLogin from "./pages/customer/auth/CustomerLogin";
 import CustomerSignup from "./pages/customer/auth/CustomerSignup";
+import CustomerForgotPassword from "./pages/customer/auth/CustomerForgotPassword";
+import CustomerResetPassword from "./pages/customer/auth/CustomerResetPassword";
 import ServicesDashboard from "./pages/customer/services/ServicesDashboard";
 import EcommerceOrders from "./pages/customer/ecommerce/EcommerceOrders";
 import BloggingReading from './pages/customer/blogging/BloggingReading';
 import CustomerServicePortal from './components/customer/CustomerServicePortal';
+import CustomerReferral from './pages/customer/CustomerReferral';
+import CustomerDisputes from './pages/customer/CustomerDisputes';
+import CustomerProfile from './pages/customer/CustomerProfile';
+import CustomerPortalLayout from './components/customer/CustomerPortalLayout';
 
 const queryClient = new QueryClient();
 
@@ -356,10 +362,18 @@ const App = () => (
             {/* Customer Portal Routes */}
             <Route path="/customer/login" element={<CustomerLogin />} />
             <Route path="/customer/signup" element={<CustomerSignup />} />
+            <Route path="/customer/forgot-password" element={<CustomerForgotPassword />} />
+            <Route path="/customer/reset-password" element={<CustomerResetPassword />} />
             <Route path="/customer/services/dashboard" element={<ServicesDashboard />} />
             <Route path="/customer/ecommerce/orders" element={<EcommerceOrders />} />
             <Route path="/customer/blog/:slug" element={<BloggingReading />} />
             <Route path="/customer/services/:businessId" element={<CustomerServicePortal />} />
+            <Route path="/customer/referral" element={<CustomerPortalLayout><CustomerReferral /></CustomerPortalLayout>} />
+            <Route path="/customer/disputes" element={<CustomerPortalLayout><CustomerDisputes /></CustomerPortalLayout>} />
+            <Route path="/customer/profile" element={<CustomerPortalLayout><CustomerProfile /></CustomerPortalLayout>} />
+            <Route path="/customer/dashboard" element={<CustomerPortalLayout><ServicesDashboard /></CustomerPortalLayout>} />
+            <Route path="/customer/orders" element={<CustomerPortalLayout><EcommerceOrders /></CustomerPortalLayout>} />
+            <Route path="/customer/appointments" element={<CustomerPortalLayout><ServicesDashboard /></CustomerPortalLayout>} />
             
               <Route path="*" element={<NotFound />} />
             </Routes>
