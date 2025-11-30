@@ -44,6 +44,137 @@ export type Database = {
         }
         Relationships: []
       }
+      affiliate_commissions: {
+        Row: {
+          affiliate_id: string
+          affiliate_link_id: string
+          commission_amount: number
+          commission_rate: number
+          created_at: string
+          id: string
+          metadata: Json | null
+          order_amount: number
+          order_id: string | null
+          paid_at: string | null
+          status: string
+        }
+        Insert: {
+          affiliate_id: string
+          affiliate_link_id: string
+          commission_amount: number
+          commission_rate?: number
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          order_amount: number
+          order_id?: string | null
+          paid_at?: string | null
+          status?: string
+        }
+        Update: {
+          affiliate_id?: string
+          affiliate_link_id?: string
+          commission_amount?: number
+          commission_rate?: number
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          order_amount?: number
+          order_id?: string | null
+          paid_at?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affiliate_commissions_affiliate_link_id_fkey"
+            columns: ["affiliate_link_id"]
+            isOneToOne: false
+            referencedRelation: "affiliate_links"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      affiliate_links: {
+        Row: {
+          affiliate_id: string
+          clicks: number | null
+          code: string
+          conversions: number | null
+          created_at: string
+          id: string
+          is_active: boolean | null
+          metadata: Json | null
+          revenue_generated: number | null
+          target_url: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          affiliate_id: string
+          clicks?: number | null
+          code: string
+          conversions?: number | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          metadata?: Json | null
+          revenue_generated?: number | null
+          target_url?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          affiliate_id?: string
+          clicks?: number | null
+          code?: string
+          conversions?: number | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          metadata?: Json | null
+          revenue_generated?: number | null
+          target_url?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      affiliate_payouts: {
+        Row: {
+          affiliate_id: string
+          amount: number
+          created_at: string
+          id: string
+          payout_details: Json | null
+          payout_method: string | null
+          processed_at: string | null
+          reference_id: string | null
+          status: string
+        }
+        Insert: {
+          affiliate_id: string
+          amount: number
+          created_at?: string
+          id?: string
+          payout_details?: Json | null
+          payout_method?: string | null
+          processed_at?: string | null
+          reference_id?: string | null
+          status?: string
+        }
+        Update: {
+          affiliate_id?: string
+          amount?: number
+          created_at?: string
+          id?: string
+          payout_details?: Json | null
+          payout_method?: string | null
+          processed_at?: string | null
+          reference_id?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
       ai_conversations: {
         Row: {
           campaign_id: string | null
@@ -181,6 +312,128 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      broadcast_recipients: {
+        Row: {
+          broadcast_id: string
+          clicked_at: string | null
+          created_at: string
+          customer_email: string
+          customer_name: string | null
+          delivered_at: string | null
+          error_message: string | null
+          id: string
+          metadata: Json | null
+          opened_at: string | null
+          sent_at: string | null
+          status: string
+        }
+        Insert: {
+          broadcast_id: string
+          clicked_at?: string | null
+          created_at?: string
+          customer_email: string
+          customer_name?: string | null
+          delivered_at?: string | null
+          error_message?: string | null
+          id?: string
+          metadata?: Json | null
+          opened_at?: string | null
+          sent_at?: string | null
+          status?: string
+        }
+        Update: {
+          broadcast_id?: string
+          clicked_at?: string | null
+          created_at?: string
+          customer_email?: string
+          customer_name?: string | null
+          delivered_at?: string | null
+          error_message?: string | null
+          id?: string
+          metadata?: Json | null
+          opened_at?: string | null
+          sent_at?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "broadcast_recipients_broadcast_id_fkey"
+            columns: ["broadcast_id"]
+            isOneToOne: false
+            referencedRelation: "broadcasts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      broadcasts: {
+        Row: {
+          channel: string
+          clicked_count: number | null
+          content: string
+          created_at: string
+          delivered_count: number | null
+          failed_count: number | null
+          id: string
+          metadata: Json | null
+          name: string
+          opened_count: number | null
+          scheduled_for: string | null
+          segment_filters: Json | null
+          segment_type: string
+          sent_at: string | null
+          status: string
+          subject: string | null
+          template_id: string | null
+          total_recipients: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          channel?: string
+          clicked_count?: number | null
+          content: string
+          created_at?: string
+          delivered_count?: number | null
+          failed_count?: number | null
+          id?: string
+          metadata?: Json | null
+          name: string
+          opened_count?: number | null
+          scheduled_for?: string | null
+          segment_filters?: Json | null
+          segment_type?: string
+          sent_at?: string | null
+          status?: string
+          subject?: string | null
+          template_id?: string | null
+          total_recipients?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          channel?: string
+          clicked_count?: number | null
+          content?: string
+          created_at?: string
+          delivered_count?: number | null
+          failed_count?: number | null
+          id?: string
+          metadata?: Json | null
+          name?: string
+          opened_count?: number | null
+          scheduled_for?: string | null
+          segment_filters?: Json | null
+          segment_type?: string
+          sent_at?: string | null
+          status?: string
+          subject?: string | null
+          template_id?: string | null
+          total_recipients?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       business_client_messages: {
         Row: {
@@ -362,6 +615,48 @@ export type Database = {
           is_verified?: boolean | null
           routing_number?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      customer_preferences: {
+        Row: {
+          created_at: string
+          customer_email: string
+          email_opted_in: boolean | null
+          id: string
+          in_app_opted_in: boolean | null
+          sms_opted_in: boolean | null
+          suppressed: boolean | null
+          suppression_reason: string | null
+          updated_at: string
+          user_id: string
+          whatsapp_opted_in: boolean | null
+        }
+        Insert: {
+          created_at?: string
+          customer_email: string
+          email_opted_in?: boolean | null
+          id?: string
+          in_app_opted_in?: boolean | null
+          sms_opted_in?: boolean | null
+          suppressed?: boolean | null
+          suppression_reason?: string | null
+          updated_at?: string
+          user_id: string
+          whatsapp_opted_in?: boolean | null
+        }
+        Update: {
+          created_at?: string
+          customer_email?: string
+          email_opted_in?: boolean | null
+          id?: string
+          in_app_opted_in?: boolean | null
+          sms_opted_in?: boolean | null
+          suppressed?: boolean | null
+          suppression_reason?: string | null
+          updated_at?: string
+          user_id?: string
+          whatsapp_opted_in?: boolean | null
         }
         Relationships: []
       }
@@ -742,6 +1037,102 @@ export type Database = {
           },
         ]
       }
+      email_domains: {
+        Row: {
+          created_at: string
+          dkim_record: string | null
+          dkim_verified: boolean | null
+          domain: string
+          id: string
+          last_check_at: string | null
+          metadata: Json | null
+          spf_record: string | null
+          spf_verified: boolean | null
+          status: string
+          updated_at: string
+          user_id: string
+          verified_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          dkim_record?: string | null
+          dkim_verified?: boolean | null
+          domain: string
+          id?: string
+          last_check_at?: string | null
+          metadata?: Json | null
+          spf_record?: string | null
+          spf_verified?: boolean | null
+          status?: string
+          updated_at?: string
+          user_id: string
+          verified_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          dkim_record?: string | null
+          dkim_verified?: boolean | null
+          domain?: string
+          id?: string
+          last_check_at?: string | null
+          metadata?: Json | null
+          spf_record?: string | null
+          spf_verified?: boolean | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+          verified_at?: string | null
+        }
+        Relationships: []
+      }
+      email_events: {
+        Row: {
+          broadcast_id: string | null
+          created_at: string
+          email_address: string
+          event_type: string
+          id: string
+          metadata: Json | null
+          recipient_id: string | null
+          user_id: string
+        }
+        Insert: {
+          broadcast_id?: string | null
+          created_at?: string
+          email_address: string
+          event_type: string
+          id?: string
+          metadata?: Json | null
+          recipient_id?: string | null
+          user_id: string
+        }
+        Update: {
+          broadcast_id?: string | null
+          created_at?: string
+          email_address?: string
+          event_type?: string
+          id?: string
+          metadata?: Json | null
+          recipient_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_events_broadcast_id_fkey"
+            columns: ["broadcast_id"]
+            isOneToOne: false
+            referencedRelation: "broadcasts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "email_events_recipient_id_fkey"
+            columns: ["recipient_id"]
+            isOneToOne: false
+            referencedRelation: "broadcast_recipients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       import_history: {
         Row: {
           completed_at: string | null
@@ -1088,6 +1479,54 @@ export type Database = {
         }
         Relationships: []
       }
+      message_threads: {
+        Row: {
+          channel: string
+          created_at: string
+          customer_email: string
+          customer_name: string | null
+          id: string
+          is_ai_handled: boolean | null
+          last_message_at: string | null
+          metadata: Json | null
+          status: string
+          subject: string | null
+          unread_count: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          channel?: string
+          created_at?: string
+          customer_email: string
+          customer_name?: string | null
+          id?: string
+          is_ai_handled?: boolean | null
+          last_message_at?: string | null
+          metadata?: Json | null
+          status?: string
+          subject?: string | null
+          unread_count?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          channel?: string
+          created_at?: string
+          customer_email?: string
+          customer_name?: string | null
+          id?: string
+          is_ai_handled?: boolean | null
+          last_message_at?: string | null
+          metadata?: Json | null
+          status?: string
+          subject?: string | null
+          unread_count?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           category: string
@@ -1205,6 +1644,57 @@ export type Database = {
           updated_at?: string
           user_id?: string
           variables?: Json | null
+        }
+        Relationships: []
+      }
+      payment_holds: {
+        Row: {
+          amount: number
+          appointment_id: string | null
+          created_at: string
+          customer_email: string
+          hold_reason: string | null
+          id: string
+          metadata: Json | null
+          order_id: string | null
+          refunded_at: string | null
+          release_after: string | null
+          released_at: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          appointment_id?: string | null
+          created_at?: string
+          customer_email: string
+          hold_reason?: string | null
+          id?: string
+          metadata?: Json | null
+          order_id?: string | null
+          refunded_at?: string | null
+          release_after?: string | null
+          released_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          appointment_id?: string | null
+          created_at?: string
+          customer_email?: string
+          hold_reason?: string | null
+          id?: string
+          metadata?: Json | null
+          order_id?: string | null
+          refunded_at?: string | null
+          release_after?: string | null
+          released_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -1328,6 +1818,107 @@ export type Database = {
           reference_id?: string | null
           referrer_id?: string
           status?: string
+        }
+        Relationships: []
+      }
+      review_photos: {
+        Row: {
+          caption: string | null
+          created_at: string
+          id: string
+          order_index: number | null
+          photo_url: string
+          review_id: string
+        }
+        Insert: {
+          caption?: string | null
+          created_at?: string
+          id?: string
+          order_index?: number | null
+          photo_url: string
+          review_id: string
+        }
+        Update: {
+          caption?: string | null
+          created_at?: string
+          id?: string
+          order_index?: number | null
+          photo_url?: string
+          review_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "review_photos_review_id_fkey"
+            columns: ["review_id"]
+            isOneToOne: false
+            referencedRelation: "reviews"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reviews: {
+        Row: {
+          appointment_id: string | null
+          content: string | null
+          created_at: string
+          customer_email: string
+          customer_name: string | null
+          device_fingerprint: string | null
+          helpful_count: number | null
+          id: string
+          ip_address: string | null
+          is_verified_purchase: boolean | null
+          moderation_notes: string | null
+          order_id: string | null
+          rating: number
+          responded_at: string | null
+          response: string | null
+          status: string
+          title: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          appointment_id?: string | null
+          content?: string | null
+          created_at?: string
+          customer_email: string
+          customer_name?: string | null
+          device_fingerprint?: string | null
+          helpful_count?: number | null
+          id?: string
+          ip_address?: string | null
+          is_verified_purchase?: boolean | null
+          moderation_notes?: string | null
+          order_id?: string | null
+          rating: number
+          responded_at?: string | null
+          response?: string | null
+          status?: string
+          title?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          appointment_id?: string | null
+          content?: string | null
+          created_at?: string
+          customer_email?: string
+          customer_name?: string | null
+          device_fingerprint?: string | null
+          helpful_count?: number | null
+          id?: string
+          ip_address?: string | null
+          is_verified_purchase?: boolean | null
+          moderation_notes?: string | null
+          order_id?: string | null
+          rating?: number
+          responded_at?: string | null
+          response?: string | null
+          status?: string
+          title?: string | null
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -1548,6 +2139,47 @@ export type Database = {
           status?: string
         }
         Relationships: []
+      }
+      thread_messages: {
+        Row: {
+          attachments: Json | null
+          content: string
+          created_at: string
+          id: string
+          metadata: Json | null
+          read_at: string | null
+          sender_type: string
+          thread_id: string
+        }
+        Insert: {
+          attachments?: Json | null
+          content: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          read_at?: string | null
+          sender_type?: string
+          thread_id: string
+        }
+        Update: {
+          attachments?: Json | null
+          content?: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          read_at?: string | null
+          sender_type?: string
+          thread_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "thread_messages_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "message_threads"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       translations: {
         Row: {

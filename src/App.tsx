@@ -76,6 +76,10 @@ import LeadHistory from "./pages/LeadHistory";
 import SocialHub from "./pages/SocialHub";
 import ContentStudio from "./pages/ContentStudio";
 import AIConversationsUnified from "./pages/AIConversationsUnified";
+import Broadcasts from "./pages/Broadcasts";
+import Reviews from "./pages/Reviews";
+import ConversationsInbox from "./pages/ConversationsInbox";
+import EmailSettings from "./pages/EmailSettings";
 import { CustomerAuthProvider } from "@/contexts/CustomerAuthContext";
 import CustomerLogin from "./pages/customer/auth/CustomerLogin";
 import CustomerSignup from "./pages/customer/auth/CustomerSignup";
@@ -358,6 +362,12 @@ const App = () => (
             <Route path="/social-hub" element={<DashboardLayout><ProtectedRoute requiredPlan="pro" route="/social-hub"><SocialHub /></ProtectedRoute></DashboardLayout>} />
             <Route path="/content-studio" element={<DashboardLayout><ProtectedRoute requiredPlan="pro" route="/content-studio"><ContentStudio /></ProtectedRoute></DashboardLayout>} />
             <Route path="/ai-conversations" element={<DashboardLayout><ProtectedRoute requiredPlan="pro" route="/ai-conversations"><AIConversationsUnified /></ProtectedRoute></DashboardLayout>} />
+            
+            {/* Messaging & Communication Routes */}
+            <Route path="/broadcasts" element={<DashboardLayout><Broadcasts /></DashboardLayout>} />
+            <Route path="/reviews" element={<DashboardLayout><Reviews /></DashboardLayout>} />
+            <Route path="/inbox" element={<DashboardLayout><ConversationsInbox /></DashboardLayout>} />
+            <Route path="/email-settings" element={<DashboardLayout><EmailSettings /></DashboardLayout>} />
             
             {/* Customer Portal Routes */}
             <Route path="/customer/login" element={<CustomerLogin />} />

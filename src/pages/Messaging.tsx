@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MessageSquare, Send, Sparkles, Users } from "lucide-react";
+import { MessageSquare, Send, Sparkles, Users, Mail, Radio, Inbox, Star, Settings } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function Messaging() {
   const [message, setMessage] = useState("");
@@ -15,11 +16,67 @@ export default function Messaging() {
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6 space-y-4 md:space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold">WhatsApp & SMS</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold">Messaging Center</h1>
             <p className="text-muted-foreground mt-1 text-sm sm:text-base">
-              Send automated messages to your customers
+              Communicate with your customers across all channels
             </p>
           </div>
+        </div>
+
+        {/* Quick Links */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <Link to="/broadcasts">
+            <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <CardContent className="p-4 flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-primary/10">
+                  <Radio className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <p className="font-medium">Broadcasts</p>
+                  <p className="text-xs text-muted-foreground">Send to segments</p>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+          <Link to="/inbox">
+            <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <CardContent className="p-4 flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-blue-500/10">
+                  <Inbox className="h-5 w-5 text-blue-500" />
+                </div>
+                <div>
+                  <p className="font-medium">Inbox</p>
+                  <p className="text-xs text-muted-foreground">All conversations</p>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+          <Link to="/reviews">
+            <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <CardContent className="p-4 flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-yellow-500/10">
+                  <Star className="h-5 w-5 text-yellow-500" />
+                </div>
+                <div>
+                  <p className="font-medium">Reviews</p>
+                  <p className="text-xs text-muted-foreground">Customer feedback</p>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+          <Link to="/email-settings">
+            <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <CardContent className="p-4 flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-green-500/10">
+                  <Settings className="h-5 w-5 text-green-500" />
+                </div>
+                <div>
+                  <p className="font-medium">Email Settings</p>
+                  <p className="text-xs text-muted-foreground">Domain verification</p>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
         </div>
 
         <Tabs defaultValue="whatsapp" className="w-full">
