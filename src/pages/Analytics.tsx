@@ -10,7 +10,7 @@ import {
   Calendar, FileText, Target, Download, BarChart3, PieChart,
   Clock, XCircle, CheckCircle, Truck, Star, Zap, Globe,
   Smartphone, Monitor, Tablet, ArrowUpRight, ArrowDownRight,
-  Activity, RefreshCw
+  Activity, RefreshCw, Mail, MessageSquare, Send, Bot, MousePointer
 } from 'lucide-react';
 import { useBusinessContext } from '@/contexts/BusinessContext';
 import { useToast } from '@/hooks/use-toast';
@@ -120,6 +120,47 @@ export default function Analytics() {
     },
   ];
 
+  // Messaging & Communication metrics
+  const messagingMetrics = {
+    totalSent: 12450,
+    delivered: 11890,
+    opened: 6234,
+    clicked: 1847,
+    deliveryRate: '95.5%',
+    openRate: '52.4%',
+    clickRate: '14.8%'
+  };
+
+  const conversationMetrics = {
+    totalThreads: 234,
+    openThreads: 45,
+    avgResponseTime: '2.4 hrs',
+    aiHandled: 156,
+    humanHandled: 78,
+    aiResolutionRate: '84%'
+  };
+
+  const reviewsMetrics = {
+    totalReviews: 456,
+    avgRating: 4.7,
+    pending: 12,
+    responseRate: '92%',
+    fiveStarPercent: 68,
+    fourStarPercent: 22,
+    threeStarPercent: 7,
+    twoStarPercent: 2,
+    oneStarPercent: 1
+  };
+
+  const leadActivationMetrics = {
+    totalLeads: 1234,
+    activated: 890,
+    contacted: 756,
+    converted: 234,
+    conversionRate: '18.9%',
+    avgTimeToConvert: '3.2 days'
+  };
+
   const handleExport = async (format: 'csv' | 'pdf') => {
     setExporting(true);
     // Simulate export
@@ -203,6 +244,7 @@ export default function Analytics() {
           <TabsTrigger value="performance">
             {businessProfile.type === 'services' ? 'Staff' : 'Products'}
           </TabsTrigger>
+          <TabsTrigger value="engagement">Engagement</TabsTrigger>
           <TabsTrigger value="traffic">Traffic</TabsTrigger>
           <TabsTrigger value="insights">AI Insights</TabsTrigger>
         </TabsList>
@@ -461,6 +503,190 @@ export default function Analytics() {
                   ))}
                 </div>
               )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Engagement Tab - Messaging, Conversations, Reviews */}
+        <TabsContent value="engagement" className="space-y-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                  <Send className="h-4 w-4" />
+                  <span className="text-sm">Messages Sent</span>
+                </div>
+                <p className="text-2xl font-bold">{messagingMetrics.totalSent.toLocaleString()}</p>
+                <p className="text-xs text-green-600">+18% from last period</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                  <CheckCircle className="h-4 w-4" />
+                  <span className="text-sm">Delivery Rate</span>
+                </div>
+                <p className="text-2xl font-bold text-green-600">{messagingMetrics.deliveryRate}</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                  <Eye className="h-4 w-4" />
+                  <span className="text-sm">Open Rate</span>
+                </div>
+                <p className="text-2xl font-bold text-blue-600">{messagingMetrics.openRate}</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                  <MousePointer className="h-4 w-4" />
+                  <span className="text-sm">Click Rate</span>
+                </div>
+                <p className="text-2xl font-bold text-purple-600">{messagingMetrics.clickRate}</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Conversations */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <MessageSquare className="h-5 w-5" />
+                  Conversations
+                </CardTitle>
+                <CardDescription>Customer support and chat metrics</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-3 rounded-lg bg-muted">
+                    <p className="text-sm text-muted-foreground">Total Threads</p>
+                    <p className="text-xl font-bold">{conversationMetrics.totalThreads}</p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-green-500/10">
+                    <p className="text-sm text-muted-foreground">Open</p>
+                    <p className="text-xl font-bold text-green-600">{conversationMetrics.openThreads}</p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-blue-500/10">
+                    <p className="text-sm text-muted-foreground">Avg Response</p>
+                    <p className="text-xl font-bold text-blue-600">{conversationMetrics.avgResponseTime}</p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-purple-500/10">
+                    <p className="text-sm text-muted-foreground">AI Resolution</p>
+                    <p className="text-xl font-bold text-purple-600">{conversationMetrics.aiResolutionRate}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4 pt-2">
+                  <div className="flex items-center gap-2">
+                    <Bot className="h-4 w-4 text-blue-500" />
+                    <span className="text-sm">AI: {conversationMetrics.aiHandled}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Users className="h-4 w-4 text-green-500" />
+                    <span className="text-sm">Human: {conversationMetrics.humanHandled}</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Reviews */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Star className="h-5 w-5 text-yellow-500" />
+                  Reviews
+                </CardTitle>
+                <CardDescription>Customer feedback and ratings</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <div className="text-center">
+                    <div className="flex items-center gap-1 justify-center">
+                      <Star className="h-6 w-6 text-yellow-500 fill-yellow-500" />
+                      <span className="text-3xl font-bold">{reviewsMetrics.avgRating}</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground">{reviewsMetrics.totalReviews} reviews</p>
+                  </div>
+                  <div className="flex-1 space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs w-6">5★</span>
+                      <Progress value={reviewsMetrics.fiveStarPercent} className="h-2 flex-1" />
+                      <span className="text-xs w-8">{reviewsMetrics.fiveStarPercent}%</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs w-6">4★</span>
+                      <Progress value={reviewsMetrics.fourStarPercent} className="h-2 flex-1" />
+                      <span className="text-xs w-8">{reviewsMetrics.fourStarPercent}%</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs w-6">3★</span>
+                      <Progress value={reviewsMetrics.threeStarPercent} className="h-2 flex-1" />
+                      <span className="text-xs w-8">{reviewsMetrics.threeStarPercent}%</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs w-6">2★</span>
+                      <Progress value={reviewsMetrics.twoStarPercent} className="h-2 flex-1" />
+                      <span className="text-xs w-8">{reviewsMetrics.twoStarPercent}%</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs w-6">1★</span>
+                      <Progress value={reviewsMetrics.oneStarPercent} className="h-2 flex-1" />
+                      <span className="text-xs w-8">{reviewsMetrics.oneStarPercent}%</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between pt-2 border-t">
+                  <div className="text-sm">
+                    <span className="text-muted-foreground">Pending: </span>
+                    <span className="font-medium">{reviewsMetrics.pending}</span>
+                  </div>
+                  <div className="text-sm">
+                    <span className="text-muted-foreground">Response Rate: </span>
+                    <span className="font-medium text-green-600">{reviewsMetrics.responseRate}</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Lead Activation Results */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Zap className="h-5 w-5 text-yellow-500" />
+                Lead Activation Results
+              </CardTitle>
+              <CardDescription>AI-powered lead outreach performance</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
+                <div className="p-3 rounded-lg bg-muted text-center">
+                  <p className="text-2xl font-bold">{leadActivationMetrics.totalLeads.toLocaleString()}</p>
+                  <p className="text-xs text-muted-foreground">Total Leads</p>
+                </div>
+                <div className="p-3 rounded-lg bg-blue-500/10 text-center">
+                  <p className="text-2xl font-bold text-blue-600">{leadActivationMetrics.activated}</p>
+                  <p className="text-xs text-muted-foreground">Activated</p>
+                </div>
+                <div className="p-3 rounded-lg bg-purple-500/10 text-center">
+                  <p className="text-2xl font-bold text-purple-600">{leadActivationMetrics.contacted}</p>
+                  <p className="text-xs text-muted-foreground">Contacted</p>
+                </div>
+                <div className="p-3 rounded-lg bg-green-500/10 text-center">
+                  <p className="text-2xl font-bold text-green-600">{leadActivationMetrics.converted}</p>
+                  <p className="text-xs text-muted-foreground">Converted</p>
+                </div>
+                <div className="p-3 rounded-lg bg-yellow-500/10 text-center">
+                  <p className="text-2xl font-bold text-yellow-600">{leadActivationMetrics.conversionRate}</p>
+                  <p className="text-xs text-muted-foreground">Conversion Rate</p>
+                </div>
+                <div className="p-3 rounded-lg bg-primary/10 text-center">
+                  <p className="text-2xl font-bold text-primary">{leadActivationMetrics.avgTimeToConvert}</p>
+                  <p className="text-xs text-muted-foreground">Avg. Time</p>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
