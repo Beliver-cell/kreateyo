@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { KreateyoLogo } from '@/components/KreateyoLogo';
+import { Logo } from '@/components/KreateyoLogo';
 
 export function LandingNavbar() {
   return (
@@ -9,7 +9,7 @@ export function LandingNavbar() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center hover:opacity-80 transition-opacity">
-            <KreateyoLogo size="lg" />
+            <Logo size="xl" />
           </Link>
 
           {/* Navigation Links */}
