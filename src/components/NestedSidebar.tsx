@@ -55,6 +55,7 @@ import { useBusinessContext } from '@/contexts/BusinessContext';
 import { useState } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { PLAN_FEATURES } from '@/types/plans';
+import { KreateyoLogo } from '@/components/KreateyoLogo';
 
 interface MenuItem {
   title: string;
@@ -335,10 +336,7 @@ export function NestedSidebar() {
       <div className="p-4 border-b border-sidebar-border flex items-center gap-3 bg-sidebar">
         {!collapsed && (
           <div className="flex-1">
-            <h2 className="text-lg font-bold bg-gradient-premium bg-clip-text text-transparent">
-              KreateYo
-            </h2>
-            <p className="text-xs text-muted-foreground">Business Platform</p>
+            <KreateyoLogo size="md" />
           </div>
         )}
         {!isMobile && (

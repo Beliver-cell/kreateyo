@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
-import { Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { KreateyoLogo } from '@/components/KreateyoLogo';
 
 export function LandingNavbar() {
   return (
@@ -8,11 +8,8 @@ export function LandingNavbar() {
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <Sparkles className="h-6 w-6 text-blue-600" />
-            </div>
-            <span className="text-xl font-bold text-gray-900">KreateYo</span>
+          <Link to="/" className="flex items-center hover:opacity-80 transition-opacity">
+            <KreateyoLogo size="lg" />
           </Link>
 
           {/* Navigation Links */}
