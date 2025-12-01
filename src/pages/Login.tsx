@@ -7,7 +7,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
-import { KreateyoLogo } from '@/components/KreateyoLogo';
+import { Logo } from '@/components/KreateyoLogo';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -63,7 +63,7 @@ export default function Login() {
       <div className="w-full max-w-md space-y-8 bg-card p-10 rounded-3xl shadow-premium border border-border/50 animate-scale-in">
         <div className="text-center space-y-3">
           <div className="flex justify-center mb-6">
-            <KreateyoLogo size="xl" />
+            <Logo size="xl" />
           </div>
           <h1 className="text-4xl font-bold bg-gradient-premium bg-clip-text text-transparent">Welcome Back</h1>
           <p className="text-muted-foreground text-lg">Sign in to continue your journey</p>

@@ -1,18 +1,18 @@
 import { cn } from '@/lib/utils';
 import logo from '@/assets/kreateyo-logo.png';
 
-interface KreateyoLogoProps {
+interface LogoProps {
   className?: string;
   size?: 'sm' | 'md' | 'lg' | 'xl';
   showText?: boolean;
 }
 
-export function KreateyoLogo({ className, size = 'md', showText = true }: KreateyoLogoProps) {
+export function Logo({ className, size = 'md', showText = true }: LogoProps) {
   const sizeClasses = {
-    sm: 'h-6',
-    md: 'h-8',
-    lg: 'h-10',
-    xl: 'h-12'
+    sm: 'h-10',
+    md: 'h-12',
+    lg: 'h-16',
+    xl: 'h-20'
   };
 
   return (
@@ -20,7 +20,7 @@ export function KreateyoLogo({ className, size = 'md', showText = true }: Kreate
       <img 
         src={logo} 
         alt="Kreateyo" 
-        className={cn('object-contain', sizeClasses[size])}
+        className={cn('object-contain font-bold', sizeClasses[size])}
       />
     </div>
   );
