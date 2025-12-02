@@ -80,6 +80,7 @@ import Broadcasts from "./pages/Broadcasts";
 import Reviews from "./pages/Reviews";
 import ConversationsInbox from "./pages/ConversationsInbox";
 import EmailSettings from "./pages/EmailSettings";
+import Calls from "./pages/Calls";
 import { CustomerAuthProvider } from "@/contexts/CustomerAuthContext";
 import CustomerLogin from "./pages/customer/auth/CustomerLogin";
 import CustomerSignup from "./pages/customer/auth/CustomerSignup";
@@ -368,6 +369,9 @@ const App = () => (
             <Route path="/reviews" element={<DashboardLayout><Reviews /></DashboardLayout>} />
             <Route path="/inbox" element={<DashboardLayout><ConversationsInbox /></DashboardLayout>} />
             <Route path="/email-settings" element={<DashboardLayout><EmailSettings /></DashboardLayout>} />
+            
+            {/* Video Calls Routes (Service Businesses) */}
+            <Route path="/calls" element={<DashboardLayout><Calls /></DashboardLayout>} />
             
             {/* Customer Portal Routes */}
             <Route path="/customer/login" element={<CustomerLogin />} />

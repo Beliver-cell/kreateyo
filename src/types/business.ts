@@ -54,6 +54,7 @@ export interface BusinessFeatures {
   aiContent?: boolean;
   mediaLibrary?: boolean;
   offlineMode?: boolean;
+  videoCalls?: boolean;
 }
 
 export const getBusinessFeatures = (type: BusinessType, subType?: string): BusinessFeatures => {
@@ -87,6 +88,7 @@ export const getBusinessFeatures = (type: BusinessType, subType?: string): Busin
         multiStore: true,
         payroll: true,
         mediaLibrary: true,
+        videoCalls: true,
       };
     
     case 'digital':

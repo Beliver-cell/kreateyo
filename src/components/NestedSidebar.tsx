@@ -35,6 +35,8 @@ import {
   Building2,
   Bot,
   MessageCircle,
+  Video,
+  Phone,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -142,6 +144,18 @@ export function NestedSidebar() {
 
     if (ordersBookings.children && ordersBookings.children.length > 0) {
       structure.push(ordersBookings);
+    }
+
+    // Video Calls Section (Service Businesses Only)
+    if (businessProfile.type === 'services') {
+      structure.push({
+        title: 'Video Calls',
+        icon: Video,
+        children: [
+          { title: 'All Calls', url: '/calls', icon: Phone },
+          { title: 'Schedule Call', url: '/calls?action=schedule', icon: CalendarIcon },
+        ],
+      });
     }
 
     // POS System (Enterprise Only)
