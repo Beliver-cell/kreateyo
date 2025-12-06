@@ -31,7 +31,7 @@ export const sessions = pgTable('sessions', {
 // Businesses table (multi-tenant branding)
 export const businesses = pgTable('businesses', {
   id: uuid('id').primaryKey().defaultRandom(),
-  ownerId: uuid('owner_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  ownerId: uuid('owner_id').references(() => users.id, { onDelete: 'cascade' }),
   name: text('name').notNull(),
   slug: text('slug').notNull().unique(),
   logo: text('logo'),
