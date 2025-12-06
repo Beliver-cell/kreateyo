@@ -15,6 +15,8 @@ import { supplierConnectRoute } from './routes/supplier-connect';
 import { autoOrderProcessRoute } from './routes/auto-order-process';
 import { aiOutreachRoute } from './routes/ai-outreach';
 import { generateEmailContentRoute } from './routes/generate-email-content';
+import { notificationsRoute } from './routes/notifications';
+import { dataRoute } from './routes/data';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -40,6 +42,8 @@ app.use('/api', supplierConnectRoute);
 app.use('/api', autoOrderProcessRoute);
 app.use('/api', aiOutreachRoute);
 app.use('/api', generateEmailContentRoute);
+app.use('/api', notificationsRoute);
+app.use('/api', dataRoute);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

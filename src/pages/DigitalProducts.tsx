@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
+import { api } from '@/lib/api';
 import { Plus, Key, Download, AlertTriangle, Eye, Upload } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -43,16 +43,16 @@ export default function DigitalProducts() {
       setLoading(true);
       
       const [productsRes, licensesRes, logsRes, alertsRes] = await Promise.all([
-        supabase.from('digital_products').select('*').order('created_at', { ascending: false }),
-        supabase.from('license_keys').select('*, digital_products(name)').order('created_at', { ascending: false }),
-        supabase.from('download_logs').select('*, digital_products(name)').order('created_at', { ascending: false }).limit(50),
-        supabase.from('piracy_alerts').select('*, digital_products(name)').eq('resolved', false).order('created_at', { ascending: false })
+        api.get<{ data: any[] }>('/data/digital_products'),
+        api.get<{ data: any[] }>('/data/license_keys'),
+        api.get<{ data: any[] }>('/data/download_logs?limit=50'),
+        api.get<{ data: any[] }>('/data/piracy_alerts'),
       ]);
 
       if (productsRes.data) setProducts(productsRes.data);
       if (licensesRes.data) setLicenses(licensesRes.data);
       if (logsRes.data) setLogs(logsRes.data);
-      if (alertsRes.data) setAlerts(alertsRes.data);
+      if (alertsRes.data) setAlerts(alertsRes.data.filter((a: any) => !a.resolved));
     } catch (error) {
       console.error('Error fetching data:', error);
       toast({
@@ -65,50 +65,19 @@ export default function DigitalProducts() {
     }
   };
 
-  const handleFileUpload = async (file: File) => {
+  const handleCreate = async () => {
     try {
-      setUploading(true);
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('Not authenticated');
-
-      const fileName = `${user.id}/${Date.now()}-${file.name}`;
-      
-      const { error: uploadError } = await supabase.storage
-        .from('digital-products')
-        .upload(fileName, file);
-
-      if (uploadError) throw uploadError;
-
-      return fileName;
-    } catch (error) {
-      console.error('Upload error:', error);
-      throw error;
-    } finally {
-      setUploading(false);
-    }
-  };
-
-  const handleCreate = async (fileUrl: string) => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('Not authenticated');
-
-      const { error } = await supabase
-        .from('digital_products')
-        .insert({
-          user_id: user.id,
-          name: formData.name,
-          description: formData.description,
-          file_url: fileUrl,
-          price: parseFloat(formData.price),
-          download_limit: parseInt(formData.downloadLimit),
-          access_duration_days: parseInt(formData.accessDurationDays),
-          license_type: formData.licenseType,
-          requires_activation: formData.requiresActivation,
-          metadata: { instructions: formData.instructions }
-        });
-
-      if (error) throw error;
+      await api.post('/data/digital_products', {
+        name: formData.name,
+        description: formData.description,
+        fileUrl: '',
+        price: parseFloat(formData.price),
+        downloadLimit: parseInt(formData.downloadLimit),
+        accessDurationDays: parseInt(formData.accessDurationDays),
+        licenseType: formData.licenseType,
+        requiresActivation: formData.requiresActivation,
+        metadata: { instructions: formData.instructions }
+      });
 
       toast({
         title: 'Success',
@@ -236,29 +205,9 @@ export default function DigitalProducts() {
                     rows={3}
                   />
                 </div>
-                <div>
-                  <Label>Upload Product File</Label>
-                  <Input
-                    type="file"
-                    onChange={async (e) => {
-                      const file = e.target.files?.[0];
-                      if (file) {
-                        try {
-                          const fileUrl = await handleFileUpload(file);
-                          await handleCreate(fileUrl);
-                        } catch (error) {
-                          toast({
-                            title: 'Error',
-                            description: 'Failed to upload file',
-                            variant: 'destructive'
-                          });
-                        }
-                      }
-                    }}
-                    disabled={uploading}
-                  />
-                  {uploading && <p className="text-sm text-muted-foreground mt-2">Uploading...</p>}
-                </div>
+                <Button onClick={handleCreate} className="w-full">
+                  Create Product
+                </Button>
               </div>
             </DialogContent>
           </Dialog>
@@ -300,7 +249,7 @@ export default function DigitalProducts() {
                     <div className="space-y-3">
                       <div className="flex items-start justify-between">
                         <h3 className="font-semibold text-lg">{product.name}</h3>
-                        {product.is_active ? (
+                        {product.isActive ? (
                           <Badge>Active</Badge>
                         ) : (
                           <Badge variant="secondary">Inactive</Badge>
@@ -314,15 +263,15 @@ export default function DigitalProducts() {
                         </div>
                         <div className="flex justify-between">
                           <span className="text-muted-foreground">Downloads:</span>
-                          <span>{product.download_limit}</span>
+                          <span>{product.downloadLimit}</span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-muted-foreground">Access:</span>
-                          <span>{product.access_duration_days} days</span>
+                          <span>{product.accessDurationDays} days</span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-muted-foreground">License:</span>
-                          <span className="capitalize">{product.license_type}</span>
+                          <span className="capitalize">{product.licenseType}</span>
                         </div>
                       </div>
                     </div>
@@ -348,30 +297,30 @@ export default function DigitalProducts() {
                     <div key={license.id} className="p-4">
                       <div className="flex items-start justify-between mb-2">
                         <div>
-                          <h3 className="font-semibold">{license.digital_products?.name}</h3>
-                          <p className="text-sm text-muted-foreground">{license.customer_email}</p>
+                          <h3 className="font-semibold">{license.productName || 'Product'}</h3>
+                          <p className="text-sm text-muted-foreground">{license.customerEmail}</p>
                         </div>
                         {getStatusBadge(license.status)}
                       </div>
                       <div className="mt-3 p-3 bg-muted rounded-lg">
                         <div className="flex items-center justify-between">
-                          <code className="text-sm font-mono">{license.license_key}</code>
+                          <code className="text-sm font-mono">{license.licenseKey}</code>
                           <Key className="h-4 w-4 text-muted-foreground" />
                         </div>
                       </div>
                       <div className="grid grid-cols-3 gap-2 mt-3 text-xs">
                         <div>
                           <span className="text-muted-foreground">Downloads:</span>
-                          <span className="ml-1 font-medium">{license.download_count}/{license.max_downloads}</span>
+                          <span className="ml-1 font-medium">{license.downloadCount}/{license.maxDownloads}</span>
                         </div>
                         <div>
                           <span className="text-muted-foreground">Activations:</span>
-                          <span className="ml-1 font-medium">{license.activation_count}/{license.max_activations}</span>
+                          <span className="ml-1 font-medium">{license.activationCount}/{license.maxActivations}</span>
                         </div>
                         <div>
                           <span className="text-muted-foreground">Expires:</span>
                           <span className="ml-1 font-medium">
-                            {license.expires_at ? new Date(license.expires_at).toLocaleDateString() : 'Never'}
+                            {license.expiresAt ? new Date(license.expiresAt).toLocaleDateString() : 'Never'}
                           </span>
                         </div>
                       </div>
@@ -399,16 +348,16 @@ export default function DigitalProducts() {
                       <Download className="h-5 w-5 text-primary mt-0.5" />
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-1">
-                          <span className="font-medium">{log.digital_products?.name}</span>
+                          <span className="font-medium">{log.productName || 'Product'}</span>
                           {log.success ? (
                             <Badge>Success</Badge>
                           ) : (
                             <Badge variant="destructive">Failed</Badge>
                           )}
                         </div>
-                        <p className="text-sm text-muted-foreground">{log.customer_email}</p>
+                        <p className="text-sm text-muted-foreground">{log.customerEmail}</p>
                         <div className="mt-2 text-xs text-muted-foreground">
-                          {log.ip_address} • {new Date(log.created_at).toLocaleString()}
+                          {log.ipAddress} • {new Date(log.createdAt).toLocaleString()}
                         </div>
                       </div>
                     </div>
@@ -440,14 +389,14 @@ export default function DigitalProducts() {
                       }`} />
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-1">
-                          <span className="font-semibold capitalize">{alert.alert_type.replace('_', ' ')}</span>
+                          <span className="font-semibold capitalize">{alert.alertType?.replace('_', ' ')}</span>
                           <Badge variant={alert.severity === 'critical' || alert.severity === 'high' ? 'destructive' : 'default'}>
                             {alert.severity}
                           </Badge>
                         </div>
-                        <p className="text-sm text-muted-foreground">{alert.digital_products?.name}</p>
+                        <p className="text-sm text-muted-foreground">{alert.productName || 'Product'}</p>
                         <p className="text-xs text-muted-foreground mt-1">
-                          {new Date(alert.created_at).toLocaleString()}
+                          {new Date(alert.createdAt).toLocaleString()}
                         </p>
                       </div>
                     </div>

@@ -8,7 +8,7 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import { NotificationCenter } from '@/components/NotificationCenter';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 interface DashboardLayoutProps {
@@ -17,11 +17,11 @@ interface DashboardLayoutProps {
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const isMobile = useIsMobile();
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    navigate('/login');
+    await logout();
   };
 
   return (
@@ -29,10 +29,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       <div className="flex min-h-screen w-full bg-background">
         <NestedSidebar />
         <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Top Navigation Bar */}
           <div className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="flex h-16 items-center px-4 md:px-6 gap-4">
-              {/* Mobile menu button */}
               {isMobile && (
                 <SidebarTrigger className="mr-2">
                   <Button variant="ghost" size="icon">
@@ -41,7 +39,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 </SidebarTrigger>
               )}
 
-              {/* Search */}
               <div className="flex-1 max-w-md">
                 <div className="relative">
                   <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -53,7 +50,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 </div>
               </div>
 
-              {/* Right side actions - pushed to extreme end */}
               <div className="flex items-center gap-2 ml-auto">
                 <NotificationCenter />
                 <ThemeToggle />
@@ -83,7 +79,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             </div>
           </div>
 
-          {/* Main Content */}
           <main className="flex-1 overflow-auto p-4 md:p-6">
             {children}
           </main>

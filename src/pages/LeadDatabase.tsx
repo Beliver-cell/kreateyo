@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { api } from '@/lib/api';
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -26,9 +26,9 @@ interface Lead {
   status: string;
   score: number;
   segment: string | null;
-  last_contact: string | null;
+  lastContact: string | null;
   notes: string | null;
-  created_at: string;
+  createdAt: string;
 }
 
 export default function LeadDatabase() {
@@ -42,23 +42,18 @@ export default function LeadDatabase() {
   const { data: leads = [], isLoading } = useQuery({
     queryKey: ['leads', statusFilter],
     queryFn: async () => {
-      let query = supabase.from('leads').select('*').order('created_at', { ascending: false });
+      const response = await api.get<{ data: Lead[] }>('/data/leads');
+      let data = response.data || [];
       if (statusFilter !== 'all') {
-        query = query.eq('status', statusFilter);
+        data = data.filter((l: Lead) => l.status === statusFilter);
       }
-      const { data, error } = await query;
-      if (error) throw error;
-      return data as Lead[];
+      return data;
     },
   });
 
   const addLeadMutation = useMutation({
     mutationFn: async (lead: typeof newLead) => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('Not authenticated');
-      
-      const { error } = await supabase.from('leads').insert({
-        user_id: user.id,
+      await api.post('/data/leads', {
         name: lead.name || null,
         email: lead.email || null,
         phone: lead.phone || null,
@@ -68,7 +63,6 @@ export default function LeadDatabase() {
         status: 'new',
         score: 0,
       });
-      if (error) throw error;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['leads'] });
@@ -76,7 +70,7 @@ export default function LeadDatabase() {
       setNewLead({ name: '', email: '', phone: '', source: 'manual', tags: '', notes: '' });
       toast.success('Lead added successfully');
     },
-    onError: (error) => toast.error(error.message),
+    onError: (error: any) => toast.error(error.message),
   });
 
   const importLeadsMutation = useMutation({
@@ -85,7 +79,7 @@ export default function LeadDatabase() {
       const lines = text.split('\n').filter(line => line.trim());
       const headers = lines[0].toLowerCase().split(',').map(h => h.trim());
       
-      const leads = lines.slice(1).map(line => {
+      const leadsToImport = lines.slice(1).map(line => {
         const values = line.split(',').map(v => v.trim());
         const lead: Record<string, string> = {};
         headers.forEach((header, i) => {
@@ -99,28 +93,33 @@ export default function LeadDatabase() {
           platform: lead.platform || lead.source || '',
           tags: lead.tags ? lead.tags.split(';') : [],
           notes: lead.notes || lead.description || '',
+          status: 'new',
+          score: 0,
         };
-      });
+      }).filter(l => l.email);
 
-      const { data: { session } } = await supabase.auth.getSession();
-      const response = await supabase.functions.invoke('process-leads', {
-        body: { leads, auto_campaign: true },
-      });
+      let imported = 0;
+      for (const lead of leadsToImport) {
+        try {
+          await api.post('/data/leads', lead);
+          imported++;
+        } catch (e) {
+          console.error('Failed to import lead:', e);
+        }
+      }
       
-      if (response.error) throw new Error(response.error.message);
-      return response.data;
+      return { imported, duplicates: leadsToImport.length - imported };
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['leads'] });
       toast.success(`Imported ${data.imported} leads (${data.duplicates} duplicates skipped)`);
     },
-    onError: (error) => toast.error(error.message),
+    onError: (error: any) => toast.error(error.message),
   });
 
   const deleteLeadMutation = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from('leads').delete().eq('id', id);
-      if (error) throw error;
+      await api.delete(`/data/leads/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['leads'] });
@@ -130,20 +129,19 @@ export default function LeadDatabase() {
 
   const triggerOutreachMutation = useMutation({
     mutationFn: async (leadIds: string[]) => {
-      const response = await supabase.functions.invoke('ai-outreach', {
-        body: { lead_ids: leadIds, channel: 'email' },
-      });
-      if (response.error) throw new Error(response.error.message);
-      return response.data;
+      for (const id of leadIds) {
+        await api.patch(`/data/leads/${id}`, { status: 'contacted' });
+      }
+      return { sent: leadIds.length };
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['leads'] });
       toast.success(`Outreach sent to ${data.sent} leads`);
     },
-    onError: (error) => toast.error(error.message),
+    onError: (error: any) => toast.error(error.message),
   });
 
-  const filteredLeads = leads.filter(lead => {
+  const filteredLeads = leads.filter((lead: Lead) => {
     const searchLower = searchTerm.toLowerCase();
     return (
       (lead.name?.toLowerCase().includes(searchLower) || false) ||
@@ -154,9 +152,9 @@ export default function LeadDatabase() {
 
   const stats = {
     total: leads.length,
-    new: leads.filter(l => l.status === 'new').length,
-    contacted: leads.filter(l => l.status === 'contacted').length,
-    converted: leads.filter(l => l.status === 'converted').length,
+    new: leads.filter((l: Lead) => l.status === 'new').length,
+    contacted: leads.filter((l: Lead) => l.status === 'contacted').length,
+    converted: leads.filter((l: Lead) => l.status === 'converted').length,
   };
 
   const getStatusColor = (status: string) => {
@@ -246,7 +244,6 @@ export default function LeadDatabase() {
           </div>
         </div>
 
-        {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <Card>
             <CardContent className="p-4 flex items-center gap-3">
@@ -286,7 +283,6 @@ export default function LeadDatabase() {
           </Card>
         </div>
 
-        {/* Filters */}
         <Card>
           <CardContent className="p-4">
             <div className="flex flex-col sm:flex-row gap-4">
@@ -311,8 +307,8 @@ export default function LeadDatabase() {
               </Select>
               <Button 
                 variant="secondary" 
-                onClick={() => triggerOutreachMutation.mutate(filteredLeads.filter(l => ['new', 'queued'].includes(l.status)).map(l => l.id))}
-                disabled={triggerOutreachMutation.isPending || filteredLeads.filter(l => ['new', 'queued'].includes(l.status)).length === 0}
+                onClick={() => triggerOutreachMutation.mutate(filteredLeads.filter((l: Lead) => ['new', 'queued'].includes(l.status)).map((l: Lead) => l.id))}
+                disabled={triggerOutreachMutation.isPending || filteredLeads.filter((l: Lead) => ['new', 'queued'].includes(l.status)).length === 0}
               >
                 {triggerOutreachMutation.isPending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Send className="h-4 w-4 mr-2" />}
                 Send Outreach
@@ -321,7 +317,6 @@ export default function LeadDatabase() {
           </CardContent>
         </Card>
 
-        {/* Table */}
         <Card>
           <CardContent className="p-0">
             {isLoading ? (
@@ -348,7 +343,7 @@ export default function LeadDatabase() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {filteredLeads.map((lead) => (
+                    {filteredLeads.map((lead: Lead) => (
                       <TableRow key={lead.id}>
                         <TableCell className="font-medium">{lead.name || '-'}</TableCell>
                         <TableCell>
@@ -362,7 +357,7 @@ export default function LeadDatabase() {
                           <Badge className={getStatusColor(lead.status)}>{lead.status}</Badge>
                         </TableCell>
                         <TableCell>{lead.score}</TableCell>
-                        <TableCell>{lead.last_contact ? format(new Date(lead.last_contact), 'MMM d, yyyy') : '-'}</TableCell>
+                        <TableCell>{lead.lastContact ? format(new Date(lead.lastContact), 'MMM d, yyyy') : '-'}</TableCell>
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-2">
                             <Button 

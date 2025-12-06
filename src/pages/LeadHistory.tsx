@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { api } from '@/lib/api';
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -25,17 +25,12 @@ export default function LeadHistory() {
   const { data: leads = [], isLoading } = useQuery({
     queryKey: ['leads-history'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('leads')
-        .select('*')
-        .order('created_at', { ascending: false });
-      if (error) throw error;
-      return data || [];
+      const response = await api.get<{ data: any[] }>('/data/leads');
+      return response.data || [];
     },
   });
 
-  // Filter leads
-  const filteredLeads = leads.filter(lead => {
+  const filteredLeads = leads.filter((lead: any) => {
     const matchesSearch = 
       (lead.name?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
       (lead.email?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
@@ -45,19 +40,16 @@ export default function LeadHistory() {
     return matchesSearch && matchesStatus && matchesSource;
   });
 
-  // Pagination
   const totalPages = Math.ceil(filteredLeads.length / pageSize);
   const paginatedLeads = filteredLeads.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
-  // Stats
   const totalLeads = leads.length;
-  const newLeads = leads.filter(l => l.status === 'new').length;
-  const contactedLeads = leads.filter(l => l.status === 'contacted').length;
-  const convertedLeads = leads.filter(l => l.status === 'converted').length;
+  const newLeads = leads.filter((l: any) => l.status === 'new').length;
+  const contactedLeads = leads.filter((l: any) => l.status === 'contacted').length;
+  const convertedLeads = leads.filter((l: any) => l.status === 'converted').length;
   const conversionRate = totalLeads > 0 ? ((convertedLeads / totalLeads) * 100).toFixed(1) : '0';
 
-  // Unique sources for filter
-  const uniqueSources = [...new Set(leads.map(l => l.source))].filter(Boolean);
+  const uniqueSources = [...new Set(leads.map((l: any) => l.source))].filter(Boolean);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -78,9 +70,9 @@ export default function LeadHistory() {
 
   const exportToCSV = () => {
     const headers = ['Name', 'Email', 'Phone', 'Status', 'Source', 'Score', 'Created'];
-    const rows = filteredLeads.map(l => [
+    const rows = filteredLeads.map((l: any) => [
       l.name || '', l.email || '', l.phone || '', l.status, l.source, l.score || 0, 
-      l.created_at ? format(new Date(l.created_at), 'yyyy-MM-dd') : ''
+      l.createdAt ? format(new Date(l.createdAt), 'yyyy-MM-dd') : ''
     ]);
     const csv = [headers, ...rows].map(row => row.join(',')).join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
@@ -94,7 +86,6 @@ export default function LeadHistory() {
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
             <h1 className="text-2xl font-bold">Lead History</h1>
@@ -105,7 +96,6 @@ export default function LeadHistory() {
           </Button>
         </div>
 
-        {/* Stats Cards */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           <Card>
             <CardContent className="p-4 flex items-center gap-3">
@@ -154,7 +144,6 @@ export default function LeadHistory() {
           </Card>
         </div>
 
-        {/* Filters */}
         <Card>
           <CardContent className="p-4">
             <div className="flex flex-col sm:flex-row gap-4">
@@ -186,7 +175,7 @@ export default function LeadHistory() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Sources</SelectItem>
-                  {uniqueSources.map(source => (
+                  {uniqueSources.map((source: any) => (
                     <SelectItem key={source} value={source}>{source}</SelectItem>
                   ))}
                 </SelectContent>
@@ -195,7 +184,6 @@ export default function LeadHistory() {
           </CardContent>
         </Card>
 
-        {/* Leads Table */}
         <Card>
           <CardContent className="p-0">
             <ScrollArea className="w-full">
@@ -225,7 +213,7 @@ export default function LeadHistory() {
                       </TableCell>
                     </TableRow>
                   ) : (
-                    paginatedLeads.map((lead) => (
+                    paginatedLeads.map((lead: any) => (
                       <TableRow key={lead.id}>
                         <TableCell className="font-medium">{lead.name || '-'}</TableCell>
                         <TableCell>{lead.email || '-'}</TableCell>
@@ -244,7 +232,7 @@ export default function LeadHistory() {
                           </div>
                         </TableCell>
                         <TableCell className="hidden lg:table-cell">
-                          {lead.created_at ? format(new Date(lead.created_at), 'MMM d, yyyy') : '-'}
+                          {lead.createdAt ? format(new Date(lead.createdAt), 'MMM d, yyyy') : '-'}
                         </TableCell>
                       </TableRow>
                     ))
@@ -253,7 +241,6 @@ export default function LeadHistory() {
               </Table>
             </ScrollArea>
 
-            {/* Pagination */}
             {totalPages > 1 && (
               <div className="flex items-center justify-between p-4 border-t">
                 <p className="text-sm text-muted-foreground">

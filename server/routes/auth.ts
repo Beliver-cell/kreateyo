@@ -197,3 +197,57 @@ authRoute.get('/auth/me', async (req, res) => {
     res.status(500).json({ error: 'Auth check failed' });
   }
 });
+
+async function getUserFromToken(authHeader: string | undefined) {
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return null;
+  }
+
+  const token = authHeader.split(' ')[1];
+  const sessionResult = await db
+    .select()
+    .from(sessions)
+    .leftJoin(users, eq(sessions.userId, users.id))
+    .where(eq(sessions.token, token));
+
+  if (!sessionResult.length || !sessionResult[0].users) {
+    return null;
+  }
+
+  const { sessions: session, users: user } = sessionResult[0];
+
+  if (new Date(session.expiresAt) < new Date()) {
+    await db.delete(sessions).where(eq(sessions.id, session.id));
+    return null;
+  }
+
+  return user;
+}
+
+authRoute.patch('/auth/profile', async (req, res) => {
+  try {
+    const user = await getUserFromToken(req.headers.authorization);
+    
+    if (!user) {
+      return res.status(401).json({ error: 'Not authenticated' });
+    }
+
+    const { full_name, avatar_url, business_id, plan } = req.body;
+
+    const updateData: any = {};
+    if (full_name !== undefined) updateData.fullName = full_name;
+    if (avatar_url !== undefined) updateData.avatarUrl = avatar_url;
+    if (business_id !== undefined) updateData.businessId = business_id;
+    if (plan !== undefined) updateData.plan = plan;
+
+    if (Object.keys(updateData).length > 0) {
+      updateData.updatedAt = new Date();
+      await db.update(profiles).set(updateData).where(eq(profiles.id, user.id));
+    }
+
+    res.json({ success: true, message: 'Profile updated' });
+  } catch (error) {
+    console.error('Profile update error:', error);
+    res.status(500).json({ error: 'Profile update failed' });
+  }
+});

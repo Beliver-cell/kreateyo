@@ -1,9 +1,16 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
-import { User, Session } from '@supabase/supabase-js';
-
+import { api } from '@/lib/api';
 import { PlanType } from '@/types/plans';
+
+interface User {
+  id: string;
+  email: string;
+  fullName?: string;
+  avatarUrl?: string | null;
+  businessId?: string | null;
+  plan?: PlanType;
+}
 
 interface Profile {
   id: string;
@@ -17,7 +24,7 @@ interface Profile {
 
 interface AuthContextType {
   user: User | null;
-  session: Session | null;
+  session: { token: string; expiresAt: string } | null;
   profile: Profile | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<{ error: any }>;
@@ -31,116 +38,137 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
+  const [session, setSession] = useState<{ token: string; expiresAt: string } | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Fetch profile data
-  const fetchProfile = async (userId: string) => {
+  const checkAuth = async () => {
     try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .single();
+      const token = localStorage.getItem('auth_token');
+      if (!token) {
+        setLoading(false);
+        return;
+      }
 
-      if (error) throw error;
-      setProfile(data as Profile);
+      const response = await api.get<{ user: User }>('/auth/me');
+      setUser(response.user);
+      setSession({ token, expiresAt: '' });
+      
+      if (response.user) {
+        setProfile({
+          id: response.user.id,
+          full_name: response.user.fullName || '',
+          avatar_url: response.user.avatarUrl || null,
+          business_id: response.user.businessId || null,
+          plan: response.user.plan || 'free',
+          created_at: '',
+          updated_at: '',
+        });
+      }
     } catch (error) {
-      console.error('Error fetching profile:', error);
+      console.error('Auth check failed:', error);
+      api.clearToken();
+      setUser(null);
+      setSession(null);
+      setProfile(null);
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Initialize auth state
   useEffect(() => {
-    // Set up auth state listener FIRST
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        console.log('Auth state changed:', event);
-        setSession(session);
-        setUser(session?.user ?? null);
-
-        // Defer profile fetch to avoid blocking
-        if (session?.user) {
-          setTimeout(() => {
-            fetchProfile(session.user.id);
-          }, 0);
-        } else {
-          setProfile(null);
-        }
-      }
-    );
-
-    // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      
-      if (session?.user) {
-        fetchProfile(session.user.id);
-      }
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
+    checkAuth();
   }, []);
 
   const login = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    
-    if (!error) {
-      navigate('/dashboard');
+    try {
+      const response = await api.post<{
+        success: boolean;
+        user: User;
+        token: string;
+        expiresAt: string;
+      }>('/auth/signin', { email, password });
+
+      if (response.success) {
+        api.setToken(response.token);
+        setUser(response.user);
+        setSession({ token: response.token, expiresAt: response.expiresAt });
+        setProfile({
+          id: response.user.id,
+          full_name: response.user.fullName || '',
+          avatar_url: response.user.avatarUrl || null,
+          business_id: response.user.businessId || null,
+          plan: response.user.plan || 'free',
+          created_at: '',
+          updated_at: '',
+        });
+        navigate('/dashboard');
+        return { error: null };
+      }
+      return { error: new Error('Login failed') };
+    } catch (error) {
+      return { error };
     }
-    
-    return { error };
   };
 
   const signup = async (email: string, password: string, fullName: string) => {
-    const redirectUrl = `${window.location.origin}/`;
-    
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: redirectUrl,
-        data: {
+    try {
+      const response = await api.post<{
+        success: boolean;
+        user: User;
+        token: string;
+        expiresAt: string;
+      }>('/auth/signup', { email, password, fullName });
+
+      if (response.success) {
+        api.setToken(response.token);
+        setUser(response.user);
+        setSession({ token: response.token, expiresAt: response.expiresAt });
+        setProfile({
+          id: response.user.id,
           full_name: fullName,
-        },
-      },
-    });
-    
-    if (!error) {
-      navigate('/dashboard');
+          avatar_url: null,
+          business_id: null,
+          plan: 'free',
+          created_at: '',
+          updated_at: '',
+        });
+        navigate('/dashboard');
+        return { error: null };
+      }
+      return { error: new Error('Signup failed') };
+    } catch (error) {
+      return { error };
     }
-    
-    return { error };
   };
 
   const logout = async () => {
-    await supabase.auth.signOut();
-    setUser(null);
-    setSession(null);
-    setProfile(null);
-    navigate('/login');
+    try {
+      await api.post('/auth/signout');
+    } catch (error) {
+      console.error('Signout error:', error);
+    } finally {
+      api.clearToken();
+      setUser(null);
+      setSession(null);
+      setProfile(null);
+      navigate('/login');
+    }
   };
 
   const updateProfile = async (data: Partial<Profile>) => {
     if (!user) return { error: new Error('Not authenticated') };
 
-    const { error } = await supabase
-      .from('profiles')
-      .update(data)
-      .eq('id', user.id);
-
-    if (!error && profile) {
-      setProfile({ ...profile, ...data });
+    try {
+      await api.patch('/auth/profile', data);
+      if (profile) {
+        setProfile({ ...profile, ...data });
+      }
+      return { error: null };
+    } catch (error) {
+      return { error };
     }
-
-    return { error };
   };
 
   const updatePlan = async (plan: PlanType) => {
