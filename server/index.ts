@@ -1,4 +1,6 @@
 import express from 'express';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
 import cors from 'cors';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 import { authRoute } from './routes/auth';
@@ -18,8 +20,19 @@ import { generateEmailContentRoute } from './routes/generate-email-content';
 import { notificationsRoute } from './routes/notifications';
 import { dataRoute } from './routes/data';
 import businessesRoute from './routes/businesses';
+import { chatRoute } from './routes/chat';
+import { templatesRoute } from './routes/templates';
+import { setupChatSocket } from './sockets/chat';
 
 const app = express();
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST'],
+  },
+});
+
 const PORT = process.env.PORT || 3001;
 
 app.use(cors());
@@ -46,10 +59,17 @@ app.use('/api', generateEmailContentRoute);
 app.use('/api', notificationsRoute);
 app.use('/api', dataRoute);
 app.use('/api/businesses', businessesRoute);
+app.use('/api/chat', chatRoute);
+app.use('/api/templates', templatesRoute);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
 
-app.listen(PORT, () => {
+setupChatSocket(io);
+
+httpServer.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  console.log('Socket.IO ready for real-time connections');
 });
+
+export { io };

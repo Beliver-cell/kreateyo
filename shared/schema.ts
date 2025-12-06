@@ -994,3 +994,118 @@ export const paymentHolds = pgTable('payment_holds', {
 }, (table) => ({
   userIdx: index('idx_payment_holds_user').on(table.userId, table.status),
 }));
+
+// ==================== CHAT SYSTEM ====================
+
+// Conversation status enum
+export const conversationStatusEnum = pgEnum('conversation_status', ['active', 'archived', 'closed']);
+
+// Conversations table
+export const conversations = pgTable('conversations', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  businessId: uuid('business_id').notNull().references(() => businesses.id, { onDelete: 'cascade' }),
+  customerId: uuid('customer_id'),
+  customerEmail: text('customer_email'),
+  customerName: text('customer_name'),
+  subject: text('subject'),
+  status: conversationStatusEnum('status').notNull().default('active'),
+  lastMessageAt: timestamp('last_message_at'),
+  unreadCount: integer('unread_count').default(0),
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  businessIdx: index('idx_conversations_business').on(table.businessId),
+  statusIdx: index('idx_conversations_status').on(table.status),
+  lastMessageIdx: index('idx_conversations_last_message').on(table.lastMessageAt),
+}));
+
+// Messages table
+export const messages = pgTable('messages', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  conversationId: uuid('conversation_id').notNull().references(() => conversations.id, { onDelete: 'cascade' }),
+  senderId: uuid('sender_id').notNull(),
+  senderType: text('sender_type').notNull(), // 'customer' | 'staff' | 'system'
+  content: text('content').notNull(),
+  attachments: jsonb('attachments').default([]),
+  readAt: timestamp('read_at'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+}, (table) => ({
+  conversationIdx: index('idx_chat_messages_conversation').on(table.conversationId),
+  senderIdx: index('idx_chat_messages_sender').on(table.senderId),
+  createdAtIdx: index('idx_chat_messages_created_at').on(table.createdAt),
+}));
+
+// Conversation participants table
+export const conversationParticipants = pgTable('conversation_participants', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  conversationId: uuid('conversation_id').notNull().references(() => conversations.id, { onDelete: 'cascade' }),
+  participantId: uuid('participant_id').notNull(),
+  participantType: text('participant_type').notNull(), // 'customer' | 'staff'
+  isOnline: boolean('is_online').default(false),
+  lastSeenAt: timestamp('last_seen_at'),
+  joinedAt: timestamp('joined_at').notNull().defaultNow(),
+}, (table) => ({
+  conversationIdx: index('idx_participants_conversation').on(table.conversationId),
+  participantIdx: index('idx_participants_participant').on(table.participantId),
+  uniqueParticipant: uniqueIndex('unique_conversation_participant').on(table.conversationId, table.participantId),
+}));
+
+// ==================== TEMPLATE SYSTEM ====================
+
+// Template category enum
+export const templateCategoryEnum = pgEnum('template_category', ['ecommerce', 'service', 'blog', 'consulting', 'portfolio', 'landing']);
+
+// Templates registry table
+export const templates = pgTable('templates', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: text('name').notNull(),
+  slug: text('slug').notNull().unique(),
+  description: text('description'),
+  category: templateCategoryEnum('category').notNull(),
+  industry: text('industry'),
+  thumbnailUrl: text('thumbnail_url'),
+  previewUrl: text('preview_url'),
+  componentName: text('component_name').notNull(), // React component name
+  defaultConfig: jsonb('default_config').default({}),
+  features: text('features').array().default([]),
+  isActive: boolean('is_active').default(true),
+  isPremium: boolean('is_premium').default(false),
+  sortOrder: integer('sort_order').default(0),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  categoryIdx: index('idx_templates_category').on(table.category),
+  slugIdx: index('idx_templates_slug').on(table.slug),
+}));
+
+// Template blocks table (for block-based editing)
+export const templateBlocks = pgTable('template_blocks', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  templateId: uuid('template_id').notNull().references(() => templates.id, { onDelete: 'cascade' }),
+  blockType: text('block_type').notNull(), // 'hero', 'features', 'testimonials', 'pricing', etc.
+  name: text('name').notNull(),
+  defaultContent: jsonb('default_content').default({}),
+  schema: jsonb('schema').default({}), // JSON schema for block customization
+  orderIndex: integer('order_index').default(0),
+  isRequired: boolean('is_required').default(false),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+}, (table) => ({
+  templateIdx: index('idx_template_blocks_template').on(table.templateId),
+}));
+
+// Business template instances table
+export const businessTemplateInstances = pgTable('business_template_instances', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  businessId: uuid('business_id').notNull().references(() => businesses.id, { onDelete: 'cascade' }),
+  templateId: uuid('template_id').notNull().references(() => templates.id),
+  customizations: jsonb('customizations').default({}),
+  blockOverrides: jsonb('block_overrides').default({}),
+  isPublished: boolean('is_published').default(false),
+  publishedAt: timestamp('published_at'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  businessIdx: index('idx_business_templates_business').on(table.businessId),
+  templateIdx: index('idx_business_templates_template').on(table.templateId),
+}));
