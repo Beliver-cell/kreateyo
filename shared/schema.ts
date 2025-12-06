@@ -3,6 +3,31 @@ import { pgTable, uuid, text, timestamp, integer, boolean, jsonb, decimal, pgEnu
 // Enums
 export const appRoleEnum = pgEnum('app_role', ['owner', 'admin', 'manager', 'staff', 'viewer']);
 
+// Users table (authentication)
+export const users = pgTable('users', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  email: text('email').notNull().unique(),
+  passwordHash: text('password_hash'),
+  emailVerified: boolean('email_verified').default(false),
+  lastSignInAt: timestamp('last_sign_in_at'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  emailIdx: index('idx_users_email').on(table.email),
+}));
+
+// Sessions table (for authentication tokens)
+export const sessions = pgTable('sessions', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  token: text('token').notNull().unique(),
+  expiresAt: timestamp('expires_at').notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+}, (table) => ({
+  userIdIdx: index('idx_sessions_user_id').on(table.userId),
+  tokenIdx: index('idx_sessions_token').on(table.token),
+}));
+
 // Profiles table
 export const profiles = pgTable('profiles', {
   id: uuid('id').primaryKey(),

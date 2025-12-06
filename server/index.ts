@@ -1,5 +1,7 @@
 import express from 'express';
 import cors from 'cors';
+import { errorHandler, notFoundHandler } from './middleware/errorHandler';
+import { authRoute } from './routes/auth';
 import { validateLicenseRoute } from './routes/validate-license';
 import { generateLicenseRoute } from './routes/generate-license';
 import { createDownloadLinkRoute } from './routes/create-download-link';
@@ -17,16 +19,14 @@ import { generateEmailContentRoute } from './routes/generate-email-content';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'Server is running' });
 });
 
-// API Routes
+app.use('/api', authRoute);
 app.use('/api', validateLicenseRoute);
 app.use('/api', generateLicenseRoute);
 app.use('/api', createDownloadLinkRoute);
@@ -41,11 +41,8 @@ app.use('/api', autoOrderProcessRoute);
 app.use('/api', aiOutreachRoute);
 app.use('/api', generateEmailContentRoute);
 
-// Error handler
-app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  console.error('Server error:', err);
-  res.status(500).json({ error: err.message || 'Internal server error' });
-});
+app.use(notFoundHandler);
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
