@@ -45,6 +45,7 @@ import Tools from "./pages/Tools";
 import Payments from "./pages/Payments";
 import MediaLibrary from "./pages/MediaLibrary";
 import TemplatePreview from "./pages/TemplatePreview";
+import TemplateEditorPage from "./pages/TemplateEditor";
 import NotFound from "./pages/NotFound";
 import Team from "./pages/Team";
 import Developer from "./pages/Developer";
@@ -265,6 +266,14 @@ const App = () => (
               element={
                 <DashboardLayout>
                   <TemplatePreview />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/template-editor"
+              element={
+                <DashboardLayout>
+                  <TemplateEditorPage />
                 </DashboardLayout>
               }
             />

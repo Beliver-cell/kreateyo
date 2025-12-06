@@ -198,4 +198,35 @@ router.post('/business/:businessId/publish', async (req: Request, res: Response)
   }
 });
 
+router.patch('/business/:businessId/blocks/reorder', async (req: Request, res: Response) => {
+  try {
+    const { businessId } = req.params;
+    const { blockOrder } = req.body;
+
+    if (!blockOrder || !Array.isArray(blockOrder)) {
+      return res.status(400).json({ error: 'blockOrder array is required' });
+    }
+
+    const instance = await db.select()
+      .from(businessTemplateInstances)
+      .where(eq(businessTemplateInstances.businessId, businessId))
+      .limit(1);
+
+    if (instance.length === 0) {
+      return res.status(404).json({ error: 'Template instance not found' });
+    }
+
+    for (let i = 0; i < blockOrder.length; i++) {
+      await db.update(templateBlocks)
+        .set({ orderIndex: i })
+        .where(eq(templateBlocks.id, blockOrder[i]));
+    }
+
+    res.json({ success: true, message: 'Block order updated' });
+  } catch (error) {
+    console.error('Error reordering blocks:', error);
+    res.status(500).json({ error: 'Failed to reorder blocks' });
+  }
+});
+
 export const templatesRoute = router;
