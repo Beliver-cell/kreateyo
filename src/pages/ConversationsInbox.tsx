@@ -12,7 +12,7 @@ import {
   Archive, Star, MoreHorizontal, Clock, CheckCheck
 } from "lucide-react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { api } from "@/lib/api";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
@@ -33,12 +33,8 @@ export default function ConversationsInbox() {
   const { data: threads, isLoading: threadsLoading } = useQuery({
     queryKey: ["message_threads"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("message_threads")
-        .select("*")
-        .order("last_message_at", { ascending: false });
-      if (error) throw error;
-      return data;
+      const response = await api.get<{ data: any[] }>("/data/message_threads");
+      return response.data;
     },
     enabled: !!user,
   });
@@ -47,33 +43,23 @@ export default function ConversationsInbox() {
     queryKey: ["thread_messages", selectedThread?.id],
     queryFn: async () => {
       if (!selectedThread) return [];
-      const { data, error } = await supabase
-        .from("thread_messages")
-        .select("*")
-        .eq("thread_id", selectedThread.id)
-        .order("created_at", { ascending: true });
-      if (error) throw error;
-      return data;
+      const response = await api.get<{ data: any[] }>(`/data/thread_messages?thread_id=${selectedThread.id}`);
+      return response.data;
     },
     enabled: !!selectedThread,
   });
 
   const sendMessage = useMutation({
     mutationFn: async (content: string) => {
-      const { error } = await supabase
-        .from("thread_messages")
-        .insert({
-          thread_id: selectedThread.id,
-          sender_type: "business",
-          content,
-        });
-      if (error) throw error;
+      await api.post("/data/thread_messages", {
+        thread_id: selectedThread.id,
+        sender_type: "business",
+        content,
+      });
 
-      // Update thread last_message_at
-      await supabase
-        .from("message_threads")
-        .update({ last_message_at: new Date().toISOString() })
-        .eq("id", selectedThread.id);
+      await api.patch(`/data/message_threads/${selectedThread.id}`, {
+        last_message_at: new Date().toISOString()
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["thread_messages", selectedThread?.id] });
@@ -81,7 +67,7 @@ export default function ConversationsInbox() {
       setNewMessage("");
       toast.success("Message sent");
     },
-    onError: (error) => {
+    onError: (error: any) => {
       toast.error("Failed to send message: " + error.message);
     },
   });

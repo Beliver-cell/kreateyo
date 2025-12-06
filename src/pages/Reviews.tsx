@@ -15,7 +15,7 @@ import {
   Image as ImageIcon
 } from "lucide-react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { api } from "@/lib/api";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -51,12 +51,8 @@ export default function Reviews() {
   const { data: reviews, isLoading } = useQuery({
     queryKey: ["reviews"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("reviews")
-        .select("*")
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      return data;
+      const response = await api.get<{ data: any[] }>("/data/reviews");
+      return response.data;
     },
     enabled: !!user,
   });
@@ -70,11 +66,7 @@ export default function Reviews() {
         updateData.responded_at = new Date().toISOString();
       }
       
-      const { error } = await supabase
-        .from("reviews")
-        .update(updateData)
-        .eq("id", id);
-      if (error) throw error;
+      await api.patch(`/data/reviews/${id}`, updateData);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["reviews"] });
@@ -82,7 +74,7 @@ export default function Reviews() {
       setResponseText("");
       toast.success("Review updated successfully");
     },
-    onError: (error) => {
+    onError: (error: any) => {
       toast.error("Failed to update review: " + error.message);
     },
   });

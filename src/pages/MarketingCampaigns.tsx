@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -28,20 +28,14 @@ export default function MarketingCampaigns() {
   const { data: campaigns, isLoading } = useQuery({
     queryKey: ["marketing-campaigns"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("marketing_campaigns")
-        .select("*")
-        .order("created_at", { ascending: false });
-      
-      if (error) throw error;
-      return data;
+      const response = await api.get<{ data: any[] }>("/data/marketing_campaigns");
+      return response.data;
     }
   });
 
   const createMutation = useMutation({
     mutationFn: async (data: any) => {
-      const { error } = await supabase.from("marketing_campaigns").insert(data);
-      if (error) throw error;
+      await api.post("/data/marketing_campaigns", data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["marketing-campaigns"] });

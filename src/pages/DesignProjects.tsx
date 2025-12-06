@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -39,20 +39,14 @@ export default function DesignProjects() {
   const { data: projects, isLoading } = useQuery({
     queryKey: ["design-projects"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("design_projects")
-        .select("*, design_milestones(*)")
-        .order("created_at", { ascending: false });
-      
-      if (error) throw error;
-      return data;
+      const response = await api.get<{ data: any[] }>("/data/design_projects");
+      return response.data;
     }
   });
 
   const createProjectMutation = useMutation({
     mutationFn: async (data: any) => {
-      const { error } = await supabase.from("design_projects").insert(data);
-      if (error) throw error;
+      await api.post("/data/design_projects", data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["design-projects"] });
@@ -65,8 +59,7 @@ export default function DesignProjects() {
 
   const createMilestoneMutation = useMutation({
     mutationFn: async (data: any) => {
-      const { error } = await supabase.from("design_milestones").insert(data);
-      if (error) throw error;
+      await api.post("/data/design_milestones", data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["design-projects"] });
@@ -79,11 +72,10 @@ export default function DesignProjects() {
 
   const toggleMilestoneMutation = useMutation({
     mutationFn: async ({ id, completed }: { id: string; completed: boolean }) => {
-      const { error } = await supabase
-        .from("design_milestones")
-        .update({ completed, completed_at: completed ? new Date().toISOString() : null })
-        .eq("id", id);
-      if (error) throw error;
+      await api.patch(`/data/design_milestones/${id}`, { 
+        completed, 
+        completed_at: completed ? new Date().toISOString() : null 
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["design-projects"] });

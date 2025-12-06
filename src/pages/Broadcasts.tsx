@@ -16,7 +16,7 @@ import {
   Plus, Calendar, Search, Filter, MoreHorizontal, Sparkles
 } from "lucide-react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { api } from "@/lib/api";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -54,29 +54,20 @@ export default function Broadcasts() {
   const { data: broadcasts, isLoading } = useQuery({
     queryKey: ["broadcasts"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("broadcasts")
-        .select("*")
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      return data;
+      const response = await api.get<{ data: any[] }>("/data/broadcasts");
+      return response.data;
     },
     enabled: !!user,
   });
 
   const createBroadcast = useMutation({
     mutationFn: async (broadcast: typeof newBroadcast) => {
-      const { data, error } = await supabase
-        .from("broadcasts")
-        .insert({
-          ...broadcast,
-          user_id: user?.id,
-          scheduled_for: broadcast.scheduled_for || null,
-        })
-        .select()
-        .single();
-      if (error) throw error;
-      return data;
+      const response = await api.post<{ data: any }>("/data/broadcasts", {
+        ...broadcast,
+        user_id: user?.id,
+        scheduled_for: broadcast.scheduled_for || null,
+      });
+      return response.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["broadcasts"] });
@@ -84,19 +75,14 @@ export default function Broadcasts() {
       setNewBroadcast({ name: "", subject: "", content: "", channel: "email", segment_type: "all", scheduled_for: "" });
       toast.success("Broadcast created successfully");
     },
-    onError: (error) => {
+    onError: (error: any) => {
       toast.error("Failed to create broadcast: " + error.message);
     },
   });
 
   const sendBroadcast = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase
-        .from("broadcasts")
-        .update({ status: "sending" })
-        .eq("id", id);
-      if (error) throw error;
-      // In production, this would trigger an edge function to process the broadcast
+      await api.patch(`/data/broadcasts/${id}`, { status: "sending" });
       toast.success("Broadcast is being sent");
     },
     onSuccess: () => {

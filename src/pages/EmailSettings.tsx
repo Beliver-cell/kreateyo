@@ -11,7 +11,7 @@ import {
   Copy, AlertTriangle, ExternalLink
 } from "lucide-react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { api } from "@/lib/api";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -23,66 +23,50 @@ export default function EmailSettings() {
   const { data: domains, isLoading } = useQuery({
     queryKey: ["email_domains"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("email_domains")
-        .select("*")
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      return data;
+      const response = await api.get<{ data: any[] }>("/data/email_domains");
+      return response.data;
     },
     enabled: !!user,
   });
 
   const addDomain = useMutation({
     mutationFn: async (domain: string) => {
-      // Generate DKIM and SPF records
-      const dkimSelector = `kreateyo._domainkey.${domain}`;
       const dkimRecord = `v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQ...`;
       const spfRecord = `v=spf1 include:_spf.kreateyo.com ~all`;
 
-      const { data, error } = await supabase
-        .from("email_domains")
-        .insert({
-          user_id: user?.id,
-          domain,
-          dkim_record: dkimRecord,
-          spf_record: spfRecord,
-        })
-        .select()
-        .single();
-      if (error) throw error;
-      return data;
+      const response = await api.post<{ data: any }>("/data/email_domains", {
+        user_id: user?.id,
+        domain,
+        dkim_record: dkimRecord,
+        spf_record: spfRecord,
+      });
+      return response.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["email_domains"] });
       setNewDomain("");
       toast.success("Domain added. Please configure DNS records.");
     },
-    onError: (error) => {
+    onError: (error: any) => {
       toast.error("Failed to add domain: " + error.message);
     },
   });
 
   const verifyDomain = useMutation({
     mutationFn: async (id: string) => {
-      // In production, this would check DNS records
-      const { error } = await supabase
-        .from("email_domains")
-        .update({ 
-          status: "verified",
-          dkim_verified: true,
-          spf_verified: true,
-          verified_at: new Date().toISOString(),
-          last_check_at: new Date().toISOString(),
-        })
-        .eq("id", id);
-      if (error) throw error;
+      await api.patch(`/data/email_domains/${id}`, { 
+        status: "verified",
+        dkim_verified: true,
+        spf_verified: true,
+        verified_at: new Date().toISOString(),
+        last_check_at: new Date().toISOString(),
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["email_domains"] });
       toast.success("Domain verified successfully!");
     },
-    onError: (error) => {
+    onError: (error: any) => {
       toast.error("Verification failed: " + error.message);
     },
   });

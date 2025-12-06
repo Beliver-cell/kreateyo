@@ -9,7 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Mail, Sparkles, Send, Clock, Users, TrendingUp, Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import { api } from "@/lib/api";
 
 const EmailCampaigns = () => {
   const { toast } = useToast();
@@ -38,15 +38,12 @@ const EmailCampaigns = () => {
   const generateSubjectLine = async () => {
     setIsGenerating(true);
     try {
-      const { data, error } = await supabase.functions.invoke('generate-email-content', {
-        body: {
-          type: 'subject',
-          tone: selectedTone,
-          context: campaignContent
-        }
+      const data = await api.post<{ content: string }>('/api/generate-email-content', {
+        type: 'subject',
+        tone: selectedTone,
+        context: campaignContent
       });
 
-      if (error) throw error;
       setCampaignSubject(data.content);
       toast({
         title: "Subject Line Generated",
@@ -66,15 +63,12 @@ const EmailCampaigns = () => {
   const generateContent = async () => {
     setIsGenerating(true);
     try {
-      const { data, error } = await supabase.functions.invoke('generate-email-content', {
-        body: {
-          type: 'content',
-          tone: selectedTone,
-          subject: campaignSubject
-        }
+      const data = await api.post<{ content: string }>('/api/generate-email-content', {
+        type: 'content',
+        tone: selectedTone,
+        subject: campaignSubject
       });
 
-      if (error) throw error;
       setCampaignContent(data.content);
       toast({
         title: "Content Generated",
