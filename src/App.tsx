@@ -39,6 +39,7 @@ import ThemeCustomizer from "./pages/ThemeCustomizer";
 import ChatSupport from "./pages/ChatSupport";
 import Checkout from "./pages/Checkout";
 import Logistics from "./pages/Logistics";
+import FomoSettings from "./pages/FomoSettings";
 import Pages from "./pages/Pages";
 import Subscribers from "./pages/Subscribers";
 import Tools from "./pages/Tools";
@@ -378,6 +379,7 @@ const App = () => (
             <Route path="/reviews" element={<DashboardLayout><Reviews /></DashboardLayout>} />
             <Route path="/inbox" element={<DashboardLayout><ConversationsInbox /></DashboardLayout>} />
             <Route path="/email-settings" element={<DashboardLayout><EmailSettings /></DashboardLayout>} />
+            <Route path="/fomo-settings" element={<DashboardLayout><FomoSettings /></DashboardLayout>} />
             
             {/* Video Calls Routes (Service Businesses) */}
             <Route path="/calls" element={<DashboardLayout><Calls /></DashboardLayout>} />
