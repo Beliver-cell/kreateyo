@@ -28,12 +28,41 @@ export const sessions = pgTable('sessions', {
   tokenIdx: index('idx_sessions_token').on(table.token),
 }));
 
+// Businesses table (multi-tenant branding)
+export const businesses = pgTable('businesses', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  ownerId: uuid('owner_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  name: text('name').notNull(),
+  slug: text('slug').notNull().unique(),
+  logo: text('logo'),
+  brandColor: text('brand_color').default('#6366f1'),
+  secondaryColor: text('secondary_color').default('#8b5cf6'),
+  description: text('description'),
+  category: text('category'),
+  email: text('email'),
+  phone: text('phone'),
+  website: text('website'),
+  address: text('address'),
+  city: text('city'),
+  country: text('country'),
+  timezone: text('timezone').default('UTC'),
+  activeHours: jsonb('active_hours'),
+  socialLinks: jsonb('social_links'),
+  settings: jsonb('settings'),
+  isActive: boolean('is_active').notNull().default(true),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  slugIdx: index('idx_businesses_slug').on(table.slug),
+  ownerIdx: index('idx_businesses_owner').on(table.ownerId),
+}));
+
 // Profiles table
 export const profiles = pgTable('profiles', {
   id: uuid('id').primaryKey(),
   fullName: text('full_name').notNull(),
   avatarUrl: text('avatar_url'),
-  businessId: uuid('business_id'),
+  businessId: uuid('business_id').references(() => businesses.id),
   plan: text('plan').notNull().default('free'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),

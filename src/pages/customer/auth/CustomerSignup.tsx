@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,12 +6,14 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { customerAuth } from '@/services/customerApi';
 import { useCustomerAuth } from '@/contexts/CustomerAuthContext';
-import { Sparkles, Loader2 } from 'lucide-react';
+import { useBusinessBranding, getBusinessIdentifier } from '@/hooks/useBusinessBranding';
+import { Sparkles, Loader2, AlertCircle } from 'lucide-react';
 
 export default function CustomerSignup() {
   const { toast } = useToast();
   const { login } = useCustomerAuth();
   const navigate = useNavigate();
+  const { branding, isLoading: brandingLoading, error: brandingError } = useBusinessBranding();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -20,9 +22,20 @@ export default function CustomerSignup() {
     firstName: '',
     lastName: '',
     phone: '',
-    businessId: '', // TODO: Get from subdomain
-    businessType: 'services', // TODO: Get from business
+    businessId: '',
+    businessType: 'services',
   });
+
+  useEffect(() => {
+    if (branding?.id) {
+      setFormData(prev => ({ ...prev, businessId: branding.id }));
+    } else {
+      const identifier = getBusinessIdentifier();
+      if (identifier) {
+        setFormData(prev => ({ ...prev, businessId: identifier }));
+      }
+    }
+  }, [branding]);
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,14 +80,52 @@ export default function CustomerSignup() {
     }
   };
 
+  if (brandingLoading && getBusinessIdentifier()) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted/30 to-background">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (brandingError && getBusinessIdentifier()) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted/30 to-background p-4">
+        <div className="text-center space-y-4">
+          <AlertCircle className="h-12 w-12 text-destructive mx-auto" />
+          <h1 className="text-xl font-bold">Business Not Found</h1>
+          <p className="text-muted-foreground">We couldn't find this business. Please check the link and try again.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const brandColorStyle = branding?.brandColor ? { '--brand-color': branding.brandColor } as React.CSSProperties : {};
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted/30 to-background p-4">
+    <div 
+      className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted/30 to-background p-4"
+      style={brandColorStyle}
+    >
       <div className="w-full max-w-md space-y-6 bg-card p-6 sm:p-8 rounded-2xl shadow-lg border border-border">
         <div className="text-center">
           <div className="flex justify-center mb-4">
-            <Sparkles className="h-10 w-10 sm:h-12 sm:w-12 text-primary" />
+            {branding?.logo ? (
+              <img 
+                src={branding.logo} 
+                alt={branding.name} 
+                className="h-12 w-auto max-w-[200px] object-contain"
+              />
+            ) : (
+              <Sparkles 
+                className="h-10 w-10 sm:h-12 sm:w-12" 
+                style={{ color: branding?.brandColor || 'hsl(var(--primary))' }}
+              />
+            )}
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Create Account</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
+            {branding?.name ? `Join ${branding.name}` : 'Create Account'}
+          </h1>
           <p className="text-muted-foreground mt-2 text-sm sm:text-base">Sign up to get started</p>
         </div>
 
