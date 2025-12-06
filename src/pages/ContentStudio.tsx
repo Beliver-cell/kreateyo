@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { api } from '@/lib/api';
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -55,24 +55,22 @@ export default function ContentStudio() {
     mutationFn: async (prompt: string) => {
       setIsGenerating(true);
       
-      // Call AI edge function
-      const { data, error } = await supabase.functions.invoke('generate-email-content', {
-        body: { prompt: `Generate a social media post: ${prompt}`, type: 'social_post' },
-      });
-      
-      if (error) {
-        // Fallback to simulated response
+      try {
+        const response = await api.post<{ content: string }>('/ai/generate-content', {
+          prompt: `Generate a social media post: ${prompt}`,
+          type: 'social_post'
+        });
+        return response.content || `🌟 ${prompt}\n\nDiscover amazing deals and offers!`;
+      } catch (error) {
         await new Promise(resolve => setTimeout(resolve, 1500));
         return `🌟 ${prompt}\n\nDiscover amazing deals and offers! Don't miss out on our exclusive products.\n\n#business #sale #offer`;
       }
-      
-      return data?.content || `🌟 ${prompt}\n\nDiscover amazing deals and offers!`;
     },
     onSuccess: (content) => {
       setGeneratedPost(content);
       toast.success('Post generated successfully!');
     },
-    onError: (error) => toast.error(error.message),
+    onError: (error: any) => toast.error(error.message),
     onSettled: () => setIsGenerating(false),
   });
 

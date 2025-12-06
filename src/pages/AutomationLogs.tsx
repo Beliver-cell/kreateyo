@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { api } from '@/lib/api';
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -29,22 +29,15 @@ export default function AutomationLogs() {
   const { data: logs = [], isLoading } = useQuery({
     queryKey: ['automation_logs', statusFilter, actionFilter],
     queryFn: async () => {
-      let query = supabase
-        .from('automation_logs')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(500);
-
+      let url = '/data/automation_logs?orderBy=created_at&order=desc&limit=500';
       if (statusFilter !== 'all') {
-        query = query.eq('status', statusFilter);
+        url += `&status=${statusFilter}`;
       }
       if (actionFilter !== 'all') {
-        query = query.eq('action', actionFilter);
+        url += `&action=${actionFilter}`;
       }
-
-      const { data, error } = await query;
-      if (error) throw error;
-      return data as AutomationLog[];
+      const response = await api.get<{ data: AutomationLog[] }>(url);
+      return response.data;
     },
   });
 

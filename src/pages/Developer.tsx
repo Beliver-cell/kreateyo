@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Code, Key, Webhook, Terminal, Copy, Eye, EyeOff } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
+import { api } from '@/lib/api';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
@@ -23,41 +23,26 @@ export default function Developer() {
   const { data: apiKeys } = useQuery({
     queryKey: ['api-keys'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('api_keys')
-        .select('*')
-        .order('created_at', { ascending: false });
-      if (error) throw error;
-      return data;
+      const response = await api.get<{ data: any[] }>('/data/api_keys?orderBy=created_at&order=desc');
+      return response.data;
     }
   });
 
   const { data: webhooks } = useQuery({
     queryKey: ['webhooks'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('webhooks')
-        .select('*')
-        .order('created_at', { ascending: false });
-      if (error) throw error;
-      return data;
+      const response = await api.get<{ data: any[] }>('/data/webhooks?orderBy=created_at&order=desc');
+      return response.data;
     }
   });
 
   const createApiKeyMutation = useMutation({
     mutationFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('Not authenticated');
-
       const apiKey = `nxc_${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`;
-      const { error } = await supabase
-        .from('api_keys')
-        .insert({
-          user_id: user.id,
-          name: newApiKeyName,
-          key_hash: apiKey
-        });
-      if (error) throw error;
+      await api.post('/data/api_keys', {
+        name: newApiKeyName,
+        key_hash: apiKey
+      });
       return apiKey;
     },
     onSuccess: (apiKey) => {
@@ -73,19 +58,12 @@ export default function Developer() {
 
   const createWebhookMutation = useMutation({
     mutationFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('Not authenticated');
-
       const secret = Math.random().toString(36).substring(2, 15);
-      const { error } = await supabase
-        .from('webhooks')
-        .insert({
-          user_id: user.id,
-          url: webhookUrl,
-          events: ['order.created', 'booking.created'],
-          secret
-        });
-      if (error) throw error;
+      await api.post('/data/webhooks', {
+        url: webhookUrl,
+        events: ['order.created', 'booking.created'],
+        secret
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['webhooks'] });

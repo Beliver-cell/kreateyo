@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { api } from '@/lib/api';
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -44,15 +44,8 @@ export default function AIConversations() {
   const { data: conversations = [], isLoading } = useQuery({
     queryKey: ['ai_conversations'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('ai_conversations')
-        .select(`
-          *,
-          leads (name, email, phone)
-        `)
-        .order('last_message_at', { ascending: false });
-      if (error) throw error;
-      return (data || []).map(c => ({
+      const response = await api.get<{ data: any[] }>('/data/ai_conversations?orderBy=last_message_at&order=desc&include=leads');
+      return (response.data || []).map(c => ({
         ...c,
         messages: (Array.isArray(c.messages) ? c.messages : []) as unknown as Message[]
       })) as Conversation[];

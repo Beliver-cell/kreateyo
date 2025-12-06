@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Users, UserPlus, Shield, Activity, MoreVertical } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { toast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
+import { api } from '@/lib/api';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 export default function Team() {
@@ -22,39 +22,25 @@ export default function Team() {
   const { data: teamMembers } = useQuery({
     queryKey: ['team-members'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('user_roles')
-        .select('*');
-      if (error) throw error;
-      return data;
+      const response = await api.get<{ data: any[] }>('/data/user_roles');
+      return response.data;
     }
   });
 
   const { data: invitations } = useQuery({
     queryKey: ['team-invitations'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('team_invitations')
-        .select('*')
-        .eq('status', 'pending');
-      if (error) throw error;
-      return data;
+      const response = await api.get<{ data: any[] }>('/data/team_invitations?status=pending');
+      return response.data;
     }
   });
 
   const inviteMutation = useMutation({
     mutationFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('Not authenticated');
-
-      const { error } = await supabase
-        .from('team_invitations')
-        .insert({
-          email: inviteEmail,
-          role: inviteRole,
-          invited_by: user.id
-        });
-      if (error) throw error;
+      await api.post('/data/team_invitations', {
+        email: inviteEmail,
+        role: inviteRole
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['team-invitations'] });
@@ -62,18 +48,14 @@ export default function Team() {
       setInviteEmail('');
       setIsInviteOpen(false);
     },
-    onError: (error) => {
+    onError: (error: any) => {
       toast({ title: "Error", description: error.message, variant: "destructive" });
     }
   });
 
   const deleteInviteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase
-        .from('team_invitations')
-        .delete()
-        .eq('id', id);
-      if (error) throw error;
+      await api.delete(`/data/team_invitations/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['team-invitations'] });
@@ -83,11 +65,7 @@ export default function Team() {
 
   const updateRoleMutation = useMutation({
     mutationFn: async ({ id, role }: { id: string, role: 'owner' | 'admin' | 'manager' | 'staff' | 'viewer' }) => {
-      const { error } = await supabase
-        .from('user_roles')
-        .update({ role })
-        .eq('id', id);
-      if (error) throw error;
+      await api.patch(`/data/user_roles/${id}`, { role });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['team-members'] });

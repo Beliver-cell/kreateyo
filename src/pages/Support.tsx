@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { HelpCircle, MessageSquare, BookOpen, Video, Send } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
+import { api } from '@/lib/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export default function Support() {
@@ -19,18 +19,11 @@ export default function Support() {
 
   const createTicketMutation = useMutation({
     mutationFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('Not authenticated');
-
-      const { error } = await supabase
-        .from('support_tickets')
-        .insert({
-          user_id: user.id,
-          subject,
-          message,
-          priority
-        });
-      if (error) throw error;
+      await api.post('/data/support_tickets', {
+        subject,
+        message,
+        priority
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['support-tickets'] });

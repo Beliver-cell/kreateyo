@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -33,20 +33,14 @@ export default function ContentCalendar() {
   const { data: content, isLoading } = useQuery({
     queryKey: ["content-calendar"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("content_calendar")
-        .select("*")
-        .order("scheduled_date", { ascending: true });
-      
-      if (error) throw error;
-      return data;
+      const response = await api.get<{ data: any[] }>("/data/content_calendar?orderBy=scheduled_date&order=asc");
+      return response.data;
     }
   });
 
   const createMutation = useMutation({
     mutationFn: async (data: any) => {
-      const { error } = await supabase.from("content_calendar").insert(data);
-      if (error) throw error;
+      await api.post("/data/content_calendar", data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["content-calendar"] });

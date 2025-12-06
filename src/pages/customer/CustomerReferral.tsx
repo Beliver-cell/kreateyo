@@ -9,7 +9,6 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { useCustomerAuth } from '@/contexts/CustomerAuthContext';
-import { supabase } from '@/integrations/supabase/client';
 import { 
   Gift, Copy, Users, DollarSign, TrendingUp, 
   Wallet, CreditCard, CheckCircle, Clock, AlertCircle,

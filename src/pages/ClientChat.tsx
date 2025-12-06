@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { supabase } from '@/integrations/supabase/client';
+import { api } from '@/lib/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -43,38 +43,38 @@ export default function ClientChat() {
 
     const fetchClients = async () => {
       try {
-        // Get unique clients from messages
-        const { data: messagesData, error } = await supabase
-          .from('business_client_messages')
-          .select('client_id, message, created_at, read, sender_type')
-          .eq('business_id', profile.business_id)
-          .order('created_at', { ascending: false });
-
-        if (error) throw error;
+        // Get messages for this business
+        const messagesResponse = await api.get<{ data: any[] }>(`/data/business_client_messages?business_id=${profile.business_id}`);
+        const messagesData = messagesResponse.data || [];
 
         // Get unique client IDs
-        const clientIds = [...new Set(messagesData?.map(m => m.client_id) || [])];
+        const clientIds = [...new Set(messagesData.map(m => m.client_id))];
+        
+        if (clientIds.length === 0) {
+          setClients([]);
+          setLoading(false);
+          return;
+        }
 
         // Fetch client profiles
-        const { data: profilesData, error: profilesError } = await supabase
-          .from('profiles')
-          .select('id, full_name, avatar_url')
-          .in('id', clientIds);
-
-        if (profilesError) throw profilesError;
+        const profilesResponse = await api.get<{ data: any[] }>('/data/profiles');
+        const profilesData = (profilesResponse.data || []).filter(p => clientIds.includes(p.id));
 
         // Build client list with unread counts
-        const clientList = profilesData?.map(client => {
-          const clientMessages = messagesData?.filter(m => m.client_id === client.id) || [];
+        const clientList = profilesData.map(client => {
+          const clientMessages = messagesData.filter(m => m.client_id === client.id);
           const unreadCount = clientMessages.filter(m => !m.read && m.sender_type === 'client').length;
-          const lastMessage = clientMessages[0]?.message || '';
+          const sortedMessages = clientMessages.sort((a: any, b: any) => 
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+          );
+          const lastMessage = sortedMessages[0]?.message || '';
 
           return {
             ...client,
             lastMessage,
             unreadCount,
           };
-        }) || [];
+        });
 
         setClients(clientList);
         if (clientList.length > 0 && !selectedClient) {
@@ -101,24 +101,13 @@ export default function ClientChat() {
 
     const fetchMessages = async () => {
       try {
-        const { data, error } = await supabase
-          .from('business_client_messages')
-          .select('*')
-          .eq('business_id', profile.business_id)
-          .eq('client_id', selectedClient.id)
-          .order('created_at', { ascending: true });
-
-        if (error) throw error;
-        setMessages((data as Message[]) || []);
-
-        // Mark unread messages as read
-        await supabase
-          .from('business_client_messages')
-          .update({ read: true })
-          .eq('business_id', profile.business_id)
-          .eq('client_id', selectedClient.id)
-          .eq('sender_type', 'client')
-          .eq('read', false);
+        const response = await api.get<{ data: Message[] }>(
+          `/data/business_client_messages?business_id=${profile.business_id}&client_id=${selectedClient.id}`
+        );
+        const sortedMessages = (response.data || []).sort((a, b) => 
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+        );
+        setMessages(sortedMessages);
       } catch (error: any) {
         console.error('Error fetching messages:', error);
       }
@@ -126,28 +115,11 @@ export default function ClientChat() {
 
     fetchMessages();
 
-    // Subscribe to real-time updates
-    const channel = supabase
-      .channel('client_messages')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'business_client_messages',
-          filter: `business_id=eq.${profile.business_id}`,
-        },
-        (payload) => {
-          console.log('Message update:', payload);
-          if (payload.new && (payload.new as any).client_id === selectedClient.id) {
-            setMessages((prev) => [...prev, payload.new as Message]);
-          }
-        }
-      )
-      .subscribe();
+    // Poll for new messages every 5 seconds
+    const interval = setInterval(fetchMessages, 5000);
 
     return () => {
-      supabase.removeChannel(channel);
+      clearInterval(interval);
     };
   }, [selectedClient, profile?.business_id]);
 
@@ -160,16 +132,16 @@ export default function ClientChat() {
     if (!newMessage.trim() || !selectedClient || !profile?.business_id) return;
 
     try {
-      const { error } = await supabase
-        .from('business_client_messages')
-        .insert({
-          business_id: profile.business_id,
-          client_id: selectedClient.id,
-          sender_type: 'business',
-          message: newMessage.trim(),
-        });
+      const response = await api.post<{ data: Message }>('/data/business_client_messages', {
+        business_id: profile.business_id,
+        client_id: selectedClient.id,
+        sender_type: 'business',
+        message: newMessage.trim(),
+      });
 
-      if (error) throw error;
+      if (response.data) {
+        setMessages((prev) => [...prev, response.data]);
+      }
 
       setNewMessage('');
     } catch (error: any) {

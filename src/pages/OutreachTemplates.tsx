@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { api } from '@/lib/api';
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -42,25 +42,16 @@ export default function OutreachTemplates() {
   const { data: templates = [], isLoading } = useQuery({
     queryKey: ['outreach_templates'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('outreach_templates')
-        .select('*')
-        .order('created_at', { ascending: false });
-      if (error) throw error;
-      return data as Template[];
+      const response = await api.get<{ data: Template[] }>('/data/outreach_templates');
+      return response.data || [];
     },
   });
 
   const createMutation = useMutation({
     mutationFn: async (data: typeof formData) => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('Not authenticated');
-      
-      // Extract variables from content
       const variables = (data.content.match(/{{(\w+)}}/g) || []).map(v => v.replace(/[{}]/g, ''));
       
-      const { error } = await supabase.from('outreach_templates').insert({
-        user_id: user.id,
+      await api.post('/data/outreach_templates', {
         name: data.name,
         category: data.category,
         channel: data.channel,
@@ -69,7 +60,6 @@ export default function OutreachTemplates() {
         variables,
         is_active: data.is_active,
       });
-      if (error) throw error;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['outreach_templates'] });
@@ -77,14 +67,14 @@ export default function OutreachTemplates() {
       resetForm();
       toast.success('Template created');
     },
-    onError: (error) => toast.error(error.message),
+    onError: (error: any) => toast.error(error.message),
   });
 
   const updateMutation = useMutation({
     mutationFn: async (data: typeof formData & { id: string }) => {
       const variables = (data.content.match(/{{(\w+)}}/g) || []).map(v => v.replace(/[{}]/g, ''));
       
-      const { error } = await supabase.from('outreach_templates').update({
+      await api.patch(`/data/outreach_templates/${data.id}`, {
         name: data.name,
         category: data.category,
         channel: data.channel,
@@ -92,8 +82,7 @@ export default function OutreachTemplates() {
         content: data.content,
         variables,
         is_active: data.is_active,
-      }).eq('id', data.id);
-      if (error) throw error;
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['outreach_templates'] });
@@ -105,8 +94,7 @@ export default function OutreachTemplates() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from('outreach_templates').delete().eq('id', id);
-      if (error) throw error;
+      await api.delete(`/data/outreach_templates/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['outreach_templates'] });

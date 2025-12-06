@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { api } from '@/lib/api';
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -40,12 +40,8 @@ export default function AutoCampaigns() {
   const { data: campaigns = [], isLoading } = useQuery({
     queryKey: ['lead_campaigns'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('lead_campaigns')
-        .select('*')
-        .order('created_at', { ascending: false });
-      if (error) throw error;
-      return (data || []).map(c => ({
+      const response = await api.get<{ data: any[] }>('/data/lead_campaigns?orderBy=created_at&order=desc');
+      return (response.data || []).map(c => ({
         ...c,
         stats: { 
           sent: ((c.stats as any)?.sent || 0), 
@@ -59,18 +55,13 @@ export default function AutoCampaigns() {
 
   const createCampaignMutation = useMutation({
     mutationFn: async (campaign: typeof newCampaign) => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('Not authenticated');
-      
-      const { error } = await supabase.from('lead_campaigns').insert({
-        user_id: user.id,
+      await api.post('/data/lead_campaigns', {
         name: campaign.name,
         description: campaign.description || null,
         channel: campaign.channel,
         script_template: campaign.script_template || null,
         status: 'active',
       });
-      if (error) throw error;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['lead_campaigns'] });
@@ -78,17 +69,13 @@ export default function AutoCampaigns() {
       setNewCampaign({ name: '', description: '', channel: 'email', script_template: '' });
       toast.success('Campaign created successfully');
     },
-    onError: (error) => toast.error(error.message),
+    onError: (error: any) => toast.error(error.message),
   });
 
   const toggleCampaignMutation = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
       const newStatus = status === 'active' ? 'paused' : 'active';
-      const { error } = await supabase
-        .from('lead_campaigns')
-        .update({ status: newStatus })
-        .eq('id', id);
-      if (error) throw error;
+      await api.patch(`/data/lead_campaigns/${id}`, { status: newStatus });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['lead_campaigns'] });
@@ -98,18 +85,15 @@ export default function AutoCampaigns() {
 
   const runCampaignMutation = useMutation({
     mutationFn: async (campaignId: string) => {
-      const response = await supabase.functions.invoke('ai-outreach', {
-        body: { campaign_id: campaignId },
-      });
-      if (response.error) throw new Error(response.error.message);
-      return response.data;
+      const response = await api.post<{ sent: number }>('/ai/outreach', { campaign_id: campaignId });
+      return response;
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['lead_campaigns'] });
       queryClient.invalidateQueries({ queryKey: ['leads'] });
       toast.success(`Campaign executed: ${data.sent} messages sent`);
     },
-    onError: (error) => toast.error(error.message),
+    onError: (error: any) => toast.error(error.message),
   });
 
   const getChannelIcon = (channel: string) => {
