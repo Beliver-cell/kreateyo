@@ -359,14 +359,14 @@ export function OnboardingModalEnhanced({ open, onOpenChange }: { open: boolean;
                     <img 
                       src={brandingData.logo} 
                       alt="Logo preview" 
-                      className="w-12 h-12 rounded-full object-cover"
+                      className="w-20 h-20 rounded-full object-cover"
                       onError={(e) => {
                         (e.target as HTMLImageElement).style.display = 'none';
                       }}
                     />
                   ) : (
                     <div 
-                      className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl"
+                      className="w-20 h-20 rounded-full flex items-center justify-center text-white font-bold text-3xl"
                       style={{ backgroundColor: brandingData.brandColor }}
                     >
                       {brandingData.name.charAt(0).toUpperCase() || 'B'}
