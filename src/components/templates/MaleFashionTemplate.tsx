@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { ShoppingCart, Heart, Search, Star, ChevronRight, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -12,10 +12,6 @@ import watchImg from '@/assets/products/watch.jpg';
 import sunglassesImg from '@/assets/products/sunglasses.jpg';
 import earbudsImg from '@/assets/products/earbuds.jpg';
 import smartwatchImg from '@/assets/products/smartwatch.jpg';
-import { FomoProvider } from '@/components/fomo';
-import { StockUrgency } from '@/components/fomo/StockUrgency';
-import { CountdownTimer } from '@/components/fomo/CountdownTimer';
-import { SoldCounter } from '@/components/fomo/SoldCounter';
 
 interface TemplateProps {
   businessId: string;
@@ -30,25 +26,6 @@ interface TemplateProps {
   };
 }
 
-interface FomoSettings {
-  viewerCountEnabled: boolean;
-  viewerCountMinimum: number;
-  viewerCountMultiplier: string;
-  viewerCountShowOnProduct: boolean;
-  stockUrgencyEnabled: boolean;
-  stockUrgencyThreshold: number;
-  stockUrgencyMessage: string;
-  stockUrgencyColor: string;
-  countdownEnabled: boolean;
-  countdownEndDate: string | null;
-  countdownMessage: string;
-  soldCounterEnabled: boolean;
-  soldCounterTimeWindow: number;
-  soldCounterMinimum: number;
-  soldCounterMessage: string;
-  primaryColor: string;
-}
-
 export default function MaleFashionTemplate({ businessId, colors, fonts }: TemplateProps) {
   const primaryColor = colors?.primary || 'hsl(var(--primary))';
   const accentColor = colors?.accent || 'hsl(var(--accent))';
@@ -56,19 +33,9 @@ export default function MaleFashionTemplate({ businessId, colors, fonts }: Templ
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [page, setPage] = useState(1);
-  const [fomoSettings, setFomoSettings] = useState<FomoSettings | null>(null);
 
   const { data, isLoading } = useEcommerceProducts({ category: selectedCategory, page, limit: 6 });
   const { addToCart, itemCount } = useCart();
-
-  useEffect(() => {
-    if (businessId) {
-      fetch(`/api/fomo/settings/${businessId}`)
-        .then(res => res.ok ? res.json() : null)
-        .then(data => setFomoSettings(data))
-        .catch(() => {});
-    }
-  }, [businessId]);
 
   const handleAddToCart = (product: any) => {
     addToCart({
@@ -87,22 +54,7 @@ export default function MaleFashionTemplate({ businessId, colors, fonts }: Templ
   ];
 
   return (
-    <FomoProvider businessId={businessId}>
     <div className="min-h-screen bg-background">
-      {/* Countdown Timer Banner */}
-      {fomoSettings?.countdownEnabled && fomoSettings.countdownEndDate && (
-        <div className="bg-gradient-to-r from-primary/10 to-accent/10 py-3">
-          <div className="container mx-auto px-4 flex justify-center">
-            <CountdownTimer
-              enabled={fomoSettings.countdownEnabled}
-              endDate={fomoSettings.countdownEndDate}
-              message={fomoSettings.countdownMessage}
-              primaryColor={fomoSettings.primaryColor || primaryColor}
-            />
-          </div>
-        </div>
-      )}
-      
       {/* Top Bar */}
       <div className="bg-muted/40 border-b">
         <div className="container mx-auto px-4 py-2">
@@ -274,27 +226,6 @@ export default function MaleFashionTemplate({ businessId, colors, fonts }: Templ
                           ))}
                         </div>
                         <h4 className="font-medium mb-3 line-clamp-1">{product.name}</h4>
-                        {fomoSettings?.stockUrgencyEnabled && (
-                          <StockUrgency
-                            enabled={fomoSettings.stockUrgencyEnabled}
-                            currentStock={product.stock}
-                            threshold={fomoSettings.stockUrgencyThreshold}
-                            message={fomoSettings.stockUrgencyMessage}
-                            color={fomoSettings.stockUrgencyColor}
-                            businessId={businessId}
-                          />
-                        )}
-                        {fomoSettings?.soldCounterEnabled && (
-                          <SoldCounter
-                            enabled={fomoSettings.soldCounterEnabled}
-                            businessId={businessId}
-                            productId={product._id}
-                            timeWindow={fomoSettings.soldCounterTimeWindow}
-                            minimum={fomoSettings.soldCounterMinimum}
-                            message={fomoSettings.soldCounterMessage}
-                            primaryColor={fomoSettings.primaryColor || primaryColor}
-                          />
-                        )}
                         <div className="flex items-center justify-between">
                           <span className="text-xl font-bold" style={{ color: primaryColor }}>
                             ${product.price.toFixed(2)}
@@ -433,6 +364,5 @@ export default function MaleFashionTemplate({ businessId, colors, fonts }: Templ
         primaryColor={primaryColor}
       />
     </div>
-    </FomoProvider>
   );
 }

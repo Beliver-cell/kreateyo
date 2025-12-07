@@ -22,7 +22,6 @@ import { dataRoute } from './routes/data';
 import businessesRoute from './routes/businesses';
 import { chatRoute } from './routes/chat';
 import { templatesRoute } from './routes/templates';
-import { fomoRoute } from './routes/fomo';
 import { setupChatSocket } from './sockets/chat';
 
 const app = express();
@@ -62,7 +61,6 @@ app.use('/api', dataRoute);
 app.use('/api/businesses', businessesRoute);
 app.use('/api/chat', chatRoute);
 app.use('/api/templates', templatesRoute);
-app.use('/api/fomo', fomoRoute);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { ShoppingCart, Heart, Search, Loader2, Package, Shield, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -9,11 +9,6 @@ import { CartDrawer } from './CartDrawer';
 import { CheckoutDialog } from './CheckoutDialog';
 import { toast } from 'sonner';
 import bagImg from '@/assets/products/bag.jpg';
-import { FomoProvider } from '@/components/fomo';
-import { ViewerCount } from '@/components/fomo/ViewerCount';
-import { StockUrgency } from '@/components/fomo/StockUrgency';
-import { CountdownTimer } from '@/components/fomo/CountdownTimer';
-import { SoldCounter } from '@/components/fomo/SoldCounter';
 
 interface TemplateProps {
   businessId: string;
@@ -28,44 +23,15 @@ interface TemplateProps {
   };
 }
 
-interface FomoSettings {
-  viewerCountEnabled: boolean;
-  viewerCountMinimum: number;
-  viewerCountMultiplier: string;
-  viewerCountShowOnProduct: boolean;
-  stockUrgencyEnabled: boolean;
-  stockUrgencyThreshold: number;
-  stockUrgencyMessage: string;
-  stockUrgencyColor: string;
-  countdownEnabled: boolean;
-  countdownEndDate: string | null;
-  countdownMessage: string;
-  soldCounterEnabled: boolean;
-  soldCounterTimeWindow: number;
-  soldCounterMinimum: number;
-  soldCounterMessage: string;
-  primaryColor: string;
-}
-
 export default function CozaStoreTemplate({ businessId, colors, fonts }: TemplateProps) {
   const primaryColor = colors?.primary || 'hsl(var(--primary))';
   const accentColor = colors?.accent || 'hsl(var(--accent))';
   const [cartOpen, setCartOpen] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [fomoSettings, setFomoSettings] = useState<FomoSettings | null>(null);
   
   const { data, isLoading } = useEcommerceProducts({ category: selectedCategory, limit: 12 });
   const { addToCart, itemCount } = useCart();
-
-  useEffect(() => {
-    if (businessId) {
-      fetch(`/api/fomo/settings/${businessId}`)
-        .then(res => res.ok ? res.json() : null)
-        .then(data => setFomoSettings(data))
-        .catch(() => {});
-    }
-  }, [businessId]);
 
   const handleAddToCart = (product: any) => {
     addToCart({
@@ -78,22 +44,7 @@ export default function CozaStoreTemplate({ businessId, colors, fonts }: Templat
   };
 
   return (
-    <FomoProvider businessId={businessId}>
     <div className="min-h-screen bg-background">
-      {/* Countdown Timer Banner */}
-      {fomoSettings?.countdownEnabled && fomoSettings.countdownEndDate && (
-        <div className="bg-gradient-to-r from-primary/10 to-accent/10 py-3">
-          <div className="container mx-auto px-4 flex justify-center">
-            <CountdownTimer
-              enabled={fomoSettings.countdownEnabled}
-              endDate={fomoSettings.countdownEndDate}
-              message={fomoSettings.countdownMessage}
-              primaryColor={fomoSettings.primaryColor || primaryColor}
-            />
-          </div>
-        </div>
-      )}
-      
       {/* Top Bar */}
       <div className="bg-muted/30 border-b">
         <div className="container mx-auto px-4 py-2">
@@ -264,34 +215,13 @@ export default function CozaStoreTemplate({ businessId, colors, fonts }: Templat
                         </Button>
                       </div>
                     </div>
-                    <div className="space-y-2">
-                      <h4 className="font-medium line-clamp-1 text-center">{product.name}</h4>
+                    <div className="text-center">
+                      <h4 className="font-medium mb-2 line-clamp-1">{product.name}</h4>
                       <div className="flex items-center justify-center gap-2">
                         <span className="text-lg font-semibold" style={{ color: primaryColor }}>
                           ${product.price.toFixed(2)}
                         </span>
                       </div>
-                      {fomoSettings && (
-                        <div className="space-y-1">
-                          <StockUrgency
-                            enabled={fomoSettings.stockUrgencyEnabled}
-                            threshold={fomoSettings.stockUrgencyThreshold}
-                            message={fomoSettings.stockUrgencyMessage}
-                            color={fomoSettings.stockUrgencyColor}
-                            currentStock={product.stock || 0}
-                            businessId={businessId}
-                          />
-                          <SoldCounter
-                            businessId={businessId}
-                            productId={product._id}
-                            enabled={fomoSettings.soldCounterEnabled}
-                            timeWindow={fomoSettings.soldCounterTimeWindow}
-                            minimum={fomoSettings.soldCounterMinimum}
-                            message={fomoSettings.soldCounterMessage}
-                            primaryColor={fomoSettings.primaryColor || primaryColor}
-                          />
-                        </div>
-                      )}
                     </div>
                   </CardContent>
                 </Card>
@@ -383,6 +313,5 @@ export default function CozaStoreTemplate({ businessId, colors, fonts }: Templat
         primaryColor={primaryColor}
       />
     </div>
-    </FomoProvider>
   );
 }
