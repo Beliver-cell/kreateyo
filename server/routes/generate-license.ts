@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { db } from '../db';
-import { licenseKeys, digitalProducts } from '@shared/schema';
+import { licenseKeys, digitalProducts } from '../../shared/schema';
 import { eq, and } from 'drizzle-orm';
 
 export const generateLicenseRoute = Router();

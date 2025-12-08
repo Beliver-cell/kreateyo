@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { db } from '../db';
-import { licenseKeys, digitalProducts, downloadLinks, downloadLogs, piracyAlerts } from '@shared/schema';
+import { licenseKeys, digitalProducts, downloadLinks, downloadLogs, piracyAlerts } from '../../shared/schema';
 import { eq } from 'drizzle-orm';
 import crypto from 'crypto';
 
