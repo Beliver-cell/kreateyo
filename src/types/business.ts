@@ -28,6 +28,7 @@ export type CommunitySubType =
   | null;
 
 export interface BusinessProfile {
+  id?: string;
   type: BusinessType;
   subType?: EcommerceSubType | ServicesSubType | DigitalSubType | CommunitySubType;
   name?: string;

@@ -15,6 +15,7 @@ interface BusinessContextType {
   setBusinessType: (type: BusinessType) => void;
   setBusinessSubType: (subType: EcommerceSubType | ServicesSubType | DigitalSubType | CommunitySubType) => void;
   setPlan: (plan: PlanType) => void;
+  setBusinessId: (id: string) => void;
   completeOnboarding: () => void;
   features: ReturnType<typeof getBusinessFeatures>;
 }
@@ -45,6 +46,10 @@ export function BusinessProvider({ children }: { children: React.ReactNode }) {
     setBusinessProfile(prev => ({ ...prev, plan }));
   };
 
+  const setBusinessId = (id: string) => {
+    setBusinessProfile(prev => ({ ...prev, id }));
+  };
+
   const completeOnboarding = () => {
     setBusinessProfile(prev => ({ ...prev, onboarded: true }));
   };
@@ -55,6 +60,7 @@ export function BusinessProvider({ children }: { children: React.ReactNode }) {
       setBusinessType, 
       setBusinessSubType, 
       setPlan,
+      setBusinessId,
       completeOnboarding,
       features 
     }}>

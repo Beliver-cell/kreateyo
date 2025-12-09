@@ -22,6 +22,8 @@ import { dataRoute } from './routes/data';
 import businessesRoute from './routes/businesses';
 import { chatRoute } from './routes/chat';
 import { templatesRoute } from './routes/templates';
+import { yopayRoute, yopayDashboardRoute } from './routes/yopay';
+import { affiliatesRoute } from './routes/affiliates';
 import { setupChatSocket } from './sockets/chat';
 
 const app = express();
@@ -59,8 +61,11 @@ app.use('/api', generateEmailContentRoute);
 app.use('/api', notificationsRoute);
 app.use('/api', dataRoute);
 app.use('/api/businesses', businessesRoute);
+app.use('/api/businesses', yopayDashboardRoute);
 app.use('/api/chat', chatRoute);
 app.use('/api/templates', templatesRoute);
+app.use('/api/yopay', yopayRoute);
+app.use('/api', affiliatesRoute);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

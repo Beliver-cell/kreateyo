@@ -1109,3 +1109,70 @@ export const businessTemplateInstances = pgTable('business_template_instances', 
   businessIdx: index('idx_business_templates_business').on(table.businessId),
   templateIdx: index('idx_business_templates_template').on(table.templateId),
 }));
+
+// ==================== YOPAY PAYMENT SYSTEM ====================
+
+// Yopay accounts table - Stores business Yopay account info
+export const yopayAccounts = pgTable('yopay_accounts', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  businessId: uuid('business_id').notNull().references(() => businesses.id, { onDelete: 'cascade' }).unique(),
+  subaccountId: text('subaccount_id'),
+  bankCode: text('bank_code'),
+  bankName: text('bank_name'),
+  accountNumber: text('account_number'),
+  accountName: text('account_name'),
+  businessName: text('business_name'),
+  businessEmail: text('business_email'),
+  contactName: text('contact_name'),
+  businessPhone: text('business_phone'),
+  bvn: text('bvn'),
+  idType: text('id_type'),
+  idNumber: text('id_number'),
+  status: text('status').notNull().default('pending'),
+  kycVerified: boolean('kyc_verified').default(false),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  businessIdIdx: index('idx_yopay_accounts_business_id').on(table.businessId),
+}));
+
+// Yopay onboarding sessions table - Tracks onboarding progress
+export const yopayOnboardingSessions = pgTable('yopay_onboarding_sessions', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  businessId: uuid('business_id').notNull().references(() => businesses.id, { onDelete: 'cascade' }),
+  currentStep: text('current_step').notNull().default('business_verification'),
+  progress: integer('progress').default(0),
+  stepsCompleted: jsonb('steps_completed').default([]),
+  formData: jsonb('form_data').default({}),
+  country: text('country').default('NG'),
+  expiresAt: timestamp('expires_at'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  businessIdIdx: index('idx_yopay_onboarding_business_id').on(table.businessId),
+}));
+
+// Yopay transactions table - Stores payment transactions
+export const yopayTransactions = pgTable('yopay_transactions', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  businessId: uuid('business_id').notNull().references(() => businesses.id, { onDelete: 'cascade' }),
+  yopayAccountId: uuid('yopay_account_id').references(() => yopayAccounts.id, { onDelete: 'set null' }),
+  transactionRef: text('transaction_ref').notNull().unique(),
+  flutterwaveRef: text('flutterwave_ref'),
+  customerEmail: text('customer_email'),
+  customerName: text('customer_name'),
+  description: text('description'),
+  amount: decimal('amount', { precision: 10, scale: 2 }).notNull(),
+  currency: text('currency').notNull().default('NGN'),
+  flutterwaveFee: decimal('flutterwave_fee', { precision: 10, scale: 2 }),
+  platformFee: decimal('platform_fee', { precision: 10, scale: 2 }),
+  netAmount: decimal('net_amount', { precision: 10, scale: 2 }),
+  status: text('status').notNull(),
+  paymentMethod: text('payment_method'),
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+}, (table) => ({
+  businessIdIdx: index('idx_yopay_transactions_business_id').on(table.businessId),
+  statusIdx: index('idx_yopay_transactions_status').on(table.status),
+  transactionRefIdx: index('idx_yopay_transactions_ref').on(table.transactionRef),
+}));
